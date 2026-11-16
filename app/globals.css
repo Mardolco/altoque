@@ -1,0 +1,138 @@
+@import "tailwindcss";
+
+/* design/ es solo referencia visual: Tailwind no debe buscar clases ahí. */
+@source not "../design";
+
+/* Tokens de design/pantallas/Fundamentos.dc.html, tal cual. */
+@theme {
+  --color-primary: #0B5FA5;
+  --color-primary-dark: #084A82;
+  --color-ink: #0B2340;
+  --color-ink-muted: #4B5D73;
+  --color-surface: #CFE0F1;
+  --color-canvas: #F5F7FA;
+  --color-line: #D6E0EB;
+  --color-line-strong: #7A8BA1;
+  --color-muted: #EDF1F5;
+  --color-ok: #1F9D55;
+  --color-ok-tint: #E3F3E9;
+  --color-ok-ink: #12703D;
+  --color-caution: #F2A900;
+  --color-caution-tint: #FFF4D6;
+  --color-caution-ink: #6B4C00;
+  --color-stop: #D93025;
+  --color-stop-tint: #FCEAE8;
+  --color-stop-ink: #B3261E;
+  --font-display: var(--font-nunito), ui-rounded, sans-serif;
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --radius-btn: 16px;
+  --radius-card: 20px;
+  --radius-sheet: 28px;
+  --shadow-card: 0 1px 2px rgb(11 35 64 / 0.05), 0 6px 16px rgb(11 35 64 / 0.06);
+  --shadow-float: 0 8px 24px rgb(11 35 64 / 0.16);
+}
+
+/* Escala tipográfica de Fundamentos (tamaño, interlineado y peso).
+   Los títulos y botones llevan además la clase font-display. */
+@theme {
+  --text-display: 32px;
+  --text-display--line-height: 38px;
+  --text-display--font-weight: 900;
+  --text-title: 27px;
+  --text-title--line-height: 33px;
+  --text-title--font-weight: 900;
+  --text-button: 19px;
+  --text-button--line-height: 24px;
+  --text-button--font-weight: 900;
+  --text-heading: 18px;
+  --text-heading--line-height: 22px;
+  --text-heading--font-weight: 800;
+  --text-body: 16px;
+  --text-body--line-height: 23px;
+  --text-body--font-weight: 400;
+  --text-small: 14px;
+  --text-small--line-height: 19px;
+  --text-small--font-weight: 500;
+  --text-caption: 13px;
+  --text-caption--line-height: 18px;
+  --text-caption--font-weight: 600;
+}
+
+/* Apoyo: valores que usan las pantallas del diseño y que Fundamentos no nombra. */
+@theme {
+  --color-line-soft: #E1E8F0; /* borde de tarjetas */
+  --color-line-dash: #AFC0D3; /* borde punteado de "ocupado" y "buscando" */
+  --color-handle: #C9D5E2; /* tirador de las hojas inferiores */
+  --color-placeholder: #5F7187; /* texto de ejemplo en campos */
+  --color-star-edge: #C78B00; /* contorno de la estrella llena */
+  --shadow-button: 0 6px 16px rgb(11 95 165 / 0.24);
+  --shadow-sheet: 0 -8px 24px rgb(11 35 64 / 0.16);
+
+  --animate-halo: halo 2.2s ease-out infinite; /* aro de Analizando */
+  --animate-radar: radar 2.2s ease-out infinite; /* "estás aquí" en los mapas */
+  --animate-sheet: sheet-in 0.22s ease-out;
+
+  @keyframes halo {
+    from {
+      transform: scale(0.94);
+      opacity: 0.6;
+    }
+    to {
+      transform: scale(1.22);
+      opacity: 0;
+    }
+  }
+  @keyframes radar {
+    from {
+      transform: scale(0.6);
+      opacity: 0.5;
+    }
+    to {
+      transform: scale(1.5);
+      opacity: 0;
+    }
+  }
+  @keyframes sheet-in {
+    from {
+      transform: translateY(24px);
+      opacity: 0;
+    }
+    to {
+      transform: none;
+      opacity: 1;
+    }
+  }
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  button:not(:disabled),
+  label:has(input[type="file"]) {
+    cursor: pointer;
+  }
+
+  :where(a, button, input, textarea, select, [tabindex]):focus-visible {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  ::placeholder {
+    color: var(--color-placeholder);
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    ::before,
+    ::after {
+      animation: none !important;
+    }
+  }
+}

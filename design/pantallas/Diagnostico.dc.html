@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>AlToque · Diagnóstico</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Nunito:wght@700;800;900&display=swap">
+<style>
+body{margin:0}
+*{box-sizing:border-box}
+button,input,textarea{font:inherit;color:inherit}
+a{color:#0B5FA5}a:hover{color:#084A82}
+a:focus-visible,button:focus-visible{outline:3px solid #0B5FA5;outline-offset:2px}
+</style>
+</helmet>
+<div style="width:390px;height:844px;position:relative;overflow:hidden;display:flex;flex-direction:column;background:#F5F7FA;color:#0B2340;font-family:Inter,system-ui,-apple-system,sans-serif">
+  <div style="padding:40px 12px 0 8px;flex-shrink:0">
+    <div style="display:flex;align-items:center;gap:4px;height:56px">
+      <a href="Preguntas.dc.html" aria-label="Volver a las preguntas" style="width:48px;height:48px;display:flex;align-items:center;justify-content:center;border-radius:999px;color:#0B2340;text-decoration:none"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></a>
+      <span style="font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:800;font-size:20px;line-height:26px">Tu diagnóstico</span>
+    </div>
+  </div>
+
+  <main style="flex:1;overflow-y:auto;padding:4px 20px 12px;display:flex;flex-direction:column;gap:14px">
+    <section aria-label="Gravedad: rojo, detente" style="flex-shrink:0;border-radius:22px;overflow:hidden;background:#FFFFFF;border:1px solid #E1E8F0;box-shadow:0 1px 2px rgba(11,35,64,0.05),0 6px 16px rgba(11,35,64,0.06)">
+      <div style="display:flex;align-items:center;gap:10px;padding:12px 16px;background:#D93025;color:#FFFFFF">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.3 2.5h7.4l5.8 5.8v7.4l-5.8 5.8H8.3l-5.8-5.8V8.3l5.8-5.8z"/><path d="M12 7.5v5.5M12 16.5h.01"/></svg>
+        <span style="font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:20px;line-height:26px">Detente en un lugar seguro</span>
+      </div>
+      <div style="padding:12px 16px 14px;display:flex;flex-direction:column;gap:2px">
+        <span style="font-size:14px;font-weight:600;line-height:19px;color:#4B5D73">Falla probable</span>
+        <h1 style="margin:0;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:28px;line-height:34px">Llanta pinchada</h1>
+        <span style="font-size:15px;line-height:21px;color:#4B5D73">Delantera derecha · según tu foto y respuestas</span>
+      </div>
+    </section>
+
+    <section style="flex-shrink:0">
+      <h2 style="margin:0 0 8px;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:800;font-size:18px;line-height:22px">Qué hacer ahora</h2>
+      <ol style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px">
+        <li style="display:flex;gap:12px;align-items:flex-start;font-size:16px;line-height:22px"><span style="width:24px;height:24px;flex-shrink:0;border-radius:999px;background:#CFE0F1;color:#0B2340;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px">1</span><span>Deja las luces de emergencia prendidas.</span></li>
+        <li style="display:flex;gap:12px;align-items:flex-start;font-size:16px;line-height:22px"><span style="width:24px;height:24px;flex-shrink:0;border-radius:999px;background:#CFE0F1;color:#0B2340;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px">2</span><span>No sigas manejando: dañarías el aro.</span></li>
+        <li style="display:flex;gap:12px;align-items:flex-start;font-size:16px;line-height:22px"><span style="width:24px;height:24px;flex-shrink:0;border-radius:999px;background:#CFE0F1;color:#0B2340;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px">3</span><span>Espera en el auto con los seguros puestos.</span></li>
+      </ol>
+    </section>
+
+    <section aria-label="Camino recomendado" style="flex-shrink:0;display:flex;flex-direction:column;gap:8px;padding:14px 16px 16px;border-radius:20px;background:#CFE0F1;border:2px solid #0B5FA5">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+        <span style="display:flex;align-items:center;gap:6px;padding:4px 10px 4px 8px;border-radius:999px;background:#0B5FA5;color:#FFFFFF;font-size:13px;font-weight:700;line-height:18px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>Recomendado para ti</span>
+        <span style="font-size:14px;font-weight:700">Nivel 2</span>
+      </div>
+      <h2 style="margin:0;display:flex;align-items:center;gap:8px;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:21px;line-height:26px">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0B5FA5" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 6.5a4 4 0 0 0-5 5.2l-5.6 5.6a1.9 1.9 0 0 0 2.7 2.7l5.6-5.6a4 4 0 0 0 5.2-5l-2.6 2.6-2.5-.4-.4-2.5 2.6-2.6z"/></svg>
+        Llama a un mecánico
+      </h2>
+      <p style="margin:0;font-size:15px;line-height:21px">Sin gata no podrás levantar el auto. Un mecánico verificado llega con herramientas y pone tu repuesto.</p>
+    </section>
+
+    <section style="flex-shrink:0">
+      <h2 style="margin:0 0 8px;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:800;font-size:17px;line-height:22px">O elige otro camino</h2>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <a href="Guia.dc.html" style="display:flex;align-items:center;gap:12px;min-height:64px;padding:8px 10px 8px 12px;border-radius:16px;background:#FFFFFF;border:1px solid #D6E0EB;text-decoration:none;color:#0B2340">
+          <span style="width:40px;height:40px;flex-shrink:0;border-radius:12px;background:#CFE0F1;color:#0B5FA5;display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6l1.5 1.5L8 5M4 12l1.5 1.5L8 11M4 18l1.5 1.5L8 17M11 6.5h9M11 12.5h9M11 18.5h9"/></svg></span>
+          <span style="flex:1;display:flex;flex-direction:column;gap:1px">
+            <span style="font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:800;font-size:17px;line-height:22px">Nivel 1 · Resuélvelo tú</span>
+            <span style="font-size:14px;line-height:19px;color:#4B5D73">Necesitas gata y llave de ruedas</span>
+          </span>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4B5D73" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+        </a>
+        <a href="Gruas.dc.html" style="display:flex;align-items:center;gap:12px;min-height:64px;padding:8px 10px 8px 12px;border-radius:16px;background:#FFFFFF;border:1px solid #D6E0EB;text-decoration:none;color:#0B2340">
+          <span style="width:40px;height:40px;flex-shrink:0;border-radius:12px;background:#CFE0F1;color:#0B5FA5;display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 16.5V7.5h10v9"/><path d="M12.5 10.5h4.2l3.3 3.6v2.4h-2"/><path d="M9 16.5h6"/><circle cx="6.5" cy="17" r="2"/><circle cx="17" cy="17" r="2"/><path d="M2.5 16.5h2"/></svg></span>
+          <span style="flex:1;display:flex;flex-direction:column;gap:1px">
+            <span style="font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:800;font-size:17px;line-height:22px">Nivel 3 · Pide una grúa</span>
+            <span style="font-size:14px;line-height:19px;color:#4B5D73">Lleva tu auto a un taller</span>
+          </span>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4B5D73" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <div style="flex-shrink:0;padding:10px 20px 24px;display:flex;flex-direction:column;gap:8px;background:#FFFFFF;border-top:1px solid #E1E8F0">
+    <p style="margin:0;display:flex;align-items:center;justify-content:center;gap:6px;font-size:13px;line-height:18px;color:#4B5D73"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5M12 7.8h.01"/></svg>La IA te orienta, no reemplaza a un mecánico.</p>
+    <a href="Mecanicos.dc.html" style="display:flex;align-items:center;justify-content:center;gap:10px;min-height:56px;padding:0 20px;border-radius:16px;background:#0B5FA5;color:#FFFFFF;text-decoration:none;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:19px;box-shadow:0 6px 16px rgba(11,95,165,0.24)">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 6.5a4 4 0 0 0-5 5.2l-5.6 5.6a1.9 1.9 0 0 0 2.7 2.7l5.6-5.6a4 4 0 0 0 5.2-5l-2.6 2.6-2.5-.4-.4-2.5 2.6-2.6z"/></svg>
+      <span>Ver mecánicos cercanos</span>
+    </a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>AlToque · Cuéntanos qué pasó</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Nunito:wght@700;800;900&display=swap">
+<style>
+body{margin:0}
+*{box-sizing:border-box}
+button,input,textarea{font:inherit;color:inherit}
+a{color:#0B5FA5}a:hover{color:#084A82}
+a:focus-visible,button:focus-visible,textarea:focus-visible{outline:3px solid #0B5FA5;outline-offset:2px}
+textarea::placeholder{color:#5F7187}
+</style>
+</helmet>
+<div style="width:390px;height:844px;position:relative;overflow:hidden;display:flex;flex-direction:column;background:#F5F7FA;color:#0B2340;font-family:Inter,system-ui,-apple-system,sans-serif">
+  <div style="padding:40px 12px 0 8px;flex-shrink:0">
+    <div style="display:flex;align-items:center;gap:4px;height:56px">
+      <a href="Main.dc.html" aria-label="Volver al inicio" style="width:48px;height:48px;display:flex;align-items:center;justify-content:center;border-radius:999px;color:#0B2340;text-decoration:none"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></a>
+      <h1 style="margin:0;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:800;font-size:20px;line-height:26px">Cuéntanos qué pasó</h1>
+    </div>
+  </div>
+
+  <main style="flex:1;overflow-y:auto;padding:8px 20px 16px;display:flex;flex-direction:column;gap:20px">
+    <section aria-label="Foto de la falla">
+      <sc-if value="{{sinFoto}}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:14px;padding:22px 18px 18px;border-radius:20px;border:2px dashed #7A8BA1;background:#FFFFFF;text-align:center">
+          <span style="width:56px;height:56px;border-radius:18px;background:#CFE0F1;color:#0B5FA5;display:flex;align-items:center;justify-content:center"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7.5h3l1.8-2.5h6.4L17 7.5h3a1 1 0 0 1 1 1V19a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8.5a1 1 0 0 1 1-1z"/><circle cx="12" cy="13.5" r="3.5"/></svg></span>
+          <span style="display:flex;flex-direction:column;gap:4px">
+            <span style="font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:800;font-size:19px;line-height:24px">Toma una foto de lo que ves</span>
+            <span style="font-size:15px;line-height:21px;color:#4B5D73">La llanta, el tablero o el motor. Si está oscuro, prende la linterna del celular.</span>
+          </span>
+          <div style="align-self:stretch;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px">
+            <button type="button" onClick="{{tomarFoto}}" style="display:flex;align-items:center;justify-content:center;gap:8px;min-height:52px;padding:0 12px;border-radius:14px;border:2px solid #0B5FA5;background:#FFFFFF;color:#0B5FA5;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:800;font-size:17px;cursor:pointer">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7.5h3l1.8-2.5h6.4L17 7.5h3a1 1 0 0 1 1 1V19a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8.5a1 1 0 0 1 1-1z"/><circle cx="12" cy="13.5" r="3.5"/></svg>
+              <span>Tomar foto</span>
+            </button>
+            <button type="button" onClick="{{tomarFoto}}" style="display:flex;align-items:center;justify-content:center;gap:8px;min-height:52px;padding:0 12px;border-radius:14px;border:2px solid #0B5FA5;background:#FFFFFF;color:#0B5FA5;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:800;font-size:17px;cursor:pointer">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="9.5" r="1.8"/><path d="M21 15.5l-4.5-4.5L6 20"/></svg>
+              <span>Subir foto</span>
+            </button>
+          </div>
+        </div>
+      </sc-if>
+      <sc-if value="{{conFoto}}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;align-items:center;gap:14px;padding:12px;border-radius:20px;background:#FFFFFF;border:1px solid #E1E8F0;box-shadow:0 1px 2px rgba(11,35,64,0.05),0 4px 12px rgba(11,35,64,0.05)">
+          <svg width="112" height="84" viewBox="0 0 112 84" role="img" aria-label="Foto de la llanta tomada de noche" style="flex-shrink:0;border-radius:14px"><rect width="112" height="84" fill="#0B2340"/><circle cx="96" cy="10" r="26" fill="#CFE0F1" opacity="0.14"/><path d="M0 16H112V54H86A36 36 0 0 0 14 54H0Z" fill="#24456B"/><rect y="70" width="112" height="14" fill="#142C4A"/><path d="M20 71C18 52 31 37 50 37S82 52 80 71Z" fill="#06152A" stroke="#4E6C8E" stroke-width="2"/><ellipse cx="50" cy="71" rx="31" ry="3.5" fill="#06152A"/><circle cx="50" cy="56" r="12" fill="#8FA7C2"/><circle cx="50" cy="56" r="4" fill="#CFE0F1"/></svg>
+          <div style="flex:1;display:flex;flex-direction:column;gap:2px">
+            <span style="display:flex;align-items:center;gap:6px;font-weight:700;font-size:16px;color:#12703D"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12.3l2.7 2.7L16 9.5"/></svg>Foto lista</span>
+            <span style="font-size:14px;line-height:20px;color:#4B5D73">La IA la revisará al analizar.</span>
+            <button type="button" onClick="{{quitarFoto}}" style="align-self:flex-start;min-height:48px;padding:0;border:0;background:transparent;color:#0B5FA5;font-weight:700;font-size:15px;cursor:pointer;text-decoration:underline;text-underline-offset:3px">Cambiar foto</button>
+          </div>
+        </div>
+      </sc-if>
+    </section>
+
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <label for="descripcion" style="font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:800;font-size:17px;line-height:22px">Descríbelo con tus palabras <span style="font-family:Inter,system-ui,sans-serif;font-weight:500;font-size:14px;color:#4B5D73">(opcional)</span></label>
+      <textarea id="descripcion" rows="3" placeholder="Ej.: Sonó un golpe y el timón se jala a la derecha." value="{{texto}}" onChange="{{escribir}}" style="width:100%;min-height:96px;padding:14px 16px;border-radius:16px;border:2px solid #7A8BA1;background:#FFFFFF;font-size:16px;line-height:23px;resize:none"></textarea>
+    </div>
+
+    <fieldset style="margin:0;padding:0;border:0;min-width:0;display:flex;flex-direction:column;gap:10px">
+      <legend style="padding:0;margin-bottom:10px;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:800;font-size:17px;line-height:22px">¿Qué parte crees que es?</legend>
+      <div style="display:flex;flex-wrap:wrap;gap:10px">
+        <sc-for list="{{chips}}" as="c" hint-placeholder-count="4">
+          <button type="button" aria-pressed="{{c.sel}}" onClick="{{c.pick}}" style="display:flex;align-items:center;gap:8px;min-height:48px;padding:0 18px 0 14px;border-radius:999px;border:2px solid {{c.borde}};background:{{c.fondo}};color:#0B2340;font-weight:600;font-size:15px;cursor:pointer">
+            <sc-if value="{{c.sel}}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0B5FA5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg></sc-if>
+            <span>{{c.label}}</span>
+          </button>
+        </sc-for>
+      </div>
+    </fieldset>
+  </main>
+
+  <div style="flex-shrink:0;padding:12px 20px 28px;display:flex;flex-direction:column;gap:10px;background:#FFFFFF;border-top:1px solid #E1E8F0">
+    <p style="margin:0;text-align:center;font-size:14px;line-height:20px;color:#4B5D73">Con una foto o una frase basta.</p>
+    <a href="Analizando.dc.html" style="display:flex;align-items:center;justify-content:center;gap:10px;min-height:56px;padding:0 20px;border-radius:16px;background:#0B5FA5;color:#FFFFFF;text-decoration:none;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:19px;box-shadow:0 6px 16px rgba(11,95,165,0.24)">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3"/><path d="M7.5 12h9"/></svg>
+      <span>Analizar</span>
+    </a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const st = this.state || {};
+    const sel = st.chip || null;
+    const opciones = ['Llanta', 'Batería', 'Luz en el tablero', 'Otro'];
+    return {
+      sinFoto: !st.foto,
+      conFoto: !!st.foto,
+      tomarFoto: () => this.setState({ foto: true }),
+      quitarFoto: () => this.setState({ foto: false }),
+      texto: st.texto || '',
+      escribir: (e) => this.setState({ texto: e.target.value }),
+      chips: opciones.map((label) => ({
+        label: label,
+        sel: sel === label,
+        borde: sel === label ? '#0B5FA5' : '#7A8BA1',
+        fondo: sel === label ? '#CFE0F1' : '#FFFFFF',
+        pick: () => this.setState({ chip: sel === label ? null : label })
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>

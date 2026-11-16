@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>AlToque · Inicio</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Nunito:wght@700;800;900&display=swap">
+<style>
+body{margin:0}
+*{box-sizing:border-box}
+button,input,textarea{font:inherit;color:inherit}
+a{color:#0B5FA5}a:hover{color:#084A82}
+a:focus-visible,button:focus-visible{outline:3px solid #0B5FA5;outline-offset:2px}
+</style>
+</helmet>
+<div style="width:390px;height:844px;position:relative;overflow:hidden;display:flex;flex-direction:column;background:#F5F7FA;color:#0B2340;font-family:Inter,system-ui,-apple-system,sans-serif">
+  <main style="flex:1;display:flex;flex-direction:column;padding:40px 20px 0">
+    <div style="display:flex;align-items:center;justify-content:space-between;height:52px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <svg width="36" height="36" viewBox="0 0 36 36" aria-hidden="true"><rect width="36" height="36" rx="11" fill="#0B5FA5"/><path d="M18 29s-8-6.6-8-12.5a8 8 0 0 1 16 0C26 22.4 18 29 18 29z" fill="#FFFFFF"/><path d="M14.6 16.4l2.3 2.3 4.5-4.6" fill="none" stroke="#0B5FA5" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span style="font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:22px">AlToque</span>
+      </div>
+      <button type="button" onClick="{{abrirEmergencia}}" aria-label="Emergencia: llamar a la Policía al 105" style="display:flex;align-items:center;gap:8px;min-height:48px;padding:0 16px 0 14px;border-radius:999px;border:2px solid #D93025;background:#FFFFFF;color:#D93025;font-weight:700;font-size:15px;cursor:pointer">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 3.5h3l1.6 4.2-2 1.3a12 12 0 0 0 5.9 5.9l1.3-2 4.2 1.6v3a2 2 0 0 1-2.1 2A17 17 0 0 1 4.5 5.6a2 2 0 0 1 2-2.1z"/></svg>
+        <span>Policía 105</span>
+      </button>
+    </div>
+
+    <div style="margin-top:24px;display:flex;flex-direction:column;gap:6px">
+      <h1 style="margin:0;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:32px;line-height:38px">Hola, Valeria</h1>
+      <p style="margin:0;font-size:17px;line-height:25px;color:#4B5D73">Estamos contigo. Cuéntanos qué pasó y te decimos qué hacer.</p>
+    </div>
+
+    <div style="margin-top:16px;align-self:flex-start;display:flex;align-items:center;gap:8px;padding:8px 14px 8px 10px;border-radius:999px;background:#FFFFFF;border:1px solid #D6E0EB;font-size:14px;font-weight:600">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0B5FA5" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.1-7-11.2a7 7 0 0 1 14 0C19 14.9 12 21 12 21z"/><circle cx="12" cy="9.8" r="2.6"/></svg>
+      <span>Estás en Av. Javier Prado</span>
+    </div>
+
+    <h2 style="margin:26px 0 12px;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:800;font-size:19px;line-height:24px">¿Qué está fallando?</h2>
+    <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px">
+      <a href="Falla.dc.html" style="display:flex;flex-direction:column;justify-content:space-between;gap:12px;min-height:116px;padding:16px;border-radius:20px;background:#FFFFFF;border:1px solid #E1E8F0;box-shadow:0 1px 2px rgba(11,35,64,0.05),0 4px 12px rgba(11,35,64,0.05);text-decoration:none;color:#0B2340">
+        <span style="width:44px;height:44px;border-radius:14px;background:#CFE0F1;color:#0B5FA5;display:flex;align-items:center;justify-content:center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/><path d="M12 3v5.5M12 15.5V21M3 12h5.5M15.5 12H21"/></svg></span>
+        <span style="display:flex;flex-direction:column;gap:2px"><span style="font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:800;font-size:17px;line-height:22px">Llanta</span><span style="font-size:14px;line-height:19px;color:#4B5D73">Pinchada o baja</span></span>
+      </a>
+      <a href="Falla.dc.html" style="display:flex;flex-direction:column;justify-content:space-between;gap:12px;min-height:116px;padding:16px;border-radius:20px;background:#FFFFFF;border:1px solid #E1E8F0;box-shadow:0 1px 2px rgba(11,35,64,0.05),0 4px 12px rgba(11,35,64,0.05);text-decoration:none;color:#0B2340">
+        <span style="width:44px;height:44px;border-radius:14px;background:#CFE0F1;color:#0B5FA5;display:flex;align-items:center;justify-content:center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M7 7V4.5h3V7M14 7V4.5h3V7M6.5 13.5h3.5M14 13.5h3.5M15.75 11.75v3.5"/></svg></span>
+        <span style="display:flex;flex-direction:column;gap:2px"><span style="font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:800;font-size:17px;line-height:22px">Batería</span><span style="font-size:14px;line-height:19px;color:#4B5D73">El auto no prende</span></span>
+      </a>
+      <a href="Falla.dc.html" style="display:flex;flex-direction:column;justify-content:space-between;gap:12px;min-height:116px;padding:16px;border-radius:20px;background:#FFFFFF;border:1px solid #E1E8F0;box-shadow:0 1px 2px rgba(11,35,64,0.05),0 4px 12px rgba(11,35,64,0.05);text-decoration:none;color:#0B2340">
+        <span style="width:44px;height:44px;border-radius:14px;background:#CFE0F1;color:#0B5FA5;display:flex;align-items:center;justify-content:center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="6"/><path d="M12 9v3.5M12 15h.01"/><path d="M5.5 6.5a8 8 0 0 0 0 11M18.5 6.5a8 8 0 0 1 0 11"/></svg></span>
+        <span style="display:flex;flex-direction:column;gap:2px"><span style="font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:800;font-size:17px;line-height:22px">Luz en el tablero</span><span style="font-size:14px;line-height:19px;color:#4B5D73">Se prendió un aviso</span></span>
+      </a>
+      <a href="Falla.dc.html" style="display:flex;flex-direction:column;justify-content:space-between;gap:12px;min-height:116px;padding:16px;border-radius:20px;background:#FFFFFF;border:1px solid #E1E8F0;box-shadow:0 1px 2px rgba(11,35,64,0.05),0 4px 12px rgba(11,35,64,0.05);text-decoration:none;color:#0B2340">
+        <span style="width:44px;height:44px;border-radius:14px;background:#CFE0F1;color:#0B5FA5;display:flex;align-items:center;justify-content:center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.3a2.5 2.5 0 1 1 3.4 2.4c-.6.3-1 .8-1 1.5v.5"/><path d="M12 16.8h.01"/></svg></span>
+        <span style="display:flex;flex-direction:column;gap:2px"><span style="font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:800;font-size:17px;line-height:22px">Otro</span><span style="font-size:14px;line-height:19px;color:#4B5D73">Ruido, humo u otra cosa</span></span>
+      </a>
+    </div>
+  </main>
+
+  <div style="padding:12px 20px 28px;display:flex;flex-direction:column;gap:12px">
+    <a href="Falla.dc.html" style="display:flex;align-items:center;justify-content:center;gap:12px;min-height:64px;padding:0 20px;border-radius:18px;background:#0B5FA5;color:#FFFFFF;text-decoration:none;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:21px;box-shadow:0 6px 16px rgba(11,95,165,0.28)">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 11l1.7-4.4A2 2 0 0 1 8.6 5.3h6.8a2 2 0 0 1 1.9 1.3L19 11"/><rect x="3" y="11" width="18" height="6" rx="2"/><path d="M6 17v2M18 17v2M7 14h1M16 14h1"/></svg>
+      <span>Tengo una falla</span>
+    </a>
+    <button type="button" onClick="{{abrirUbicacion}}" style="display:flex;align-items:center;justify-content:center;gap:10px;min-height:56px;padding:0 20px;border-radius:16px;border:2px solid #0B5FA5;background:#FFFFFF;color:#0B5FA5;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:800;font-size:18px;cursor:pointer">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l18-8-8 18-2-8-8-2z"/></svg>
+      <span>Compartir mi ubicación</span>
+    </button>
+  </div>
+
+  <sc-if value="{{hayHoja}}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;inset:0;z-index:10;display:flex;flex-direction:column;background:rgba(11,35,64,0.5)">
+      <button type="button" aria-label="Cerrar" onClick="{{cerrar}}" style="flex:1;border:0;background:transparent;cursor:pointer"></button>
+      <section role="dialog" aria-modal="true" aria-label="Hoja de opciones" style="display:flex;flex-direction:column;gap:18px;padding:12px 20px 28px;border-radius:28px 28px 0 0;background:#FFFFFF;box-shadow:0 -8px 24px rgba(11,35,64,0.16)">
+        <div style="align-self:center;width:44px;height:5px;border-radius:999px;background:#C9D5E2"></div>
+
+        <sc-if value="{{hojaEmergencia}}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:18px">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center">
+              <span style="width:64px;height:64px;border-radius:999px;background:#FCEAE8;color:#B3261E;display:flex;align-items:center;justify-content:center"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 3.5h3l1.6 4.2-2 1.3a12 12 0 0 0 5.9 5.9l1.3-2 4.2 1.6v3a2 2 0 0 1-2.1 2A17 17 0 0 1 4.5 5.6a2 2 0 0 1 2-2.1z"/></svg></span>
+              <h2 style="margin:4px 0 0;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:24px;line-height:30px">¿Llamar a la Policía?</h2>
+              <p style="margin:0;font-size:16px;line-height:24px;color:#4B5D73">Marcaremos el 105. Úsalo si estás en peligro o no te sientes a salvo.</p>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <a href="tel:105" style="display:flex;align-items:center;justify-content:center;gap:10px;min-height:56px;padding:0 20px;border-radius:16px;background:#D93025;color:#FFFFFF;text-decoration:none;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:19px">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 3.5h3l1.6 4.2-2 1.3a12 12 0 0 0 5.9 5.9l1.3-2 4.2 1.6v3a2 2 0 0 1-2.1 2A17 17 0 0 1 4.5 5.6a2 2 0 0 1 2-2.1z"/></svg>
+                <span>Llamar al 105</span>
+              </a>
+              <button type="button" onClick="{{cerrar}}" style="min-height:56px;padding:0 20px;border-radius:16px;border:2px solid #0B5FA5;background:#FFFFFF;color:#0B5FA5;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:800;font-size:18px;cursor:pointer">Cancelar</button>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{hojaUbicacion}}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:18px">
+            <sc-if value="{{ubicacionPendiente}}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;flex-direction:column;gap:18px">
+                <div style="display:flex;flex-direction:column;gap:6px">
+                  <h2 style="margin:0;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:24px;line-height:30px">Comparte tu ubicación</h2>
+                  <p style="margin:0;font-size:16px;line-height:24px;color:#4B5D73">Tu familia verá dónde estás en tiempo real hasta que dejes de compartir.</p>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px;padding:14px;border-radius:16px;background:#F5F7FA">
+                  <span style="width:44px;height:44px;flex-shrink:0;border-radius:999px;background:#CFE0F1;color:#0B5FA5;display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.1-7-11.2a7 7 0 0 1 14 0C19 14.9 12 21 12 21z"/><circle cx="12" cy="9.8" r="2.6"/></svg></span>
+                  <span style="display:flex;flex-direction:column;gap:2px"><span style="font-weight:700;font-size:16px">Av. Javier Prado</span><span style="font-size:14px;color:#4B5D73">Tu ubicación actual</span></span>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:8px">
+                  <span style="font-size:14px;font-weight:600;color:#4B5D73">Se enviará a</span>
+                  <div style="display:flex;align-items:center;gap:12px;min-height:60px;padding:8px 14px;border-radius:16px;border:2px solid #0B5FA5;background:#CFE0F1">
+                    <span style="width:40px;height:40px;flex-shrink:0;border-radius:999px;background:#FFFFFF;color:#0B5FA5;display:flex;align-items:center;justify-content:center;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:17px">M</span>
+                    <span style="flex:1;display:flex;flex-direction:column;gap:1px"><span style="font-weight:700;font-size:16px">Mamá</span><span style="font-size:14px;color:#0B2340">Tu contacto de confianza</span></span>
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0B5FA5" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+                  </div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:6px">
+                  <button type="button" onClick="{{enviarUbicacion}}" style="display:flex;align-items:center;justify-content:center;gap:10px;min-height:56px;padding:0 20px;border:0;border-radius:16px;background:#0B5FA5;color:#FFFFFF;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:19px;cursor:pointer">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 11.5a8.5 8.5 0 0 1-12.4 7.6L3.5 20.5l1.4-4.4A8.5 8.5 0 1 1 20.5 11.5z"/></svg>
+                    <span>Enviar por WhatsApp</span>
+                  </button>
+                  <button type="button" onClick="{{cerrar}}" style="min-height:48px;border:0;background:transparent;color:#0B5FA5;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:800;font-size:17px;cursor:pointer">Ahora no</button>
+                </div>
+              </div>
+            </sc-if>
+            <sc-if value="{{ubicacionEnviada}}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:20px">
+                <div style="display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;padding-top:6px">
+                  <span style="width:64px;height:64px;border-radius:999px;background:#E3F3E9;color:#12703D;display:flex;align-items:center;justify-content:center"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg></span>
+                  <h2 style="margin:4px 0 0;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:23px;line-height:29px">Listo, tu mamá ya puede ver dónde estás</h2>
+                  <p style="margin:0;font-size:16px;line-height:24px;color:#4B5D73">Puedes dejar de compartir cuando quieras.</p>
+                </div>
+                <button type="button" onClick="{{cerrar}}" style="min-height:56px;padding:0 20px;border:0;border-radius:16px;background:#0B5FA5;color:#FFFFFF;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:19px;cursor:pointer">Entendido</button>
+              </div>
+            </sc-if>
+          </div>
+        </sc-if>
+      </section>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const st = this.state || {};
+    const hoja = st.hoja || null;
+    return {
+      hayHoja: !!hoja,
+      hojaEmergencia: hoja === 'emergencia',
+      hojaUbicacion: hoja === 'ubicacion',
+      ubicacionPendiente: !st.enviada,
+      ubicacionEnviada: !!st.enviada,
+      abrirEmergencia: () => this.setState({ hoja: 'emergencia' }),
+      abrirUbicacion: () => this.setState({ hoja: 'ubicacion', enviada: false }),
+      cerrar: () => this.setState({ hoja: null }),
+      enviarUbicacion: () => this.setState({ enviada: true })
+    };
+  }
+}
+</script>
+</body>
+</html>

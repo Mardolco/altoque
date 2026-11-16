@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>AlToque · Preguntas de la IA</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Nunito:wght@700;800;900&display=swap">
+<style>
+body{margin:0}
+*{box-sizing:border-box}
+button,input,textarea{font:inherit;color:inherit}
+a{color:#0B5FA5}a:hover{color:#084A82}
+a:focus-visible,button:focus-visible{outline:3px solid #0B5FA5;outline-offset:2px}
+</style>
+</helmet>
+<div style="width:390px;height:844px;position:relative;overflow:hidden;display:flex;flex-direction:column;background:#F5F7FA;color:#0B2340;font-family:Inter,system-ui,-apple-system,sans-serif">
+  <div style="padding:40px 12px 0 8px;flex-shrink:0">
+    <div style="display:flex;align-items:center;gap:4px;height:56px">
+      <sc-if value="{{enPrimera}}" hint-placeholder-val="{{ true }}">
+        <a href="Falla.dc.html" aria-label="Volver" style="width:48px;height:48px;display:flex;align-items:center;justify-content:center;border-radius:999px;color:#0B2340;text-decoration:none"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></a>
+      </sc-if>
+      <sc-if value="{{puedeRetroceder}}" hint-placeholder-val="{{ false }}">
+        <button type="button" onClick="{{anterior}}" aria-label="Pregunta anterior" style="width:48px;height:48px;display:flex;align-items:center;justify-content:center;border:0;border-radius:999px;background:transparent;color:#0B2340;cursor:pointer"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button>
+      </sc-if>
+      <span style="font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:800;font-size:20px;line-height:26px">Unas preguntas rápidas</span>
+    </div>
+  </div>
+
+  <main style="flex:1;overflow-y:auto;padding:4px 20px 12px;display:flex;flex-direction:column;gap:18px">
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <span aria-live="polite" style="font-size:14px;font-weight:600;line-height:19px;color:#4B5D73">{{etiqueta}}</span>
+      <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px">
+        <sc-for list="{{segmentos}}" as="s" hint-placeholder-count="3">
+          <span style="height:8px;border-radius:999px;background:{{s.color}}"></span>
+        </sc-for>
+      </div>
+    </div>
+
+    <sc-if value="{{preguntando}}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;flex-direction:column;gap:16px;margin-top:6px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <svg width="32" height="32" viewBox="0 0 36 36" aria-hidden="true"><rect width="36" height="36" rx="11" fill="#0B5FA5"/><path d="M18 29s-8-6.6-8-12.5a8 8 0 0 1 16 0C26 22.4 18 29 18 29z" fill="#FFFFFF"/><path d="M14.6 16.4l2.3 2.3 4.5-4.6" fill="none" stroke="#0B5FA5" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span style="font-size:15px;font-weight:600;color:#4B5D73">La IA de AlToque pregunta</span>
+        </div>
+        <h1 style="margin:0;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:29px;line-height:35px">{{pregunta}}</h1>
+        <p style="margin:0;display:flex;gap:10px;align-items:flex-start;padding:14px 16px;border-radius:16px;background:#FFFFFF;border:1px solid #E1E8F0;font-size:16px;line-height:23px">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0B5FA5" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5M12 7.8h.01"/></svg>
+          <span>{{ayuda}}</span>
+        </p>
+        <sc-if value="{{hayRespondidas}}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <span style="font-size:14px;font-weight:600;color:#4B5D73">Ya respondiste</span>
+            <div style="display:flex;flex-wrap:wrap;gap:8px">
+              <sc-for list="{{respondidas}}" as="r" hint-placeholder-count="1">
+                <span style="display:flex;align-items:center;gap:6px;padding:7px 12px 7px 10px;border-radius:999px;background:#CFE0F1;font-size:14px;font-weight:600">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0B5FA5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>{{r.texto}}
+                </span>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{terminado}}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:16px;margin-top:6px">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <h1 style="margin:0;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:29px;line-height:35px">¡Gracias! Ya tenemos tu diagnóstico</h1>
+          <p style="margin:0;font-size:17px;line-height:25px;color:#4B5D73">Con tus respuestas elegimos el camino más seguro para ti.</p>
+        </div>
+        <div style="display:flex;flex-direction:column;border-radius:20px;background:#FFFFFF;border:1px solid #E1E8F0;overflow:hidden">
+          <sc-for list="{{resumen}}" as="r" hint-placeholder-count="3">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:56px;padding:0 16px;border-top:{{r.borde}}">
+              <span style="font-size:16px;line-height:22px">{{r.corto}}</span>
+              <span style="flex-shrink:0;padding:5px 14px;border-radius:999px;background:#CFE0F1;font-weight:700;font-size:15px">{{r.respuesta}}</span>
+            </div>
+          </sc-for>
+        </div>
+        <sc-if value="{{inseguro}}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-radius:16px;background:#FFF4D6;border:1px solid #F2A900">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6B4C00" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0;margin-top:1px"><path d="M12 3.5L2.5 20h19L12 3.5z"/><path d="M12 10v4M12 17v.01"/></svg>
+            <span style="font-size:15px;line-height:22px">Si puedes, avanza despacio con las luces de emergencia hasta un lugar seguro.</span>
+          </div>
+        </sc-if>
+      </div>
+    </sc-if>
+  </main>
+
+  <div style="flex-shrink:0;padding:12px 20px 28px">
+    <sc-if value="{{preguntando}}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <button type="button" onClick="{{responderSi}}" style="display:flex;align-items:center;justify-content:center;gap:10px;min-height:58px;border-radius:16px;border:2px solid #7A8BA1;background:#FFFFFF;color:#0B2340;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:20px;cursor:pointer">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0B5FA5" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+          <span>Sí</span>
+        </button>
+        <button type="button" onClick="{{responderNo}}" style="display:flex;align-items:center;justify-content:center;gap:10px;min-height:58px;border-radius:16px;border:2px solid #7A8BA1;background:#FFFFFF;color:#0B2340;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:20px;cursor:pointer">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0B5FA5" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          <span>No</span>
+        </button>
+        <button type="button" onClick="{{responderNoSe}}" style="display:flex;align-items:center;justify-content:center;gap:10px;min-height:58px;border-radius:16px;border:2px solid #7A8BA1;background:#FFFFFF;color:#0B2340;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:20px;cursor:pointer">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0B5FA5" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.3a2.5 2.5 0 1 1 3.4 2.4c-.6.3-1 .8-1 1.5v.5"/><path d="M12 16.8h.01"/></svg>
+          <span>No sé</span>
+        </button>
+      </div>
+    </sc-if>
+    <sc-if value="{{terminado}}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <a href="Diagnostico.dc.html" style="display:flex;align-items:center;justify-content:center;gap:10px;min-height:56px;padding:0 20px;border-radius:16px;background:#0B5FA5;color:#FFFFFF;text-decoration:none;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:19px;box-shadow:0 6px 16px rgba(11,95,165,0.24)">
+          <span>Ver diagnóstico</span>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <button type="button" onClick="{{reiniciar}}" style="min-height:48px;border:0;background:transparent;color:#0B5FA5;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:800;font-size:17px;cursor:pointer">Cambiar respuestas</button>
+      </div>
+    </sc-if>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const PREG = [
+      { q: '¿Estás en un lugar seguro, fuera de la pista?', ayuda: 'Por ejemplo, en la berma, una calle lateral o un estacionamiento.', corto: 'Lugar seguro' },
+      { q: '¿Tienes llanta de repuesto?', ayuda: 'Suele estar en la maletera, debajo de la alfombra del piso.', corto: 'Llanta de repuesto' },
+      { q: '¿Tienes gata y llave de ruedas?', ayuda: 'La gata sirve para levantar el auto. La llave de ruedas, para aflojar los pernos de la llanta.', corto: 'Gata y llave de ruedas' }
+    ];
+    const st = this.state || {};
+    const idx = st.idx || 0;
+    const resp = st.resp || [];
+    const actual = PREG[Math.min(idx, 2)];
+    const responder = (v) => {
+      const r = resp.slice(0, idx);
+      r[idx] = v;
+      this.setState({ resp: r, idx: idx + 1 });
+    };
+    return {
+      enPrimera: idx === 0,
+      puedeRetroceder: idx > 0,
+      anterior: () => this.setState({ idx: Math.max(0, idx - 1) }),
+      preguntando: idx < 3,
+      terminado: idx >= 3,
+      etiqueta: idx < 3 ? 'Pregunta ' + (idx + 1) + ' de 3' : 'Listo, respondiste todo',
+      segmentos: [0, 1, 2].map((i) => ({ color: i <= idx ? '#0B5FA5' : '#D6E0EB' })),
+      pregunta: actual.q,
+      ayuda: actual.ayuda,
+      hayRespondidas: idx > 0 && idx < 3,
+      respondidas: resp.slice(0, Math.min(idx, 3)).map((v, i) => ({ texto: PREG[i].corto + ': ' + v })),
+      resumen: PREG.map((p, i) => ({ corto: p.corto, respuesta: resp[i] || 'Sin respuesta', borde: i === 0 ? 'none' : '1px solid #E1E8F0' })),
+      inseguro: idx >= 3 && !!resp[0] && resp[0] !== 'Sí',
+      responderSi: () => responder('Sí'),
+      responderNo: () => responder('No'),
+      responderNoSe: () => responder('No sé'),
+      reiniciar: () => this.setState({ idx: 0, resp: [] })
+    };
+  }
+}
+</script>
+</body>
+</html>

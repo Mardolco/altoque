@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>AlToque · Hoja de estilos: componentes</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Nunito:wght@700;800;900&display=swap">
+<style>
+body{margin:0}
+*{box-sizing:border-box}
+button{font:inherit;color:inherit}
+</style>
+</helmet>
+<div style="width:1440px;height:2580px;overflow:hidden;padding:72px;display:flex;flex-direction:column;gap:48px;background:#F5F7FA;color:#0B2340;font-family:Inter,system-ui,-apple-system,sans-serif">
+
+  <header style="display:flex;align-items:flex-end;justify-content:space-between;gap:32px">
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <h1 style="margin:0;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:48px;line-height:54px">Componentes reutilizables</h1>
+      <p style="margin:0;font-size:18px;line-height:26px;color:#4B5D73">Nombre en español para el equipo y en código para Next.js. Sugerencia: un archivo por componente en components/ui/.</p>
+    </div>
+    <span style="flex-shrink:0;padding:8px 16px;border-radius:999px;background:#FFFFFF;border:1px solid #D6E0EB;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:14px">components/ui/PrimaryButton.tsx</span>
+  </header>
+
+  <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px;align-items:start">
+
+    <div style="display:flex;flex-direction:column;gap:32px">
+      <section style="display:flex;flex-direction:column;gap:14px;padding:20px;border-radius:24px;background:#FFFFFF;border:1px solid #E1E8F0">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px"><h2 style="margin:0;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:21px;line-height:26px">Botón primario</h2><code style="font-family:ui-monospace,Menlo,monospace;font-size:13px;padding:4px 8px;border-radius:8px;background:#EDF1F5">&lt;PrimaryButton&gt;</code></div>
+        <div style="display:flex;flex-direction:column;gap:14px;padding:20px;border-radius:16px;background:#F5F7FA">
+          <div style="display:flex;flex-direction:column;gap:6px"><span style="font-family:ui-monospace,Menlo,monospace;font-size:12px;color:#4B5D73">size="lg" · 64 px</span><button type="button" style="display:flex;align-items:center;justify-content:center;gap:12px;min-height:64px;border:0;border-radius:18px;background:#0B5FA5;color:#FFFFFF;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:21px;box-shadow:0 6px 16px rgba(11,95,165,0.28)"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 11l1.7-4.4A2 2 0 0 1 8.6 5.3h6.8a2 2 0 0 1 1.9 1.3L19 11"/><rect x="3" y="11" width="18" height="6" rx="2"/><path d="M6 17v2M18 17v2M7 14h1M16 14h1"/></svg>Tengo una falla</button></div>
+          <div style="display:flex;flex-direction:column;gap:6px"><span style="font-family:ui-monospace,Menlo,monospace;font-size:12px;color:#4B5D73">size="md" · 56 px</span><button type="button" style="display:flex;align-items:center;justify-content:center;gap:10px;min-height:56px;border:0;border-radius:16px;background:#0B5FA5;color:#FFFFFF;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:19px;box-shadow:0 6px 16px rgba(11,95,165,0.24)">Ver diagnóstico<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
+          <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px">
+            <div style="display:flex;flex-direction:column;gap:6px"><span style="font-family:ui-monospace,Menlo,monospace;font-size:12px;color:#4B5D73">presionado</span><button type="button" style="min-height:56px;border:0;border-radius:16px;background:#084A82;color:#FFFFFF;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:18px">Analizar</button></div>
+            <div style="display:flex;flex-direction:column;gap:6px"><span style="font-family:ui-monospace,Menlo,monospace;font-size:12px;color:#4B5D73">disabled</span><button type="button" disabled style="min-height:56px;border:0;border-radius:16px;background:#D6E0EB;color:#4B5D73;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:18px">Analizar</button></div>
+          </div>
+        </div>
+        <p style="margin:0;font-size:13px;line-height:19px;color:#4B5D73">Props: size, icon, href u onClick, disabled. Ancho completo y siempre abajo. Una sola acción principal por pantalla.</p>
+      </section>
+
+      <section style="display:flex;flex-direction:column;gap:14px;padding:20px;border-radius:24px;background:#FFFFFF;border:1px solid #E1E8F0">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px"><h2 style="margin:0;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:21px;line-height:26px">Botón secundario</h2><code style="font-family:ui-monospace,Menlo,monospace;font-size:13px;padding:4px 8px;border-radius:8px;background:#EDF1F5">&lt;SecondaryButton&gt;</code></div>
+        <div style="display:flex;flex-direction:column;gap:14px;padding:20px;border-radius:16px;background:#F5F7FA">
+          <button type="button" style="display:flex;align-items:center;justify-content:center;gap:10px;min-height:56px;border-radius:16px;border:2px solid #0B5FA5;background:#FFFFFF;color:#0B5FA5;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:800;font-size:18px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l18-8-8 18-2-8-8-2z"/></svg>Compartir mi ubicación</button>
+          <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px">
+            <button type="button" style="display:flex;align-items:center;justify-content:center;gap:6px;min-height:56px;border-radius:16px;border:2px solid #0B5FA5;background:#FFFFFF;color:#0B5FA5;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:800;font-size:18px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>Anterior</button>
+            <button type="button" disabled style="display:flex;align-items:center;justify-content:center;gap:6px;min-height:56px;border-radius:16px;border:2px solid #D6E0EB;background:#FFFFFF;color:#7A8BA1;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:800;font-size:18px">Deshabilitado</button>
+          </div>
+        </div>
+        <p style="margin:0;font-size:13px;line-height:19px;color:#4B5D73">Borde de 2 px azul sobre blanco. Mismo alto y radio que el primario. Para la segunda opción de la pantalla.</p>
+      </section>
+
+      <section style="display:flex;flex-direction:column;gap:14px;padding:20px;border-radius:24px;background:#FFFFFF;border:1px solid #E1E8F0">
+        <h2 style="margin:0;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:21px;line-height:26px">Otros botones</h2>
+        <div style="display:flex;flex-direction:column;gap:16px;padding:20px;border-radius:16px;background:#F5F7FA">
+          <div style="display:flex;flex-direction:column;gap:6px"><code style="font-family:ui-monospace,Menlo,monospace;font-size:12px;color:#4B5D73">&lt;TextButton&gt;</code><button type="button" style="display:flex;align-items:center;justify-content:center;gap:8px;min-height:48px;border:0;background:transparent;color:#0B5FA5;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:800;font-size:17px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 6.5a4 4 0 0 0-5 5.2l-5.6 5.6a1.9 1.9 0 0 0 2.7 2.7l5.6-5.6a4 4 0 0 0 5.2-5l-2.6 2.6-2.5-.4-.4-2.5 2.6-2.6z"/></svg>No puedo, quiero un mecánico</button></div>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+            <div style="display:flex;flex-direction:column;gap:6px"><code style="font-family:ui-monospace,Menlo,monospace;font-size:12px;color:#4B5D73">&lt;EmergencyButton&gt;</code><button type="button" style="align-self:flex-start;display:flex;align-items:center;gap:8px;min-height:48px;padding:0 16px 0 14px;border-radius:999px;border:2px solid #D93025;background:#FFFFFF;color:#D93025;font-weight:700;font-size:15px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 3.5h3l1.6 4.2-2 1.3a12 12 0 0 0 5.9 5.9l1.3-2 4.2 1.6v3a2 2 0 0 1-2.1 2A17 17 0 0 1 4.5 5.6a2 2 0 0 1 2-2.1z"/></svg>Policía 105</button></div>
+            <div style="display:flex;flex-direction:column;gap:6px"><code style="font-family:ui-monospace,Menlo,monospace;font-size:12px;color:#4B5D73">&lt;IconButton&gt;</code><span style="display:flex;gap:8px"><button type="button" aria-label="Volver" style="width:48px;height:48px;display:flex;align-items:center;justify-content:center;border:1px solid #D6E0EB;border-radius:999px;background:#FFFFFF;color:#0B2340"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button><button type="button" aria-label="Cerrar" style="width:48px;height:48px;display:flex;align-items:center;justify-content:center;border:1px solid #D6E0EB;border-radius:999px;background:#FFFFFF;color:#0B2340"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg></button></span></div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px"><code style="font-family:ui-monospace,Menlo,monospace;font-size:12px;color:#4B5D73">&lt;AnswerButton&gt; · Sí, No, No sé</code>
+            <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px">
+              <button type="button" style="display:flex;align-items:center;justify-content:center;gap:8px;min-height:58px;border-radius:16px;border:2px solid #7A8BA1;background:#FFFFFF;color:#0B2340;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:20px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0B5FA5" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>Sí</button>
+              <button type="button" style="display:flex;align-items:center;justify-content:center;gap:8px;min-height:58px;border-radius:16px;border:2px solid #7A8BA1;background:#FFFFFF;color:#0B2340;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:20px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0B5FA5" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.3a2.5 2.5 0 1 1 3.4 2.4c-.6.3-1 .8-1 1.5v.5"/><path d="M12 16.8h.01"/></svg>No sé</button>
+            </div>
+          </div>
+        </div>
+        <p style="margin:0;font-size:13px;line-height:19px;color:#4B5D73">El de emergencia es el único botón rojo de la app y pide confirmación en una hoja inferior antes de llamar.</p>
+      </section>
+
+      <section style="display:flex;flex-direction:column;gap:14px;padding:20px;border-radius:24px;background:#FFFFFF;border:1px solid #E1E8F0">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px"><h2 style="margin:0;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:21px;line-height:26px">Chip de opción</h2><code style="font-family:ui-monospace,Menlo,monospace;font-size:13px;padding:4px 8px;border-radius:8px;background:#EDF1F5">&lt;OptionChip&gt;</code></div>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;padding:20px;border-radius:16px;background:#F5F7FA">
+          <button type="button" aria-pressed="true" style="display:flex;align-items:center;gap:8px;min-height:48px;padding:0 18px 0 14px;border-radius:999px;border:2px solid #0B5FA5;background:#CFE0F1;color:#0B2340;font-weight:600;font-size:15px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0B5FA5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>Llanta</button>
+          <button type="button" aria-pressed="false" style="display:flex;align-items:center;min-height:48px;padding:0 18px;border-radius:999px;border:2px solid #7A8BA1;background:#FFFFFF;color:#0B2340;font-weight:600;font-size:15px">Batería</button>
+          <button type="button" aria-pressed="false" style="display:flex;align-items:center;min-height:48px;padding:0 18px;border-radius:999px;border:2px solid #7A8BA1;background:#FFFFFF;color:#0B2340;font-weight:600;font-size:15px">Luz en el tablero</button>
+          <button type="button" aria-pressed="false" style="display:flex;align-items:center;min-height:48px;padding:0 18px;border-radius:999px;border:2px solid #7A8BA1;background:#FFFFFF;color:#0B2340;font-weight:600;font-size:15px">Otro</button>
+        </div>
+        <p style="margin:0;font-size:13px;line-height:19px;color:#4B5D73">Props: label, selected, onToggle. Seleccionado: celeste, borde azul y check. Usa aria-pressed.</p>
+      </section>
+
+      <section style="display:flex;flex-direction:column;gap:14px;padding:20px;border-radius:24px;background:#FFFFFF;border:1px solid #E1E8F0">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px"><h2 style="margin:0;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:21px;line-height:26px">Insignia de verificado</h2><code style="font-family:ui-monospace,Menlo,monospace;font-size:13px;padding:4px 8px;border-radius:8px;background:#EDF1F5">&lt;VerifiedBadge&gt;</code></div>
+        <div style="display:flex;align-items:center;gap:16px;padding:20px;border-radius:16px;background:#F5F7FA">
+          <span style="display:inline-flex;align-items:center;gap:4px;padding:2px 8px 2px 6px;border-radius:999px;background:#CFE0F1;color:#0B5FA5;font-size:12px;font-weight:700;line-height:16px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5.2c0 4.4-3 8.3-7 9.8-4-1.5-7-5.4-7-9.8V6l7-3z"/><path d="M9 12l2.2 2.2L15.2 10"/></svg>Verificado</span>
+          <span style="display:inline-flex;align-items:center;gap:5px;padding:3px 10px 3px 7px;border-radius:999px;background:#CFE0F1;color:#0B5FA5;font-size:13px;font-weight:700;line-height:18px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5.2c0 4.4-3 8.3-7 9.8-4-1.5-7-5.4-7-9.8V6l7-3z"/><path d="M9 12l2.2 2.2L15.2 10"/></svg>Verificado</span>
+          <span style="font-family:ui-monospace,Menlo,monospace;font-size:12px;color:#4B5D73">sm · md</span>
+        </div>
+        <p style="margin:0;font-size:13px;line-height:19px;color:#4B5D73">Solo para proveedores que pasaron la verificación (DNI, antecedentes y RUC). Azul sobre celeste, 4.9:1.</p>
+      </section>
+
+      <section style="display:flex;flex-direction:column;gap:14px;padding:20px;border-radius:24px;background:#FFFFFF;border:1px solid #E1E8F0">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px"><h2 style="margin:0;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:21px;line-height:26px">Barra superior</h2><code style="font-family:ui-monospace,Menlo,monospace;font-size:13px;padding:4px 8px;border-radius:8px;background:#EDF1F5">&lt;TopBar&gt;</code></div>
+        <div style="display:flex;align-items:center;gap:4px;padding:8px 12px 8px 4px;border-radius:16px;background:#F5F7FA">
+          <button type="button" aria-label="Volver" style="width:48px;height:48px;display:flex;align-items:center;justify-content:center;border:0;border-radius:999px;background:transparent;color:#0B2340"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button>
+          <span style="display:flex;flex-direction:column"><b style="font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:800;font-size:20px;line-height:24px">Mecánicos cercanos</b><span style="font-size:13px;font-weight:600;line-height:17px;color:#4B5D73">Para tu llanta pinchada</span></span>
+        </div>
+        <p style="margin:0;font-size:13px;line-height:19px;color:#4B5D73">Props: title, subtitle, backHref. Deja libre la zona de la barra de estado del teléfono.</p>
+      </section>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:32px">
+      <section style="display:flex;flex-direction:column;gap:14px;padding:20px;border-radius:24px;background:#FFFFFF;border:1px solid #E1E8F0">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px"><h2 style="margin:0;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:21px;line-height:26px">Tarjeta de semáforo</h2><code style="font-family:ui-monospace,Menlo,monospace;font-size:13px;padding:4px 8px;border-radius:8px;background:#EDF1F5">&lt;SeverityCard&gt;</code></div>
+        <div style="display:flex;flex-direction:column;gap:12px;padding:20px;border-radius:16px;background:#F5F7FA">
+          <div style="border-radius:20px;overflow:hidden;background:#FFFFFF;border:1px solid #E1E8F0">
+            <div style="display:flex;align-items:center;gap:10px;padding:12px 16px;background:#D93025;color:#FFFFFF"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.3 2.5h7.4l5.8 5.8v7.4l-5.8 5.8H8.3l-5.8-5.8V8.3l5.8-5.8z"/><path d="M12 7.5v5.5M12 16.5h.01"/></svg><span style="font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:20px;line-height:26px">Detente en un lugar seguro</span></div>
+            <div style="padding:12px 16px 14px;display:flex;flex-direction:column;gap:2px"><span style="font-size:13px;font-weight:600;color:#4B5D73">Falla probable</span><b style="font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:26px;line-height:32px">Llanta pinchada</b><span style="font-size:14px;color:#4B5D73">Delantera derecha · según tu foto y respuestas</span></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:16px;background:#F2A900;color:#0B2340"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.3a2.5 2.5 0 1 1 3.4 2.4c-.6.3-1 .8-1 1.5v.5"/><path d="M12 16.8h.01"/></svg><span style="font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:20px">Necesita revisión</span><code style="margin-left:auto;font-family:ui-monospace,Menlo,monospace;font-size:12px">caution</code></div>
+          <div style="display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:16px;background:#1F9D55;color:#FFFFFF"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12.3l2.7 2.7L16 9.5"/></svg><span style="font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:20px">Puedes seguir con cuidado</span></div>
+        </div>
+        <p style="margin:0;font-size:13px;line-height:19px;color:#4B5D73">Props: level (stop, caution, ok), fault, detail. Franja con ícono y texto; la falla en Nunito 900. El rojo solo para «detente».</p>
+      </section>
+
+      <section style="display:flex;flex-direction:column;gap:14px;padding:20px;border-radius:24px;background:#FFFFFF;border:1px solid #E1E8F0">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px"><h2 style="margin:0;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:21px;line-height:26px">Tarjeta de camino</h2><code style="font-family:ui-monospace,Menlo,monospace;font-size:13px;padding:4px 8px;border-radius:8px;background:#EDF1F5">&lt;PathOption&gt;</code></div>
+        <div style="display:flex;flex-direction:column;gap:10px;padding:20px;border-radius:16px;background:#F5F7FA">
+          <div style="display:flex;flex-direction:column;gap:8px;padding:14px 16px 16px;border-radius:20px;background:#CFE0F1;border:2px solid #0B5FA5">
+            <div style="display:flex;align-items:center;justify-content:space-between"><span style="display:flex;align-items:center;gap:6px;padding:4px 10px 4px 8px;border-radius:999px;background:#0B5FA5;color:#FFFFFF;font-size:13px;font-weight:700"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>Recomendado para ti</span><span style="font-size:14px;font-weight:700">Nivel 2</span></div>
+            <b style="font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:20px;line-height:25px">Llama a un mecánico</b>
+            <span style="font-size:14px;line-height:20px">Sin gata no podrás levantar el auto. Un mecánico verificado llega con herramientas.</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;min-height:64px;padding:8px 10px 8px 12px;border-radius:16px;background:#FFFFFF;border:1px solid #D6E0EB">
+            <span style="width:40px;height:40px;flex-shrink:0;border-radius:12px;background:#CFE0F1;color:#0B5FA5;display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6l1.5 1.5L8 5M4 12l1.5 1.5L8 11M4 18l1.5 1.5L8 17M11 6.5h9M11 12.5h9M11 18.5h9"/></svg></span>
+            <span style="flex:1;display:flex;flex-direction:column"><b style="font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:800;font-size:16px">Nivel 1 · Resuélvelo tú</b><span style="font-size:13px;color:#4B5D73">Necesitas gata y llave de ruedas</span></span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4B5D73" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;min-height:64px;padding:8px 10px 8px 12px;border-radius:16px;background:#FFFFFF;border:1px solid #D6E0EB">
+            <span style="width:40px;height:40px;flex-shrink:0;border-radius:12px;background:#CFE0F1;color:#0B5FA5;display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 16.5V7.5h10v9"/><path d="M12.5 10.5h4.2l3.3 3.6v2.4h-2"/><path d="M9 16.5h6"/><circle cx="6.5" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg></span>
+            <span style="flex:1;display:flex;flex-direction:column"><b style="font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:800;font-size:16px">Nivel 3 · Pide una grúa</b><span style="font-size:13px;color:#4B5D73">Lleva tu auto a un taller</span></span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4B5D73" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+          </div>
+        </div>
+        <p style="margin:0;font-size:13px;line-height:19px;color:#4B5D73">Props: level (1, 2, 3), recommended, reason. Un solo camino recomendado; los otros dos quedan a un toque.</p>
+      </section>
+
+      <section style="display:flex;flex-direction:column;gap:14px;padding:20px;border-radius:24px;background:#FFFFFF;border:1px solid #E1E8F0">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px"><h2 style="margin:0;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:21px;line-height:26px">Calificación con estrellas</h2><code style="font-family:ui-monospace,Menlo,monospace;font-size:13px;padding:4px 8px;border-radius:8px;background:#EDF1F5">&lt;StarRating&gt;</code></div>
+        <div style="display:flex;flex-direction:column;gap:14px;padding:20px;border-radius:16px;background:#F5F7FA">
+          <div style="display:flex;flex-direction:column;gap:6px"><span style="font-family:ui-monospace,Menlo,monospace;font-size:12px;color:#4B5D73">mode="display"</span><span style="display:flex;align-items:center;gap:5px;font-size:15px"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.2l2.6 5.5 6 .8-4.4 4.2 1.1 6-5.3-2.9-5.3 2.9 1.1-6L3.4 9.5l6-.8L12 3.2z" fill="#F2A900" stroke="#C78B00" stroke-width="1.2" stroke-linejoin="round"/></svg><b style="font-weight:800">4.8</b><span style="color:#4B5D73">· 126 reseñas</span></span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px"><span style="align-self:flex-start;font-family:ui-monospace,Menlo,monospace;font-size:12px;color:#4B5D73">mode="input"</span>
+            <span style="display:flex;gap:4px">
+              <svg width="44" height="44" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.2l2.6 5.5 6 .8-4.4 4.2 1.1 6-5.3-2.9-5.3 2.9 1.1-6L3.4 9.5l6-.8L12 3.2z" fill="#F2A900" stroke="#C78B00" stroke-width="1.2" stroke-linejoin="round"/></svg>
+              <svg width="44" height="44" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.2l2.6 5.5 6 .8-4.4 4.2 1.1 6-5.3-2.9-5.3 2.9 1.1-6L3.4 9.5l6-.8L12 3.2z" fill="#F2A900" stroke="#C78B00" stroke-width="1.2" stroke-linejoin="round"/></svg>
+              <svg width="44" height="44" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.2l2.6 5.5 6 .8-4.4 4.2 1.1 6-5.3-2.9-5.3 2.9 1.1-6L3.4 9.5l6-.8L12 3.2z" fill="#F2A900" stroke="#C78B00" stroke-width="1.2" stroke-linejoin="round"/></svg>
+              <svg width="44" height="44" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.2l2.6 5.5 6 .8-4.4 4.2 1.1 6-5.3-2.9-5.3 2.9 1.1-6L3.4 9.5l6-.8L12 3.2z" fill="#F2A900" stroke="#C78B00" stroke-width="1.2" stroke-linejoin="round"/></svg>
+              <svg width="44" height="44" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.2l2.6 5.5 6 .8-4.4 4.2 1.1 6-5.3-2.9-5.3 2.9 1.1-6L3.4 9.5l6-.8L12 3.2z" fill="#FFFFFF" stroke="#7A8BA1" stroke-width="1.6" stroke-linejoin="round"/></svg>
+            </span>
+            <span style="font-size:14px;font-weight:600;color:#4B5D73">Muy buena</span>
+          </div>
+        </div>
+        <p style="margin:0;font-size:13px;line-height:19px;color:#4B5D73">Props: mode, value, count. En modo input cada estrella es un botón de 52 px con aria-label.</p>
+      </section>
+
+      <section style="display:flex;flex-direction:column;gap:14px;padding:20px;border-radius:24px;background:#FFFFFF;border:1px solid #E1E8F0">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px"><h2 style="margin:0;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:21px;line-height:26px">Barra de progreso</h2><code style="font-family:ui-monospace,Menlo,monospace;font-size:13px;padding:4px 8px;border-radius:8px;background:#EDF1F5">&lt;ProgressBar&gt;</code></div>
+        <div style="display:flex;flex-direction:column;gap:18px;padding:20px;border-radius:16px;background:#F5F7FA">
+          <div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:15px;font-weight:700;color:#0B5FA5">Paso 2 de 6</span><div style="display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:5px"><span style="height:8px;border-radius:999px;background:#0B5FA5"></span><span style="height:8px;border-radius:999px;background:#0B5FA5"></span><span style="height:8px;border-radius:999px;background:#D6E0EB"></span><span style="height:8px;border-radius:999px;background:#D6E0EB"></span><span style="height:8px;border-radius:999px;background:#D6E0EB"></span><span style="height:8px;border-radius:999px;background:#D6E0EB"></span></div><code style="font-family:ui-monospace,Menlo,monospace;font-size:12px;color:#4B5D73">variant="steps"</code></div>
+          <div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:15px;font-weight:700">Llega en 8 min</span><div style="height:8px;border-radius:999px;background:#D6E0EB;overflow:hidden"><div style="width:35%;height:8px;border-radius:999px;background:#0B5FA5"></div></div><code style="font-family:ui-monospace,Menlo,monospace;font-size:12px;color:#4B5D73">variant="continuous"</code></div>
+        </div>
+        <p style="margin:0;font-size:13px;line-height:19px;color:#4B5D73">Props: variant, value, total, label. Siempre con texto: la barra sola no basta.</p>
+      </section>
+
+      <section style="display:flex;flex-direction:column;gap:14px;padding:20px;border-radius:24px;background:#FFFFFF;border:1px solid #E1E8F0">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px"><h2 style="margin:0;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:21px;line-height:26px">Hoja inferior</h2><code style="font-family:ui-monospace,Menlo,monospace;font-size:13px;padding:4px 8px;border-radius:8px;background:#EDF1F5">&lt;BottomSheet&gt;</code></div>
+        <div style="display:flex;flex-direction:column;justify-content:flex-end;height:372px;border-radius:16px;overflow:hidden;background:rgba(11,35,64,0.5)">
+          <div style="display:flex;flex-direction:column;gap:12px;padding:10px 18px 18px;border-radius:24px 24px 0 0;background:#FFFFFF;box-shadow:0 -8px 24px rgba(11,35,64,0.16)">
+            <span style="align-self:center;width:40px;height:5px;border-radius:999px;background:#C9D5E2"></span>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center">
+              <span style="width:52px;height:52px;border-radius:999px;background:#FCEAE8;color:#B3261E;display:flex;align-items:center;justify-content:center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 3.5h3l1.6 4.2-2 1.3a12 12 0 0 0 5.9 5.9l1.3-2 4.2 1.6v3a2 2 0 0 1-2.1 2A17 17 0 0 1 4.5 5.6a2 2 0 0 1 2-2.1z"/></svg></span>
+              <b style="font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:20px">¿Llamar a la Policía?</b>
+              <span style="font-size:14px;line-height:20px;color:#4B5D73">Marcaremos el 105. Úsalo si estás en peligro o no te sientes a salvo.</span>
+            </div>
+            <button type="button" style="min-height:52px;border:0;border-radius:16px;background:#D93025;color:#FFFFFF;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:17px">Llamar al 105</button>
+            <button type="button" style="min-height:48px;border-radius:16px;border:2px solid #0B5FA5;background:#FFFFFF;color:#0B5FA5;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:800;font-size:16px">Cancelar</button>
+          </div>
+        </div>
+        <p style="margin:0;font-size:13px;line-height:19px;color:#4B5D73">Props: open, onClose, title. Fondo oscurecido al 50 %, tirador y radio de 28 arriba. Se cierra tocando fuera. Usos: emergencia, compartir ubicación y avisar a la familia.</p>
+      </section>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:32px">
+      <section style="display:flex;flex-direction:column;gap:14px;padding:20px;border-radius:24px;background:#FFFFFF;border:1px solid #E1E8F0">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px"><h2 style="margin:0;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:21px;line-height:26px">Tarjeta de mecánico</h2><code style="font-family:ui-monospace,Menlo,monospace;font-size:13px;padding:4px 8px;border-radius:8px;background:#EDF1F5">&lt;MechanicCard&gt;</code></div>
+        <div style="display:flex;flex-direction:column;gap:12px;padding:16px;border-radius:16px;background:#F5F7FA">
+          <code style="font-family:ui-monospace,Menlo,monospace;font-size:12px;color:#4B5D73">best · available</code>
+          <div style="display:flex;flex-direction:column;border-radius:20px;background:#FFFFFF;border:2px solid #0B5FA5;overflow:hidden">
+            <span style="display:flex;align-items:center;gap:6px;padding:5px 12px;background:#CFE0F1;font-size:12px;font-weight:700"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0B5FA5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>Especialista en llantas y el más cercano</span>
+            <div style="display:flex;flex-direction:column;gap:8px;padding:10px 12px 12px">
+              <div style="display:flex;align-items:center;gap:10px"><span style="width:44px;height:44px;flex-shrink:0;border-radius:999px;background:#CFE0F1;color:#0B5FA5;display:flex;align-items:center;justify-content:center;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:16px">CH</span><span style="display:flex;flex-direction:column;gap:2px"><span style="display:flex;align-items:center;gap:6px"><b style="font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:17px">Carlos Huamán</b><span style="display:inline-flex;align-items:center;gap:3px;padding:2px 7px 2px 5px;border-radius:999px;background:#CFE0F1;color:#0B5FA5;font-size:11px;font-weight:700"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5.2c0 4.4-3 8.3-7 9.8-4-1.5-7-5.4-7-9.8V6l7-3z"/><path d="M9 12l2.2 2.2L15.2 10"/></svg>Verificado</span></span><span style="font-size:13px;color:#4B5D73">Mecánica Huamán · Surquillo</span></span></div>
+              <div style="display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:5px 8px;font-size:13px;line-height:18px">
+                <span><b style="font-weight:800">4.8</b> <span style="color:#4B5D73">· 126 reseñas</span></span><span>Llega en <b style="font-weight:800">8 min</b></span>
+                <span>Llantas y frenos</span><span style="display:flex;align-items:center;gap:5px;font-weight:700;color:#12703D"><span style="width:7px;height:7px;border-radius:999px;background:#1F9D55"></span>Disponible ahora</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;padding-top:8px;border-top:1px solid #E1E8F0"><b style="font-weight:800;font-size:15px">S/ 80 a S/ 150</b><span style="padding:2px 8px;border-radius:999px;background:#F5F7FA;border:1px solid #D6E0EB;font-size:11px;font-weight:600;color:#4B5D73">referencial</span></div>
+            </div>
+          </div>
+          <code style="font-family:ui-monospace,Menlo,monospace;font-size:12px;color:#4B5D73">busy</code>
+          <div style="display:flex;flex-direction:column;gap:8px;padding:12px;border-radius:20px;background:#EDF1F5;border:1px dashed #AFC0D3">
+            <div style="display:flex;align-items:center;gap:10px"><span style="width:44px;height:44px;flex-shrink:0;border-radius:999px;background:#D6E0EB;color:#4B5D73;display:flex;align-items:center;justify-content:center;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:16px">JQ</span><span style="display:flex;flex-direction:column;gap:2px"><b style="font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:17px;color:#4B5D73">Jorge Quispe</b><span style="font-size:13px;color:#4B5D73">Mecánico móvil · Llantas · 4.9 (41)</span></span></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><span style="font-size:13px;font-weight:700;color:#4B5D73">Disponible desde 9:30 p. m.</span><button type="button" style="min-height:48px;padding:0 14px;border-radius:14px;border:2px solid #0B5FA5;background:#FFFFFF;color:#0B5FA5;font-weight:700;font-size:14px">Avísame</button></div>
+          </div>
+        </div>
+        <p style="margin:0;font-size:13px;line-height:19px;color:#4B5D73">Props: provider, status (available, busy), best, reason. Orden por «Mejor opción para ti». La grúa usa la misma tarjeta con type="tow".</p>
+      </section>
+
+      <section style="display:flex;flex-direction:column;gap:14px;padding:20px;border-radius:24px;background:#FFFFFF;border:1px solid #E1E8F0">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px"><h2 style="margin:0;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:21px;line-height:26px">Tarjeta de paso</h2><code style="font-family:ui-monospace,Menlo,monospace;font-size:13px;padding:4px 8px;border-radius:8px;background:#EDF1F5">&lt;StepCard&gt;</code></div>
+        <div style="display:flex;flex-direction:column;gap:12px;padding:16px;border-radius:16px;background:#F5F7FA">
+          <div style="display:flex;flex-direction:column;gap:12px;padding:10px 10px 14px;border-radius:22px;background:#FFFFFF;border:1px solid #E1E8F0">
+            <div style="height:116px;border-radius:16px;background:#CFE0F1;display:flex;align-items:center;justify-content:center;overflow:hidden">
+              <svg width="100%" height="116" viewBox="0 0 320 150" role="img" aria-label="Llanta de repuesto, gata y llave de ruedas"><circle cx="64" cy="70" r="44" fill="#0B2340"/><circle cx="64" cy="70" r="22" fill="#FFFFFF" stroke="#0B2340" stroke-width="3"/><circle cx="64" cy="70" r="7" fill="#CFE0F1" stroke="#0B2340" stroke-width="2.5"/><path d="M138 122h48" stroke="#0B2340" stroke-width="6" stroke-linecap="round"/><path d="M162 44L140 78L162 112L184 78Z" fill="#FFFFFF" stroke="#0B2340" stroke-width="3" stroke-linejoin="round"/><path d="M162 112V122" stroke="#0B2340" stroke-width="3"/><path d="M151 42h22" stroke="#0B2340" stroke-width="6" stroke-linecap="round"/><path d="M128 78H202" stroke="#0B5FA5" stroke-width="3" stroke-linecap="round"/><path d="M238 44L290 96M290 44L238 96" stroke="#0B2340" stroke-width="7" stroke-linecap="round"/><circle cx="238" cy="44" r="7" fill="#FFFFFF" stroke="#0B2340" stroke-width="3"/><circle cx="290" cy="44" r="7" fill="#FFFFFF" stroke="#0B2340" stroke-width="3"/><circle cx="238" cy="96" r="7" fill="#FFFFFF" stroke="#0B2340" stroke-width="3"/><circle cx="290" cy="96" r="7" fill="#FFFFFF" stroke="#0B2340" stroke-width="3"/><text x="64" y="138" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="700" fill="#0B2340">Repuesto</text><text x="162" y="142" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="700" fill="#0B2340">Gata</text><text x="264" y="138" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="700" fill="#0B2340">Llave de ruedas</text></svg>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px;padding:0 4px">
+              <span style="font-size:13px;font-weight:700;color:#0B5FA5">Paso 2 de 6</span>
+              <b style="font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:20px;line-height:25px">Saca el repuesto y las herramientas</b>
+              <span style="display:flex;gap:8px;font-size:14px;line-height:20px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0B5FA5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0;margin-top:2px"><path d="M20 6L9 17l-5-5"/></svg>Abre la maletera y levanta la alfombra del piso.</span>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;padding:12px 14px;border-radius:16px;background:#FFF4D6;border:1px solid #F2A900">
+            <span style="display:flex;align-items:center;gap:8px;font-weight:800;font-size:14px;color:#6B4C00"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M5.7 5.7l12.6 12.6"/></svg>Qué NO hacer</span>
+            <span style="font-size:14px;line-height:20px">No te pongas debajo del auto.</span>
+          </div>
+        </div>
+        <p style="margin:0;font-size:13px;line-height:19px;color:#4B5D73">Props: step, total, title, illustration, items (máx. 3), dont. Con botón flotante «Pregúntale a la IA» y salida a mecánico.</p>
+      </section>
+
+      <section style="display:flex;flex-direction:column;gap:14px;padding:20px;border-radius:24px;background:#FFFFFF;border:1px solid #E1E8F0">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px"><h2 style="margin:0;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:21px;line-height:26px">Aviso de seguridad</h2><code style="font-family:ui-monospace,Menlo,monospace;font-size:13px;padding:4px 8px;border-radius:8px;background:#EDF1F5">&lt;SafetyNotice&gt;</code></div>
+        <div style="display:flex;flex-direction:column;gap:12px;padding:16px;border-radius:16px;background:#F5F7FA">
+          <code style="font-family:ui-monospace,Menlo,monospace;font-size:12px;color:#4B5D73">tone="info"</code>
+          <div style="display:flex;gap:12px;align-items:flex-start;padding:14px;border-radius:18px;background:#CFE0F1">
+            <span style="width:40px;height:40px;flex-shrink:0;border-radius:999px;background:#F2A900;color:#0B2340;display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5L2.5 20h19L12 3.5z"/><path d="M12 10l-3.8 6.5h7.6L12 10z"/></svg></span>
+            <span style="display:flex;flex-direction:column;gap:2px"><span style="font-size:13px;font-weight:700">Mientras tanto</span><b style="font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:17px;line-height:22px">Enciende las luces de emergencia</b><span style="font-size:14px;line-height:20px">Es el botón con un triángulo rojo en el tablero.</span></span>
+          </div>
+          <code style="font-family:ui-monospace,Menlo,monospace;font-size:12px;color:#4B5D73">tone="warning"</code>
+          <div style="display:flex;flex-direction:column;gap:6px;padding:12px 14px;border-radius:16px;background:#FFF4D6;border:1px solid #F2A900">
+            <span style="display:flex;align-items:center;gap:8px;font-weight:800;font-size:14px;color:#6B4C00"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5L2.5 20h19L12 3.5z"/><path d="M12 10v4M12 17v.01"/></svg>Antes de bajar</span>
+            <span style="font-size:14px;line-height:20px">Si puedes, avanza despacio con las luces de emergencia hasta un lugar seguro.</span>
+          </div>
+        </div>
+        <p style="margin:0;font-size:13px;line-height:19px;color:#4B5D73">Props: tone (info, warning), title, children. Un consejo por aviso, en frases de una línea.</p>
+      </section>
+
+      <section style="display:flex;flex-direction:column;gap:14px;padding:20px;border-radius:24px;background:#FFFFFF;border:1px solid #E1E8F0">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px"><h2 style="margin:0;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:21px;line-height:26px">Burbuja de chat</h2><code style="font-family:ui-monospace,Menlo,monospace;font-size:13px;padding:4px 8px;border-radius:8px;background:#EDF1F5">&lt;ChatBubble&gt;</code></div>
+        <div style="display:flex;flex-direction:column;gap:12px;padding:16px;border-radius:16px;background:#F5F7FA">
+          <div style="align-self:flex-end;max-width:80%;padding:10px 14px;border-radius:18px 18px 6px 18px;background:#0B5FA5;color:#FFFFFF;font-size:15px;line-height:21px">Los pernos no se mueven</div>
+          <div style="display:flex;gap:8px;align-items:flex-end;max-width:94%">
+            <svg width="28" height="28" viewBox="0 0 36 36" aria-hidden="true" style="flex-shrink:0"><rect width="36" height="36" rx="11" fill="#0B5FA5"/><path d="M18 29s-8-6.6-8-12.5a8 8 0 0 1 16 0C26 22.4 18 29 18 29z" fill="#FFFFFF"/><path d="M14.6 16.4l2.3 2.3 4.5-4.6" fill="none" stroke="#0B5FA5" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <div style="display:flex;flex-direction:column;gap:10px;padding:10px 14px 12px;border-radius:18px 18px 18px 6px;background:#CFE0F1;font-size:15px;line-height:21px">
+              <span>No te preocupes, no tienes que hacerlo por tu cuenta. Un mecánico verificado puede llegar en minutos.</span>
+              <button type="button" style="min-height:48px;border:0;border-radius:14px;background:#0B5FA5;color:#FFFFFF;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:16px">Ver mecánicos cercanos</button>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px"><code style="font-family:ui-monospace,Menlo,monospace;font-size:12px;color:#4B5D73">&lt;QuickReply&gt;</code><span style="display:flex;flex-wrap:wrap;gap:8px"><button type="button" style="min-height:48px;padding:0 16px;border-radius:999px;border:2px solid #0B5FA5;background:#FFFFFF;color:#0B5FA5;font-weight:600;font-size:15px">¡Listo, ya pude!</button><button type="button" style="min-height:48px;padding:0 16px;border-radius:999px;border:2px solid #0B5FA5;background:#FFFFFF;color:#0B5FA5;font-weight:600;font-size:15px">Sigo sin poder</button></span></div>
+        </div>
+        <p style="margin:0;font-size:13px;line-height:19px;color:#4B5D73">Props: from (ia, user), text, action. IA en celeste con el logo; usuario en azul. Respuestas rápidas debajo del último mensaje.</p>
+      </section>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":2580}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

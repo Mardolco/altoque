@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>AlToque · Guía paso a paso</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Nunito:wght@700;800;900&display=swap">
+<style>
+body{margin:0}
+*{box-sizing:border-box}
+button,input,textarea{font:inherit;color:inherit}
+a{color:#0B5FA5}a:hover{color:#084A82}
+a:focus-visible,button:focus-visible{outline:3px solid #0B5FA5;outline-offset:2px}
+</style>
+</helmet>
+<div style="width:390px;height:844px;position:relative;overflow:hidden;display:flex;flex-direction:column;background:#F5F7FA;color:#0B2340;font-family:Inter,system-ui,-apple-system,sans-serif">
+  <div style="padding:40px 12px 0 8px;flex-shrink:0">
+    <div style="display:flex;align-items:center;gap:4px;height:56px">
+      <a href="Diagnostico.dc.html" aria-label="Volver al diagnóstico" style="width:48px;height:48px;display:flex;align-items:center;justify-content:center;border-radius:999px;color:#0B2340;text-decoration:none"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></a>
+      <div style="display:flex;flex-direction:column">
+        <span style="font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:800;font-size:20px;line-height:24px">Cambia la llanta</span>
+        <span style="font-size:13px;font-weight:600;line-height:17px;color:#4B5D73">Nivel 1 · Resuélvelo tú</span>
+      </div>
+    </div>
+  </div>
+
+  <div style="flex-shrink:0;padding:6px 20px 0;display:flex;flex-direction:column;gap:8px">
+    <span aria-live="polite" style="font-size:15px;font-weight:700;line-height:20px;color:#0B5FA5">{{etiqueta}}</span>
+    <div style="display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:5px">
+      <sc-for list="{{segmentos}}" as="s" hint-placeholder-count="6">
+        <span style="height:8px;border-radius:999px;background:{{s.color}}"></span>
+      </sc-for>
+    </div>
+  </div>
+
+  <main style="flex:1;overflow-y:auto;padding:12px 20px 76px;display:flex;flex-direction:column;gap:12px">
+    <article style="flex-shrink:0;display:flex;flex-direction:column;gap:14px;padding:12px 12px 16px;border-radius:24px;background:#FFFFFF;border:1px solid #E1E8F0;box-shadow:0 1px 2px rgba(11,35,64,0.05),0 6px 16px rgba(11,35,64,0.06)">
+      <div style="height:132px;border-radius:18px;background:#CFE0F1;display:flex;align-items:center;justify-content:center;overflow:hidden">
+        <sc-if value="{{p1}}" hint-placeholder-val="{{ true }}">
+          <svg width="100%" height="132" viewBox="0 0 320 150" role="img" aria-label="Auto estacionado con luces de emergencia y triángulo de seguridad detrás"><path d="M8 136H312" stroke="#7A8BA1" stroke-width="3" stroke-linecap="round"/><g transform="translate(-24 0)"><path d="M48 120L48 106Q48 96 60 94L104 90L132 64Q138 58 148 58L204 58Q214 58 220 64L244 88L264 92Q274 94 274 104L274 120L250 120A22 22 0 0 0 206 120L122 120A22 22 0 0 0 78 120Z" fill="#FFFFFF" stroke="#0B2340" stroke-width="3" stroke-linejoin="round"/><path d="M140 66L120 86H172V66Z" fill="#CFE0F1" stroke="#0B2340" stroke-width="2.5" stroke-linejoin="round"/><path d="M180 66V86H232L214 66Z" fill="#CFE0F1" stroke="#0B2340" stroke-width="2.5" stroke-linejoin="round"/><path d="M176 92V118" stroke="#0B2340" stroke-width="2.5" stroke-linecap="round"/><rect x="50" y="98" width="10" height="7" rx="2" fill="#F2A900" stroke="#0B2340" stroke-width="2"/><rect x="264" y="98" width="8" height="8" rx="2" fill="#F2A900" stroke="#0B2340" stroke-width="2"/><path d="M42 92l-8-6M42 101H31M42 110l-8 6M282 92l8-6M282 102h11M282 112l8 6" stroke="#F2A900" stroke-width="3.5" stroke-linecap="round"/><circle cx="100" cy="118" r="18" fill="#0B2340"/><circle cx="100" cy="118" r="7" fill="#CFE0F1" stroke="#FFFFFF" stroke-width="2"/><circle cx="228" cy="118" r="18" fill="#0B2340"/><circle cx="228" cy="118" r="7" fill="#CFE0F1" stroke="#FFFFFF" stroke-width="2"/></g><path d="M276 134L291 106L306 134Z" fill="#FCEAE8" stroke="#D93025" stroke-width="4" stroke-linejoin="round"/></svg>
+        </sc-if>
+        <sc-if value="{{p2}}" hint-placeholder-val="{{ false }}">
+          <svg width="100%" height="132" viewBox="0 0 320 150" role="img" aria-label="Llanta de repuesto, gata y llave de ruedas"><circle cx="64" cy="70" r="44" fill="#0B2340"/><circle cx="64" cy="70" r="22" fill="#FFFFFF" stroke="#0B2340" stroke-width="3"/><circle cx="64" cy="70" r="7" fill="#CFE0F1" stroke="#0B2340" stroke-width="2.5"/><path d="M138 122h48" stroke="#0B2340" stroke-width="6" stroke-linecap="round"/><path d="M162 44L140 78L162 112L184 78Z" fill="#FFFFFF" stroke="#0B2340" stroke-width="3" stroke-linejoin="round"/><path d="M162 112V122" stroke="#0B2340" stroke-width="3"/><path d="M151 42h22" stroke="#0B2340" stroke-width="6" stroke-linecap="round"/><path d="M128 78H202" stroke="#0B5FA5" stroke-width="3" stroke-linecap="round"/><path d="M202 78h8V66" fill="none" stroke="#0B5FA5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M238 44L290 96M290 44L238 96" stroke="#0B2340" stroke-width="7" stroke-linecap="round"/><circle cx="238" cy="44" r="7" fill="#FFFFFF" stroke="#0B2340" stroke-width="3"/><circle cx="290" cy="44" r="7" fill="#FFFFFF" stroke="#0B2340" stroke-width="3"/><circle cx="238" cy="96" r="7" fill="#FFFFFF" stroke="#0B2340" stroke-width="3"/><circle cx="290" cy="96" r="7" fill="#FFFFFF" stroke="#0B2340" stroke-width="3"/><text x="64" y="138" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="700" fill="#0B2340">Repuesto</text><text x="162" y="142" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="700" fill="#0B2340">Gata</text><text x="264" y="138" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="700" fill="#0B2340">Llave de ruedas</text></svg>
+        </sc-if>
+        <sc-if value="{{p3}}" hint-placeholder-val="{{ false }}">
+          <svg width="100%" height="132" viewBox="0 0 320 150" role="img" aria-label="Llave de ruedas en un perno, girando media vuelta a la izquierda"><path d="M8 140H312" stroke="#7A8BA1" stroke-width="3" stroke-linecap="round"/><circle cx="92" cy="78" r="62" fill="#0B2340"/><circle cx="92" cy="78" r="38" fill="#FFFFFF" stroke="#0B2340" stroke-width="3"/><circle cx="92" cy="78" r="10" fill="#CFE0F1" stroke="#0B2340" stroke-width="2.5"/><circle cx="114.8" cy="70.6" r="5" fill="#FFFFFF" stroke="#0B2340" stroke-width="2.5"/><circle cx="106.1" cy="97.4" r="5" fill="#FFFFFF" stroke="#0B2340" stroke-width="2.5"/><circle cx="77.9" cy="97.4" r="5" fill="#FFFFFF" stroke="#0B2340" stroke-width="2.5"/><circle cx="69.2" cy="70.6" r="5" fill="#FFFFFF" stroke="#0B2340" stroke-width="2.5"/><path d="M92 54H188" stroke="#0B2340" stroke-width="12" stroke-linecap="round"/><path d="M92 54H188" stroke="#9FB3C8" stroke-width="6" stroke-linecap="round"/><circle cx="92" cy="54" r="10" fill="#FFFFFF" stroke="#0B2340" stroke-width="3"/><path d="M206 76V34" stroke="#0B5FA5" stroke-width="4" stroke-linecap="round"/><path d="M196 44L206 32L216 44" fill="none" stroke="#0B5FA5" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><text x="224" y="52" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="800" fill="#0B5FA5">A la izquierda,</text><text x="224" y="70" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="700" fill="#0B2340">media vuelta</text></svg>
+        </sc-if>
+        <sc-if value="{{p4}}" hint-placeholder-val="{{ false }}">
+          <svg width="100%" height="132" viewBox="0 0 320 150" role="img" aria-label="Auto levantado con la gata, la llanta a unos 5 centímetros del suelo"><path d="M8 136H312" stroke="#7A8BA1" stroke-width="3" stroke-linecap="round"/><g transform="rotate(7 228 136)"><path d="M48 120L48 106Q48 96 60 94L104 90L132 64Q138 58 148 58L204 58Q214 58 220 64L244 88L264 92Q274 94 274 104L274 120L250 120A22 22 0 0 0 206 120L122 120A22 22 0 0 0 78 120Z" fill="#FFFFFF" stroke="#0B2340" stroke-width="3" stroke-linejoin="round"/><path d="M140 66L120 86H172V66Z" fill="#CFE0F1" stroke="#0B2340" stroke-width="2.5" stroke-linejoin="round"/><path d="M180 66V86H232L214 66Z" fill="#CFE0F1" stroke="#0B2340" stroke-width="2.5" stroke-linejoin="round"/><path d="M176 92V118" stroke="#0B2340" stroke-width="2.5" stroke-linecap="round"/><circle cx="100" cy="118" r="18" fill="#0B2340"/><circle cx="100" cy="118" r="7" fill="#CFE0F1" stroke="#FFFFFF" stroke-width="2"/><circle cx="228" cy="118" r="18" fill="#0B2340"/><circle cx="228" cy="118" r="7" fill="#CFE0F1" stroke="#FFFFFF" stroke-width="2"/></g><path d="M117 136h28" stroke="#0B2340" stroke-width="5" stroke-linecap="round"/><path d="M131 110L119 121L131 132L143 121Z" fill="#FFFFFF" stroke="#0B5FA5" stroke-width="3" stroke-linejoin="round"/><path d="M131 132V136" stroke="#0B5FA5" stroke-width="3"/><path d="M124 109h14" stroke="#0B5FA5" stroke-width="5" stroke-linecap="round"/><path d="M72 122V134M68 122h8M68 134h8" stroke="#0B2340" stroke-width="2.5" stroke-linecap="round"/><text x="62" y="133" text-anchor="end" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="800" fill="#0B2340">5 cm</text></svg>
+        </sc-if>
+        <sc-if value="{{p5}}" hint-placeholder-val="{{ false }}">
+          <svg width="100%" height="132" viewBox="0 0 320 150" role="img" aria-label="Se retira la llanta pinchada y se coloca el repuesto"><path d="M30 122C26 90 46 58 78 58S130 90 126 122Z" fill="#0B2340"/><ellipse cx="78" cy="122" rx="50" ry="6" fill="#0B2340"/><circle cx="78" cy="94" r="22" fill="#FFFFFF" stroke="#0B2340" stroke-width="3"/><circle cx="78" cy="94" r="7" fill="#CFE0F1" stroke="#0B2340" stroke-width="2.5"/><path d="M146 90H182" stroke="#0B5FA5" stroke-width="5" stroke-linecap="round"/><path d="M172 80L184 90L172 100" fill="none" stroke="#0B5FA5" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="246" cy="82" r="48" fill="#0B2340"/><circle cx="246" cy="82" r="24" fill="#FFFFFF" stroke="#0B2340" stroke-width="3"/><circle cx="246" cy="82" r="8" fill="#CFE0F1" stroke="#0B2340" stroke-width="2.5"/><text x="78" y="144" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="700" fill="#0B2340">Pinchada</text><text x="246" y="146" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="700" fill="#0B2340">Repuesto</text></svg>
+        </sc-if>
+        <sc-if value="{{p6}}" hint-placeholder-val="{{ false }}">
+          <svg width="100%" height="132" viewBox="0 0 320 150" role="img" aria-label="Pernos numerados del 1 al 5 para ajustar en cruz"><path d="M8 138H312" stroke="#7A8BA1" stroke-width="3" stroke-linecap="round"/><circle cx="100" cy="76" r="62" fill="#0B2340"/><circle cx="100" cy="76" r="42" fill="#FFFFFF" stroke="#0B2340" stroke-width="3"/><path d="M100 50L115.3 97L75.3 68L124.7 68L84.7 97Z" fill="none" stroke="#0B5FA5" stroke-width="2.5" stroke-dasharray="5 4" stroke-linejoin="round"/><circle cx="100" cy="50" r="10" fill="#FFFFFF" stroke="#0B2340" stroke-width="2.5"/><text x="100" y="54.5" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="12" font-weight="800" fill="#0B2340">1</text><circle cx="115.3" cy="97" r="10" fill="#FFFFFF" stroke="#0B2340" stroke-width="2.5"/><text x="115.3" y="101.5" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="12" font-weight="800" fill="#0B2340">2</text><circle cx="75.3" cy="68" r="10" fill="#FFFFFF" stroke="#0B2340" stroke-width="2.5"/><text x="75.3" y="72.5" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="12" font-weight="800" fill="#0B2340">3</text><circle cx="124.7" cy="68" r="10" fill="#FFFFFF" stroke="#0B2340" stroke-width="2.5"/><text x="124.7" y="72.5" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="12" font-weight="800" fill="#0B2340">4</text><circle cx="84.7" cy="97" r="10" fill="#FFFFFF" stroke="#0B2340" stroke-width="2.5"/><text x="84.7" y="101.5" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="12" font-weight="800" fill="#0B2340">5</text><text x="186" y="66" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="800" fill="#0B5FA5">Ajusta en cruz,</text><text x="186" y="86" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="700" fill="#0B2340">sigue los números</text></svg>
+        </sc-if>
+      </div>
+      <div style="padding:0 6px;display:flex;flex-direction:column;gap:10px">
+        <h1 style="margin:0;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:23px;line-height:29px">{{titulo}}</h1>
+        <ol style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px">
+          <sc-for list="{{items}}" as="it" hint-placeholder-count="3">
+            <li style="display:flex;gap:10px;align-items:flex-start;font-size:16px;line-height:22px">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0B5FA5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0;margin-top:2px"><path d="M20 6L9 17l-5-5"/></svg>
+              <span>{{it.texto}}</span>
+            </li>
+          </sc-for>
+        </ol>
+      </div>
+    </article>
+
+    <section aria-label="Qué no hacer" style="flex-shrink:0;display:flex;flex-direction:column;gap:8px;padding:14px 16px;border-radius:18px;background:#FFF4D6;border:1px solid #F2A900">
+      <span style="display:flex;align-items:center;gap:8px;font-weight:800;font-size:15px;line-height:20px;color:#6B4C00">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M5.7 5.7l12.6 12.6"/></svg>
+        Qué NO hacer
+      </span>
+      <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px">
+        <sc-for list="{{noHacer}}" as="n" hint-placeholder-count="2">
+          <li style="display:flex;gap:10px;align-items:flex-start;font-size:15px;line-height:21px">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B4C00" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0;margin-top:3px"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            <span>{{n.texto}}</span>
+          </li>
+        </sc-for>
+      </ul>
+    </section>
+  </main>
+
+  <button type="button" onClick="{{abrirChat}}" style="position:absolute;right:16px;bottom:152px;z-index:4;display:flex;align-items:center;gap:8px;min-height:52px;padding:0 18px 0 14px;border-radius:999px;border:2px solid #0B5FA5;background:#FFFFFF;color:#0B5FA5;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:16px;box-shadow:0 8px 20px rgba(11,35,64,0.18);cursor:pointer">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 11.5a8.5 8.5 0 0 1-12.4 7.6L3.5 20.5l1.4-4.4A8.5 8.5 0 1 1 20.5 11.5z"/><path d="M8.5 11.5h.01M12 11.5h.01M15.5 11.5h.01"/></svg>
+    <span>Pregúntale a la IA</span>
+  </button>
+
+  <div style="flex-shrink:0;padding:12px 20px 20px;display:flex;flex-direction:column;gap:4px;background:#FFFFFF;border-top:1px solid #E1E8F0">
+    <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px">
+      <sc-if value="{{sinAnterior}}" hint-placeholder-val="{{ true }}">
+        <button type="button" disabled style="display:flex;align-items:center;justify-content:center;gap:6px;min-height:56px;border-radius:16px;border:2px solid #D6E0EB;background:#FFFFFF;color:#7A8BA1;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:800;font-size:18px">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>Anterior
+        </button>
+      </sc-if>
+      <sc-if value="{{hayAnterior}}" hint-placeholder-val="{{ false }}">
+        <button type="button" onClick="{{anterior}}" style="display:flex;align-items:center;justify-content:center;gap:6px;min-height:56px;border-radius:16px;border:2px solid #0B5FA5;background:#FFFFFF;color:#0B5FA5;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:800;font-size:18px;cursor:pointer">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>Anterior
+        </button>
+      </sc-if>
+      <sc-if value="{{noEsUltimo}}" hint-placeholder-val="{{ true }}">
+        <button type="button" onClick="{{siguiente}}" style="display:flex;align-items:center;justify-content:center;gap:6px;min-height:56px;border:0;border-radius:16px;background:#0B5FA5;color:#FFFFFF;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:18px;cursor:pointer;box-shadow:0 6px 16px rgba(11,95,165,0.24)">
+          Siguiente<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </sc-if>
+      <sc-if value="{{esUltimo}}" hint-placeholder-val="{{ false }}">
+        <a href="CierreGuia.dc.html" style="display:flex;align-items:center;justify-content:center;gap:6px;min-height:56px;border-radius:16px;background:#0B5FA5;color:#FFFFFF;text-decoration:none;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:18px;box-shadow:0 6px 16px rgba(11,95,165,0.24)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>Listo, terminé
+        </a>
+      </sc-if>
+    </div>
+    <a href="Mecanicos.dc.html" style="display:flex;align-items:center;justify-content:center;gap:8px;min-height:48px;color:#0B5FA5;text-decoration:none;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:800;font-size:17px">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 6.5a4 4 0 0 0-5 5.2l-5.6 5.6a1.9 1.9 0 0 0 2.7 2.7l5.6-5.6a4 4 0 0 0 5.2-5l-2.6 2.6-2.5-.4-.4-2.5 2.6-2.6z"/></svg>
+      <span>No puedo, quiero un mecánico</span>
+    </a>
+  </div>
+
+  <sc-if value="{{chat}}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;inset:0;z-index:20;background:#F5F7FA">
+      <dc-import name="ChatIA" paso="{{paso}}" al-volver="{{cerrarChat}}" hint-size="390px,844px"></dc-import>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"paso":{"editor":"int","default":1,"min":1,"max":6},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const PASOS = [
+      { titulo: 'Ponte a salvo y señaliza', items: ['Estaciona en suelo firme y plano, lejos de la pista.', 'Pon el freno de mano y las luces de emergencia.', 'Coloca el triángulo de seguridad detrás del auto.'], no: ['No lo hagas en curva ni pendiente.', 'No te pares del lado de los autos.'] },
+      { titulo: 'Saca el repuesto y las herramientas', items: ['Abre la maletera y levanta la alfombra del piso.', 'Saca la llanta de repuesto, la gata y la llave de ruedas.'], no: ['No dejes herramientas en la pista.'] },
+      { titulo: 'Afloja los pernos', items: ['Con la llanta aún en el suelo, encaja la llave en un perno.', 'Gira hacia la izquierda, solo media vuelta.', 'Repite con todos. No los saques todavía.'], no: ['No levantes el auto antes de esto.'] },
+      { titulo: 'Levanta el auto con la gata', items: ['Pon la gata en el punto de apoyo, cerca de la llanta.', 'Es una muesca en el borde de abajo del auto.', 'Gira la manivela hasta que la llanta suba unos 5 cm.'], no: ['No te pongas debajo del auto.', 'No uses la gata en suelo blando.'] },
+      { titulo: 'Cambia la llanta', items: ['Saca los pernos y guárdalos juntos para no perderlos.', 'Retira la llanta pinchada y pon el repuesto.', 'Coloca los pernos y ajústalos a mano.'], no: ['No metas manos ni pies bajo el auto.'] },
+      { titulo: 'Baja el auto y ajusta en cruz', items: ['Baja la gata hasta que la llanta toque el suelo.', 'Ajusta fuerte los pernos en cruz, siguiendo los números.', 'Guarda todo y recoge el triángulo.'], no: ['No pases de 80 km/h si el repuesto es delgado.'] }
+    ];
+    const st = this.state || {};
+    const base = Math.min(6, Math.max(1, Number(this.props.paso) || 1));
+    const paso = st.paso || base;
+    const p = PASOS[paso - 1];
+    const ir = (n) => this.setState({ paso: Math.min(6, Math.max(1, n)) });
+    if (!this.cerrarChat) this.cerrarChat = () => this.setState({ chat: false });
+    return {
+      paso: paso,
+      etiqueta: 'Paso ' + paso + ' de 6',
+      segmentos: PASOS.map((x, i) => ({ color: i < paso ? '#0B5FA5' : '#D6E0EB' })),
+      titulo: p.titulo,
+      items: p.items.map((t) => ({ texto: t })),
+      noHacer: p.no.map((t) => ({ texto: t })),
+      p1: paso === 1,
+      p2: paso === 2,
+      p3: paso === 3,
+      p4: paso === 4,
+      p5: paso === 5,
+      p6: paso === 6,
+      sinAnterior: paso === 1,
+      hayAnterior: paso > 1,
+      noEsUltimo: paso < 6,
+      esUltimo: paso === 6,
+      anterior: () => ir(paso - 1),
+      siguiente: () => ir(paso + 1),
+      chat: !!st.chat,
+      abrirChat: () => this.setState({ chat: true }),
+      cerrarChat: this.cerrarChat
+    };
+  }
+}
+</script>
+</body>
+</html>

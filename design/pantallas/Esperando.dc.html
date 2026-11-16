@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>AlToque · Esperando ayuda</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Nunito:wght@700;800;900&display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width:390px;height:844px;box-sizing:border-box;position:relative;overflow:hidden;display:flex;flex-direction:column;background:#F5F7FA;color:#0B2340;font-family:Inter,system-ui,-apple-system,sans-serif">
+  <div style="padding:40px 12px 0 20px;flex-shrink:0;background:#FFFFFF">
+    <div style="display:flex;align-items:center;justify-content:space-between;height:56px">
+      <h1 style="margin:0;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:800;font-size:20px;line-height:26px">Ayuda en camino</h1>
+      <a href="Diagnostico.dc.html" style="display:flex;align-items:center;min-height:48px;padding:0 10px;color:#0B5FA5;text-decoration:none;font-weight:700;font-size:15px">Cancelar</a>
+    </div>
+  </div>
+
+  <svg width="390" height="200" viewBox="0 0 390 200" role="img" aria-label="{{mapaTexto}}" style="flex-shrink:0;display:block">
+    <rect width="390" height="200" fill="#E2EBF4"/>
+    <g fill="#EEF3F8"><rect x="-10" y="-10" width="112" height="64" rx="6"/><rect x="118" y="-10" width="104" height="64" rx="6"/><rect x="238" y="-10" width="162" height="64" rx="6"/><rect x="-10" y="86" width="112" height="36" rx="6"/><rect x="118" y="86" width="104" height="36" rx="6"/><rect x="238" y="86" width="162" height="36" rx="6"/><rect x="-10" y="138" width="112" height="72" rx="6"/><rect x="238" y="138" width="162" height="72" rx="6"/></g>
+    <rect x="118" y="138" width="104" height="72" rx="6" fill="#D5EBDD"/>
+    <path d="M0 130H390M110 0V200M230 0V200" stroke="#FFFFFF" stroke-width="12"/>
+    <path d="M0 70H390" stroke="#FFFFFF" stroke-width="26"/>
+    <text x="268" y="74" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="700" fill="#4B5D73">Av. Javier Prado</text>
+    <path d="M110 172V130H230V70H262" fill="none" stroke="#0B5FA5" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="2 9"/>
+    <circle cx="262" cy="70" r="20" fill="#0B5FA5" opacity="0.16"/>
+    <circle cx="262" cy="70" r="9" fill="#0B5FA5" stroke="#FFFFFF" stroke-width="3"/>
+    <circle cx="110" cy="172" r="19" fill="#FFFFFF" stroke="#0B5FA5" stroke-width="3"/>
+    <g transform="translate(99 161) scale(0.92)" fill="none" stroke="#0B5FA5" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" display="{{dispMec}}"><path d="M14.5 6.5a4 4 0 0 0-5 5.2l-5.6 5.6a1.9 1.9 0 0 0 2.7 2.7l5.6-5.6a4 4 0 0 0 5.2-5l-2.6 2.6-2.5-.4-.4-2.5 2.6-2.6z"/></g>
+    <g transform="translate(99 161) scale(0.92)" fill="none" stroke="#0B5FA5" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" display="{{dispGrua}}"><path d="M2.5 16.5V7.5h10v9"/><path d="M12.5 10.5h4.2l3.3 3.6v2.4h-2"/><path d="M9 16.5h6"/><circle cx="6.5" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></g>
+    <rect x="136" y="158" width="68" height="28" rx="14" fill="#0B2340"/>
+    <text x="170" y="177" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="800" fill="#FFFFFF">{{eta}}</text>
+  </svg>
+
+  <main style="flex:1;min-height:0;overflow-y:auto;margin-top:-28px;padding:0 16px 16px;display:flex;flex-direction:column;gap:16px;position:relative">
+    <section style="flex-shrink:0;display:flex;flex-direction:column;gap:12px;padding:16px;border-radius:22px;background:#FFFFFF;border:1px solid #E1E8F0;box-shadow:0 8px 24px rgba(11,35,64,0.12)">
+      <div style="display:flex;align-items:center;gap:12px">
+        <sc-if value="{{esMecanico}}" hint-placeholder-val="{{ true }}">
+          <span style="width:56px;height:56px;flex-shrink:0;border-radius:999px;background:#CFE0F1;color:#0B5FA5;display:flex;align-items:center;justify-content:center;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:20px">CH</span>
+        </sc-if>
+        <sc-if value="{{esGrua}}" hint-placeholder-val="{{ false }}">
+          <span style="width:56px;height:56px;flex-shrink:0;border-radius:999px;background:#CFE0F1;color:#0B5FA5;display:flex;align-items:center;justify-content:center"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 16.5V7.5h10v9"/><path d="M12.5 10.5h4.2l3.3 3.6v2.4h-2"/><path d="M9 16.5h6"/><circle cx="6.5" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg></span>
+        </sc-if>
+        <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px">
+          <h2 aria-live="polite" style="margin:0;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:21px;line-height:26px">{{titulo}}</h2>
+          <span style="font-size:15px;line-height:20px"><b style="font-weight:800">{{etaTexto}}</b><span style="color:#4B5D73"> · {{detalle}}</span></span>
+          <span style="align-self:flex-start;display:inline-flex;align-items:center;gap:4px;padding:2px 8px 2px 6px;border-radius:999px;background:#CFE0F1;color:#0B5FA5;font-size:12px;font-weight:700;line-height:16px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5.2c0 4.4-3 8.3-7 9.8-4-1.5-7-5.4-7-9.8V6l7-3z"/><path d="M9 12l2.2 2.2L15.2 10"/></svg>Verificado</span>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div style="height:8px;border-radius:999px;background:#D6E0EB;overflow:hidden"><div style="width:{{progreso}};height:8px;border-radius:999px;background:#0B5FA5"></div></div>
+        <span style="font-size:13px;line-height:18px;color:#4B5D73">Te avisaremos cuando esté cerca.</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px">
+        <button type="button" style="display:flex;align-items:center;justify-content:center;gap:8px;min-height:48px;box-sizing:border-box;border-radius:14px;border:2px solid #0B5FA5;background:#FFFFFF;color:#0B5FA5;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:800;font-size:16px;cursor:pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 3.5h3l1.6 4.2-2 1.3a12 12 0 0 0 5.9 5.9l1.3-2 4.2 1.6v3a2 2 0 0 1-2.1 2A17 17 0 0 1 4.5 5.6a2 2 0 0 1 2-2.1z"/></svg>Llamar</button>
+        <button type="button" style="display:flex;align-items:center;justify-content:center;gap:8px;min-height:48px;box-sizing:border-box;border-radius:14px;border:2px solid #0B5FA5;background:#FFFFFF;color:#0B5FA5;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:800;font-size:16px;cursor:pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 11.5a8.5 8.5 0 0 1-12.4 7.6L3.5 20.5l1.4-4.4A8.5 8.5 0 1 1 20.5 11.5z"/></svg>WhatsApp</button>
+      </div>
+    </section>
+
+    <section style="flex-shrink:0;display:flex;flex-direction:column;gap:10px;padding:0 4px">
+      <h2 style="margin:0;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:800;font-size:17px;line-height:22px">Mientras esperas</h2>
+      <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px">
+        <sc-for list="{{tips}}" as="t" hint-placeholder-count="3">
+          <li style="display:flex;align-items:center;gap:12px;font-size:15px;line-height:21px">
+            <span style="width:36px;height:36px;flex-shrink:0;border-radius:999px;background:#CFE0F1;color:#0B5FA5;display:flex;align-items:center;justify-content:center">
+              <sc-if value="{{t.lock}}" hint-placeholder-val="{{ true }}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></sc-if>
+              <sc-if value="{{t.hazard}}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5L2.5 20h19L12 3.5z"/><path d="M12 10l-3.8 6.5h7.6L12 10z"/></svg></sc-if>
+              <sc-if value="{{t.check}}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5.2c0 4.4-3 8.3-7 9.8-4-1.5-7-5.4-7-9.8V6l7-3z"/><path d="M9 12l2.2 2.2L15.2 10"/></svg></sc-if>
+            </span>
+            <span>{{t.texto}}</span>
+          </li>
+        </sc-for>
+      </ul>
+    </section>
+  </main>
+
+  <div style="flex-shrink:0;padding:12px 20px 20px;display:flex;flex-direction:column;gap:4px;background:#FFFFFF;border-top:1px solid #E1E8F0">
+    <sc-if value="{{noCompartido}}" hint-placeholder-val="{{ true }}">
+      <button type="button" onClick="{{abrirHoja}}" style="display:flex;align-items:center;justify-content:center;gap:10px;min-height:56px;box-sizing:border-box;padding:0 20px;border:0;border-radius:16px;background:#0B5FA5;color:#FFFFFF;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:19px;cursor:pointer;box-shadow:0 6px 16px rgba(11,95,165,0.24)">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.2a6.5 6.5 0 0 1 3.5 5.8"/></svg>
+        <span>Compartir con mi familia</span>
+      </button>
+    </sc-if>
+    <sc-if value="{{compartido}}" hint-placeholder-val="{{ false }}">
+      <button type="button" onClick="{{abrirHoja}}" style="display:flex;align-items:center;justify-content:center;gap:10px;min-height:56px;box-sizing:border-box;padding:0 20px;border-radius:16px;border:2px solid #12703D;background:#E3F3E9;color:#12703D;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:18px;cursor:pointer">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+        <span>Tu mamá ya sabe dónde estás</span>
+      </button>
+    </sc-if>
+    <sc-if value="{{esMecanico}}" hint-placeholder-val="{{ true }}">
+      <a href="Cierre.dc.html" style="display:flex;align-items:center;justify-content:center;min-height:48px;color:#0B5FA5;text-decoration:none;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:800;font-size:17px">Ya me ayudaron</a>
+    </sc-if>
+    <sc-if value="{{esGrua}}" hint-placeholder-val="{{ false }}">
+      <a href="CierreGrua.dc.html" style="display:flex;align-items:center;justify-content:center;min-height:48px;color:#0B5FA5;text-decoration:none;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:800;font-size:17px">Ya me ayudaron</a>
+    </sc-if>
+  </div>
+
+  <sc-if value="{{hoja}}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;inset:0;z-index:10;display:flex;flex-direction:column;background:rgba(11,35,64,0.5)">
+      <button type="button" aria-label="Cerrar" onClick="{{cerrarHoja}}" style="flex:1;border:0;background:transparent;cursor:pointer"></button>
+      <section role="dialog" aria-modal="true" aria-label="Compartir con mi familia" style="display:flex;flex-direction:column;gap:16px;padding:12px 20px 28px;border-radius:28px 28px 0 0;background:#FFFFFF;box-shadow:0 -8px 24px rgba(11,35,64,0.16)">
+        <div style="align-self:center;width:44px;height:5px;border-radius:999px;background:#C9D5E2"></div>
+        <sc-if value="{{noCompartido}}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;flex-direction:column;gap:16px">
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <h2 style="margin:0;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:24px;line-height:30px">Avísale a tu familia</h2>
+              <p style="margin:0;font-size:16px;line-height:24px;color:#4B5D73">Le enviaremos este mensaje con tu ubicación en vivo.</p>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;min-height:56px;box-sizing:border-box;padding:8px 14px;border-radius:16px;border:2px solid #0B5FA5;background:#CFE0F1">
+              <span style="width:40px;height:40px;flex-shrink:0;border-radius:999px;background:#FFFFFF;color:#0B5FA5;display:flex;align-items:center;justify-content:center;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:17px">M</span>
+              <span style="flex:1;display:flex;flex-direction:column"><span style="font-weight:700;font-size:16px">Mamá</span><span style="font-size:14px">Tu contacto de confianza</span></span>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0B5FA5" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+            </div>
+            <div style="align-self:flex-end;max-width:88%;padding:12px 14px;border-radius:18px 18px 6px 18px;background:#0B5FA5;color:#FFFFFF;font-size:15px;line-height:22px">{{mensaje}}</div>
+            <button type="button" onClick="{{enviar}}" style="display:flex;align-items:center;justify-content:center;gap:10px;min-height:56px;box-sizing:border-box;padding:0 20px;border:0;border-radius:16px;background:#0B5FA5;color:#FFFFFF;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:19px;cursor:pointer">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 11.5a8.5 8.5 0 0 1-12.4 7.6L3.5 20.5l1.4-4.4A8.5 8.5 0 1 1 20.5 11.5z"/></svg>
+              <span>Enviar por WhatsApp</span>
+            </button>
+          </div>
+        </sc-if>
+        <sc-if value="{{compartido}}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:20px">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;padding-top:6px">
+              <span style="width:64px;height:64px;border-radius:999px;background:#E3F3E9;color:#12703D;display:flex;align-items:center;justify-content:center"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg></span>
+              <h2 style="margin:4px 0 0;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:23px;line-height:29px">Listo, tu mamá ya sabe que estás bien</h2>
+              <p style="margin:0;font-size:16px;line-height:24px;color:#4B5D73">Verá tu ubicación en vivo hasta que termines.</p>
+            </div>
+            <button type="button" onClick="{{cerrarHoja}}" style="min-height:56px;box-sizing:border-box;padding:0 20px;border:0;border-radius:16px;background:#0B5FA5;color:#FFFFFF;font-family:Nunito,ui-rounded,system-ui,sans-serif;font-weight:900;font-size:19px;cursor:pointer">Entendido</button>
+          </div>
+        </sc-if>
+      </section>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"quien":{"editor":"enum","options":["mecanico","grua"],"default":"mecanico"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const V = {
+      mecanico: {
+        titulo: 'Carlos está en camino',
+        eta: '8 min',
+        etaTexto: 'Llega en 8 min',
+        detalle: 'Mecánica Huamán',
+        progreso: '35%',
+        mapaTexto: 'Mapa: Carlos viene desde Surquillo hacia tu ubicación en Av. Javier Prado',
+        tips: [
+          { i: 'lock', texto: 'Espera dentro del auto con los seguros puestos.' },
+          { i: 'hazard', texto: 'Deja prendidas las luces de emergencia.' },
+          { i: 'check', texto: 'Cuando llegue, confirma que sea Carlos Huamán, de Mecánica Huamán.' }
+        ],
+        mensaje: 'Mamá, se pinchó una llanta en la Av. Javier Prado, pero estoy bien. Carlos, un mecánico verificado, llega en 8 min. Aquí puedes ver mi ubicación en vivo.'
+      },
+      grua: {
+        titulo: 'La grúa está en camino',
+        eta: '20 min',
+        etaTexto: 'Llega en 20 min',
+        detalle: 'Grúas Lima Sur · Plataforma',
+        progreso: '20%',
+        mapaTexto: 'Mapa: la grúa viene hacia tu ubicación en Av. Javier Prado',
+        tips: [
+          { i: 'lock', texto: 'Espera dentro del auto con los seguros puestos.' },
+          { i: 'hazard', texto: 'Deja prendidas las luces de emergencia.' },
+          { i: 'check', texto: 'Ten a la mano las llaves y los documentos del auto.' }
+        ],
+        mensaje: 'Mamá, se pinchó una llanta en la Av. Javier Prado, pero estoy bien. Una grúa verificada llega en 20 min para llevar el auto al taller. Aquí puedes ver mi ubicación en vivo.'
+      }
+    };
+    const quien = this.props.quien === 'grua' ? 'grua' : 'mecanico';
+    const v = V[quien];
+    const st = this.state || {};
+    return {
+      titulo: v.titulo,
+      eta: v.eta,
+      etaTexto: v.etaTexto,
+      detalle: v.detalle,
+      progreso: v.progreso,
+      mapaTexto: v.mapaTexto,
+      mensaje: v.mensaje,
+      esMecanico: quien === 'mecanico',
+      esGrua: quien === 'grua',
+      dispMec: quien === 'mecanico' ? 'inline' : 'none',
+      dispGrua: quien === 'grua' ? 'inline' : 'none',
+      tips: v.tips.map((t) => ({ texto: t.texto, lock: t.i === 'lock', hazard: t.i === 'hazard', check: t.i === 'check' })),
+      hoja: !!st.hoja,
+      noCompartido: !st.enviado,
+      compartido: !!st.enviado,
+      abrirHoja: () => this.setState({ hoja: true }),
+      cerrarHoja: () => this.setState({ hoja: false }),
+      enviar: () => this.setState({ enviado: true })
+    };
+  }
+}
+</script>
+</body>
+</html>
