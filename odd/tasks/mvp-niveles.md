@@ -36,12 +36,12 @@ Mode: off. Source: repo has no test runner configured. Checks: `npx tsc --noEmit
 Strategy: single-pr (prototype for a course demo; one PR from `feat/mvp-niveles` to `main`).
 
 ## Tasks
-- [ ] T1 UX/UI foundations: effects components, shared polish, login screen + session guard. Route: delegated (UX/UI agent; 2+ non-trivial files).
-- [ ] T2 Level 1 + triage scripts for the 4 cases. Route: delegated (Level 1 agent).
-- [ ] T3 Levels 2 and 3 behind login. Route: delegated (Levels 2-3 agent).
-- [ ] T4 UX/UI review and polish pass over all new screens. Route: delegated (UX/UI agent).
-- [ ] T5 Verification: lint, build, browser demo of the 4 cases. Route: inline.
-- [ ] T6 Vercel deployment guide in README. Route: inline.
+- [x] T1 UX/UI foundations: effects components, shared polish, login screen + session guard. Route: delegated (UX/UI agent; 2+ non-trivial files). Commit 4334e67.
+- [x] T2 Level 1 + triage scripts for the 4 cases. Route: delegated (Level 1 agent). Commit b5c1c81.
+- [x] T3 Levels 2 and 3 behind login. Route: delegated (Levels 2-3 agent). Commit cd7fba3.
+- [x] T4 UX/UI review and polish pass over all new screens. Route: delegated (UX/UI agent). Commit e7d4d82.
+- [x] T5 Verification: lint, build, browser demo. Route: inline. Fix b87a946 (full provider name in send sheet).
+- [x] T6 Vercel deployment guide in README. Route: inline. Commit ab66bcc.
 
 ## Acceptance criteria
 - The 4 demo scripts run end to end without dead ends.
@@ -50,3 +50,10 @@ Strategy: single-pr (prototype for a course demo; one PR from `feat/mvp-niveles`
 
 ## Progress
 - Branch `feat/mvp-niveles` created from `main` (752c54e). No teammate branches or PRs existed.
+- Verification: `npm run lint` clean, `npx tsc --noEmit` clean, `npm run build` OK (26 routes).
+- Browser (390x844): case 4 (Otro + humo) → Level 3 → login redirect → tow list → send sheet → tracking: OK.
+  Case 1 (Llanta, Sí/Sí/Sí) → Level 1 guide → step 1 → chat quick reply: OK. No console errors.
+  Not exercised in browser: battery and dashboard-light cases, Level 2 list, closings.
+- Native review: assess unavailable; START failed pre-native (`git diff` → "'$GIT_DIR' too big", Windows path length). No authority created. Blocked until the repo lives in a shorter path.
+- Engram mirror: pending (not written this session).
+- Next: move repo to a shorter folder, retry review, push branch, open PR, deploy on Vercel.
