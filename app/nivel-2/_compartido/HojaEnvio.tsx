@@ -17,7 +17,6 @@ import { PrimaryButton } from "@/components/ui/PrimaryButton";
 import { SecondaryButton } from "@/components/ui/SecondaryButton";
 import { TextButton } from "@/components/ui/TextButton";
 import { enlaceLlamada, enlaceWhatsApp } from "@/lib/contacto";
-import { primerNombre } from "@/lib/formato";
 import { USUARIO } from "@/lib/mock/usuario";
 import type { Proveedor } from "@/lib/tipos";
 import { GPS, ubicacionEnviada } from "./seleccion";
@@ -41,7 +40,7 @@ export function HojaEnvio({ proveedor, resumen, foto, referencia, extra, onClose
   }
 
   if (!proveedor) return null;
-  const nombre = primerNombre(proveedor.nombre);
+  const nombre = proveedor.nombre;
   const ref = referencia.trim();
   const lugar = `${GPS.texto}${ref ? `, ${ref}` : ""}`;
   const mensaje = `Hola ${nombre}, soy ${USUARIO.nombre}. Te escribo por AlToque. ${resumen}${extra ? ` ${extra}` : ""} Mi ubicación: ${ubicacionEnviada(referencia)}`;
