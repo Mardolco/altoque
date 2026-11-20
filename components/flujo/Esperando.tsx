@@ -10,7 +10,7 @@
 // familia" es simulado, como en el diseño: no abre WhatsApp.
 
 import Link from "next/link";
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { BottomBar } from "@/components/ui/BottomBar";
 import { BottomSheet } from "@/components/ui/BottomSheet";
 import { ChatBubble } from "@/components/ui/ChatBubble";
@@ -37,11 +37,21 @@ import { MECANICO_DEMO } from "@/lib/mock/mecanicos";
 import { DIAGNOSTICO_DEMO } from "@/lib/mock/triaje";
 import { USUARIO } from "@/lib/mock/usuario";
 import { RUTAS } from "@/lib/rutas";
-import type { Falla } from "@/lib/tipos";
+import type { Falla, Proveedor } from "@/lib/tipos";
 
 type Props = {
   quien: "mecanico" | "grua";
+  /** Quien se eligió en la lista. Sin él se usa el de la demo. */
+  proveedor?: Proveedor;
+  /** Bloque extra bajo la tarjeta (en el Nivel 3, el destino y el chat). */
+  extra?: ReactNode;
 };
+
+// Avance simulado: confirmado, en camino, llegó.
+const PASOS = ["Confirmado", "En camino", "Llegó"] as const;
+const AVANCE = ["15%", "55%", "100%"] as const;
+const ESPERA_EN_CAMINO = 3000;
+const ESPERA_LLEGADA = 15000;
 
 const LETRA = "var(--font-inter), system-ui, sans-serif";
 
@@ -53,50 +63,75 @@ const LO_QUE_PASO: Record<Falla, string> = {
   otra: "el auto tuvo una falla",
 };
 
-function textosDe(quien: Props["quien"], falla: Falla) {
+function textosDe(quien: Props["quien"], falla: Falla, proveedor: Proveedor) {
   const { contacto, ubicacion } = USUARIO;
   const saludo = `${contacto.nombre}, ${LO_QUE_PASO[falla]} en la ${ubicacion}, pero estoy bien.`;
 
-  if (quien === "grua") {
-    const grua = GRUA_DEMO;
+  if (proveedor.tipo === "grua") {
     return {
-      proveedor: grua,
-      titulo: "La grúa está en camino",
-      detalle: `${grua.nombre} · ${grua.clase}`,
-      avance: "20%",
+      titulo: `${proveedor.nombre} está en camino`,
+      detalle: `${proveedor.clase} · Placa ${proveedor.placa}`,
       mapa: `Mapa: la grúa viene hacia tu ubicación en ${ubicacion}`,
-      confirma: "Ten a la mano las llaves y los documentos del auto.",
-      mensaje: `${saludo} Una grúa verificada llega en ${grua.minutos} min para llevar el auto al taller. Aquí puedes ver mi ubicación en vivo.`,
+      confirma: `Verifica que la placa sea ${proveedor.placa} y ten a la mano las llaves y los documentos.`,
+      mensaje: `${saludo} Una grúa verificada llega en ${proveedor.minutos ?? 20} min para llevar el auto al taller. Aquí puedes ver mi ubicación en vivo.`,
       cierre: RUTAS.cierreGrua,
     };
   }
 
-  const mecanico = MECANICO_DEMO;
-  const nombre = primerNombre(mecanico.nombre);
+  const nombre = primerNombre(proveedor.nombre);
   return {
-    proveedor: mecanico,
     titulo: `${nombre} está en camino`,
-    detalle: mecanico.taller,
-    avance: "35%",
-    mapa: `Mapa: ${nombre} viene desde ${mecanico.distrito} hacia tu ubicación en ${ubicacion}`,
-    confirma: `Cuando llegue, confirma que sea ${mecanico.nombre}, de ${mecanico.taller}.`,
-    mensaje: `${saludo} ${nombre}, un mecánico verificado, llega en ${mecanico.minutos} min. Aquí puedes ver mi ubicación en vivo.`,
+    detalle: proveedor.taller,
+    mapa: `Mapa: ${nombre} viene desde ${proveedor.distrito} hacia tu ubicación en ${ubicacion}`,
+    confirma: `Cuando llegue, confirma que sea ${proveedor.nombre}, de ${proveedor.taller}.`,
+    mensaje: `${saludo} ${nombre}, un mecánico verificado, llega en ${proveedor.minutos ?? 10} min. Aquí puedes ver mi ubicación en vivo.`,
     cierre: RUTAS.cierreMecanico,
   };
 }
 
-export function Esperando({ quien }: Props) {
+/** Consejos de seguridad mientras esperas, según la falla y quién viene. */
+function consejosDe(quien: Props["quien"], falla: Falla): string[] {
+  const base = [
+    "Espera dentro del auto con los seguros puestos.",
+    "Deja prendidas las luces de emergencia.",
+  ];
+  if (quien === "grua") {
+    return [
+      "No intentes encender el motor.",
+      "Si estás en una vía rápida, espera fuera del auto, detrás de la baranda.",
+      ...base.slice(1),
+    ];
+  }
+  if (falla === "llanta") return [...base, "No te pares al lado de la pista para mirar la llanta."];
+  if (falla === "bateria") return [...base, "Apaga la radio y las luces interiores para no gastar más batería."];
+  return [...base, "No abras el capó si ves humo o sientes olor a quemado."];
+}
+
+export function Esperando({ quien, proveedor: elegido, extra }: Props) {
   const flujo = useFlujo();
   const [hoja, setHoja] = useState(false);
   const [compartido, setCompartido] = useState(false);
+  const [paso, setPaso] = useState(0);
+  const [llamada, setLlamada] = useState(false);
+
+  // Avance simulado: tras unos segundos sale, y luego llega.
+  useEffect(() => {
+    const salida = window.setTimeout(() => setPaso((p) => Math.max(p, 1)), ESPERA_EN_CAMINO);
+    const llegada = window.setTimeout(() => setPaso(2), ESPERA_LLEGADA);
+    return () => {
+      window.clearTimeout(salida);
+      window.clearTimeout(llegada);
+    };
+  }, []);
 
   // Sin triaje previo (se entró directo a la ruta) se usa el ejemplo del diseño.
   const diagnostico = flujo.diagnostico ?? DIAGNOSTICO_DEMO.diagnostico;
-  const textos = textosDe(quien, diagnostico.falla);
-  const { proveedor } = textos;
+  const proveedor: Proveedor = elegido ?? (quien === "grua" ? GRUA_DEMO : MECANICO_DEMO);
+  const textos = textosDe(quien, diagnostico.falla, proveedor);
   const { contacto } = USUARIO;
-  const esGrua = quien === "grua";
-  const eta = `${proveedor.minutos} min`;
+  const esGrua = proveedor.tipo === "grua";
+  const eta = `${proveedor.minutos ?? 10} min`;
+  const llego = paso === 2;
 
   const cerrarHoja = () => setHoja(false);
 
@@ -183,28 +218,50 @@ export function Esperando({ quien }: Props) {
             </span>
             <div className="flex min-w-0 flex-1 flex-col gap-[3px]">
               <h2 aria-live="polite" className="font-display text-[21px] leading-[26px] font-black">
-                {textos.titulo}
+                {[`Pedido confirmado`, textos.titulo, `Ya llegó, ${primerNombre(proveedor.nombre)}`][paso]}
               </h2>
               <span className="text-[15px] leading-5">
-                <b className="font-extrabold">Llega en {eta}</b>
+                <b className="font-extrabold">{llego ? "Ya está contigo" : `Llega en ${eta}`}</b>
                 <span className="text-ink-muted"> · {textos.detalle}</span>
               </span>
               {proveedor.verificado && <VerifiedBadge className="self-start" />}
             </div>
           </div>
-          <div className="flex flex-col gap-1.5">
+          <div className="flex flex-col gap-2">
             <div aria-hidden="true" className="h-2 overflow-hidden rounded-full bg-line">
-              <div className="h-2 rounded-full bg-primary" style={{ width: textos.avance }} />
+              <div
+                className="h-2 rounded-full bg-primary transition-[width] duration-700"
+                style={{ width: AVANCE[paso] }}
+              />
             </div>
-            <span className="text-[13px] leading-[18px] text-ink-muted">
-              Te avisaremos cuando esté cerca.
-            </span>
+            <ol aria-label="Estado de la ayuda" className="grid grid-cols-3 gap-1 text-center">
+              {PASOS.map((nombre, i) => (
+                <li
+                  key={nombre}
+                  aria-current={i === paso ? "step" : undefined}
+                  className={`flex flex-col items-center gap-0.5 text-[13px] leading-[18px] ${
+                    i <= paso ? "font-extrabold text-ink" : "text-ink-muted"
+                  }`}
+                >
+                  <span
+                    aria-hidden="true"
+                    className={`flex size-5 items-center justify-center rounded-full ${
+                      i <= paso ? "bg-primary text-white" : "bg-line"
+                    }`}
+                  >
+                    {i <= paso && <CheckIcon size={12} strokeWidth={3.4} />}
+                  </span>
+                  {nombre}
+                </li>
+              ))}
+            </ol>
           </div>
           <div className="grid grid-cols-2 gap-2.5">
-            {/* Sin teléfono en lib/mock, "Llamar" todavía no marca. */}
+            {/* Sin teléfono en lib/mock, "Llamar" simula la llamada. */}
             <SecondaryButton
               size="sm"
               href={enlaceLlamada(proveedor.telefono)}
+              onClick={proveedor.telefono ? undefined : () => setLlamada(true)}
               icon={<PhoneIcon size={18} />}
             >
               Llamar
@@ -222,19 +279,25 @@ export function Esperando({ quien }: Props) {
               WhatsApp
             </SecondaryButton>
           </div>
+          {llamada && (
+            <p role="status" className="rounded-2xl bg-ok-tint px-3.5 py-2.5 text-[14px] leading-5 text-ok-ink">
+              Llamada simulada. En la demo no marcamos números reales.
+            </p>
+          )}
         </section>
+
+        {extra}
 
         <section className="flex shrink-0 flex-col gap-2.5 px-1">
           <h2 className="font-display text-[17px] leading-[22px] font-extrabold">
             Mientras esperas
           </h2>
           <ul className="flex flex-col gap-2">
-            <Consejo icono={<LockIcon size={18} />}>
-              Espera dentro del auto con los seguros puestos.
-            </Consejo>
-            <Consejo icono={<HazardIcon size={18} />}>
-              Deja prendidas las luces de emergencia.
-            </Consejo>
+            {consejosDe(quien, diagnostico.falla).map((consejo, i) => (
+              <Consejo key={consejo} icono={i === 0 ? <LockIcon size={18} /> : <HazardIcon size={18} />}>
+                {consejo}
+              </Consejo>
+            ))}
             <Consejo icono={<ShieldCheckIcon size={18} />}>{textos.confirma}</Consejo>
           </ul>
         </section>
@@ -255,7 +318,18 @@ export function Esperando({ quien }: Props) {
             Compartir con mi familia
           </PrimaryButton>
         )}
-        <TextButton href={textos.cierre}>Ya me ayudaron</TextButton>
+        {llego ? (
+          <SecondaryButton href={textos.cierre} className="mt-2">
+            Ya me ayudaron
+          </SecondaryButton>
+        ) : (
+          <>
+            <TextButton href={textos.cierre}>Ya me ayudaron</TextButton>
+            <TextButton onClick={() => setPaso(2)} className="text-[15px]! text-ink-muted!">
+              Simular que ya llegó (demo)
+            </TextButton>
+          </>
+        )}
       </BottomBar>
 
       <BottomSheet
