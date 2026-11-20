@@ -9,7 +9,7 @@ import { ChatBubble } from "@/components/ui/ChatBubble";
 import { MessageCircleIcon } from "@/components/ui/icons";
 import { QuickReply } from "@/components/ui/QuickReply";
 import { SecondaryButton } from "@/components/ui/SecondaryButton";
-import { primerNombre } from "@/lib/formato";
+import { precioEnRango, primerNombre } from "@/lib/formato";
 import { USUARIO } from "@/lib/mock/usuario";
 import type { Grua } from "@/lib/tipos";
 
@@ -18,7 +18,13 @@ type Mensaje = { de: "ia" | "user"; texto: string };
 const PREGUNTAS: { texto: string; respuesta: (g: Grua) => string }[] = [
   { texto: "¿Cuánto falta?", respuesta: (g) => `Llego en unos ${g.minutos ?? 15} minutos. Te aviso al estar cerca.` },
   { texto: "Mi auto está en un sótano", respuesta: () => "Gracias por avisar. Llevo la rampa y revisaré la altura al llegar." },
-  { texto: "¿Cuánto me va a costar?", respuesta: () => "Te confirmo la tarifa antes de subir el auto, según los kilómetros." },
+  {
+    texto: "¿Cuánto me va a costar?",
+    respuesta: (g) =>
+      g.precio
+        ? `Entre ${precioEnRango(g.precio)} hasta ${g.kmIncluidos} km, referencial. Te confirmo el monto antes de subir el auto.`
+        : "Te confirmo la tarifa antes de subir el auto, según los kilómetros.",
+  },
   { texto: "Ya te veo", respuesta: () => "Perfecto, ya estoy llegando a tu ubicación." },
 ];
 
