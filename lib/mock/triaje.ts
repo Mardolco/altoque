@@ -1,15 +1,21 @@
 // Triaje simulado. Es lo que responde /api/triaje mientras no haya una IA
 // de verdad. Reglas:
 //
+// - Una descripción con humo, choque, frenos, fuga o sobrecalentamiento va
+//   directo al Nivel 3 (grúa), sea cual sea la falla elegida.
 // - Llanta: hace tres preguntas. Con repuesto y gata, Nivel 1 (resuélvelo
 //   tú). Sin repuesto o sin gata, Nivel 2 (mecánico).
-// - Batería y luz en el tablero: el diseño no trae preguntas ni guía, así
-//   que van directo al Nivel 2.
-// - "Otro", o nada elegido y sin foto: si la descripción no da pistas, la IA
-//   no está segura (seguro: false) y deriva al Nivel 2.
+// - Batería: cuatro preguntas. Con cables, otro auto y sin humo, Nivel 1;
+//   con humo o batería hinchada, Nivel 3; en los demás casos, Nivel 2.
+// - Luz en el tablero: tres preguntas. Luz informativa (no roja, sin humo),
+//   Nivel 1; roja de aceite o temperatura, o con humo, Nivel 3; otra luz
+//   roja o dudas, Nivel 2.
+// - "Otro": tres preguntas. Humo, fuga o frenos raros, Nivel 3. Si no hay
+//   pistas, la IA no está segura (seguro: false) y deriva al Nivel 2.
 //
 // Contenido inventado que el equipo debe revisar: todos los textos que no
-// salen del diseño (batería, luz en el tablero y las variantes de llanta).
+// salen del diseño (batería, luz en el tablero, fallas graves y las
+// variantes de llanta).
 
 import type {
   Diagnostico,
@@ -24,14 +30,16 @@ import { USUARIO } from "./usuario";
 
 type Resultado = { diagnostico: Diagnostico; notas: NotasDiagnostico };
 
+const LUGAR_SEGURO: Pregunta = {
+  id: "lugar_seguro",
+  texto: "¿Estás en un lugar seguro, fuera de la pista?",
+  ayuda: "Por ejemplo, en la berma, una calle lateral o un estacionamiento.",
+  corto: "Lugar seguro",
+  avisoSiNo: "Si puedes, avanza despacio con las luces de emergencia hasta un lugar seguro.",
+};
+
 export const PREGUNTAS_LLANTA: Pregunta[] = [
-  {
-    id: "lugar_seguro",
-    texto: "¿Estás en un lugar seguro, fuera de la pista?",
-    ayuda: "Por ejemplo, en la berma, una calle lateral o un estacionamiento.",
-    corto: "Lugar seguro",
-    avisoSiNo: "Si puedes, avanza despacio con las luces de emergencia hasta un lugar seguro.",
-  },
+  LUGAR_SEGURO,
   {
     id: "repuesto",
     texto: "¿Tienes llanta de repuesto?",
@@ -47,6 +55,65 @@ export const PREGUNTAS_LLANTA: Pregunta[] = [
   },
 ];
 
+export const PREGUNTAS_BATERIA: Pregunta[] = [
+  LUGAR_SEGURO,
+  {
+    id: "humo",
+    texto: "¿Ves humo, hay olor a quemado o la batería está hinchada?",
+    ayuda: "Mírala solo si es seguro. Una batería hinchada o con líquido es peligrosa.",
+    corto: "Humo o batería hinchada",
+  },
+  {
+    id: "cables",
+    texto: "¿Tienes cables pasacorriente?",
+    ayuda: "Son dos cables gruesos, uno rojo y uno negro, con pinzas. Suelen ir en la maletera.",
+    corto: "Cables pasacorriente",
+  },
+  {
+    id: "otro_auto",
+    texto: "¿Hay otro auto con batería buena que pueda ayudarte?",
+    ayuda: "Puede ser un amigo, un vecino o alguien que pase y quiera ayudarte.",
+    corto: "Otro auto que ayude",
+  },
+];
+
+export const PREGUNTAS_LUZ: Pregunta[] = [
+  {
+    id: "luz_roja",
+    texto: "¿La luz que se prendió es roja?",
+    ayuda: "Roja es la que pide detenerte. Amarilla, verde o azul son avisos más suaves.",
+    corto: "Luz roja",
+  },
+  {
+    id: "luz_aceite_temp",
+    texto: "¿El dibujo es una lamparita de aceite o un termómetro?",
+    ayuda: "La lamparita de aceite parece una pequeña lata con una gota. El termómetro tiene ondas.",
+    corto: "Aceite o temperatura",
+  },
+  {
+    id: "humo",
+    texto: "¿Notas humo, olor a quemado o ruidos raros?",
+    ayuda: "Por ejemplo, golpeteos, chillidos o que el auto pierda fuerza.",
+    corto: "Humo u olor a quemado",
+  },
+];
+
+export const PREGUNTAS_OTRA: Pregunta[] = [
+  {
+    id: "humo_fuga",
+    texto: "¿Sale humo, hay olor a quemado o ves líquido debajo del auto?",
+    ayuda: "Mira desde afuera y no te acerques al motor si hay humo.",
+    corto: "Humo, olor o fuga",
+  },
+  {
+    id: "frenos",
+    texto: "¿El auto pierde fuerza o los frenos se sienten raros?",
+    ayuda: "Por ejemplo, el pedal se hunde o el auto no frena como siempre.",
+    corto: "Frenos o fuerza",
+  },
+  LUGAR_SEGURO,
+];
+
 export function triajeSimulado(solicitud: SolicitudTriaje): RespuestaTriaje {
   const conFoto = Boolean(solicitud.foto);
   const conTexto = solicitud.descripcion.trim().length > 0;
@@ -57,24 +124,86 @@ export function triajeSimulado(solicitud: SolicitudTriaje): RespuestaTriaje {
 
   const falla = adivinarFalla(solicitud.falla, solicitud.descripcion, conFoto);
 
+  // Una falla grave descrita con palabras no necesita preguntas: va a la grúa.
+  const grave = gravedadDeTexto(solicitud.descripcion);
+  if (grave) {
+    const detalle = mayuscula(origen({ conFoto, conTexto, conRespuestas: false }));
+    return { tipo: "diagnostico", ...diagnosticoGrave(grave.titulo, detalle, grave.causa) };
+  }
+
+  const respuestas = new Map<string, Respuesta>(
+    (solicitud.respuestas ?? []).map((r) => [r.id, r.respuesta]),
+  );
+  const sinRespuestas = !solicitud.respuestas;
+  const detalle = mayuscula(origen({ conFoto, conTexto, conRespuestas: true }));
+  const resp = (id: string): Respuesta => respuestas.get(id) ?? "No sé";
+
   if (falla === "llanta") {
-    if (!solicitud.respuestas) return { tipo: "preguntas", preguntas: PREGUNTAS_LLANTA };
-    const respuestas = new Map(solicitud.respuestas.map((r) => [r.id, r.respuesta]));
+    if (sinRespuestas) return { tipo: "preguntas", preguntas: PREGUNTAS_LLANTA };
     return {
       tipo: "diagnostico",
-      ...diagnosticoLlanta({
-        repuesto: respuestas.get("repuesto") ?? "No sé",
-        gata: respuestas.get("gata") ?? "No sé",
-        conFoto,
-        conTexto,
+      ...diagnosticoLlanta({ repuesto: resp("repuesto"), gata: resp("gata"), conFoto, conTexto }),
+    };
+  }
+
+  if (falla === "bateria") {
+    if (sinRespuestas) return { tipo: "preguntas", preguntas: PREGUNTAS_BATERIA };
+    return {
+      tipo: "diagnostico",
+      ...diagnosticoBateria(detalle, {
+        lugar: resp("lugar_seguro"),
+        humo: resp("humo"),
+        cables: resp("cables"),
+        otroAuto: resp("otro_auto"),
       }),
     };
   }
 
-  const detalle = mayuscula(origen({ conFoto, conTexto, conRespuestas: false }));
-  if (falla === "bateria") return { tipo: "diagnostico", ...diagnosticoBateria(detalle) };
-  if (falla === "luz_tablero") return { tipo: "diagnostico", ...diagnosticoTablero(detalle) };
+  if (falla === "luz_tablero") {
+    if (sinRespuestas) return { tipo: "preguntas", preguntas: PREGUNTAS_LUZ };
+    return {
+      tipo: "diagnostico",
+      ...diagnosticoTablero(detalle, {
+        roja: resp("luz_roja"),
+        aceiteTemp: resp("luz_aceite_temp"),
+        humo: resp("humo"),
+      }),
+    };
+  }
+
+  if (sinRespuestas) return { tipo: "preguntas", preguntas: PREGUNTAS_OTRA };
+  if (resp("humo_fuga") === "Sí" || resp("frenos") === "Sí") {
+    return {
+      tipo: "diagnostico",
+      ...diagnosticoGrave(
+        "Falla grave en el auto",
+        detalle,
+        "Humo, fuga o frenos con problemas según las respuestas",
+      ),
+    };
+  }
   return { tipo: "diagnostico", ...diagnosticoInseguro(conFoto, conTexto) };
+}
+
+/** Palabras que delatan una falla de riesgo: no se intenta arreglar, se pide grúa. */
+function gravedadDeTexto(descripcion: string): { titulo: string; causa: string } | null {
+  const texto = descripcion.toLowerCase();
+  if (/humo|incendi|fuego|quemad|chispa/.test(texto)) {
+    return { titulo: "Humo u olor a quemado", causa: "Humo, fuego u olor a quemado en el auto" };
+  }
+  if (/choqu|choc[oó]|accident|volc/.test(texto)) {
+    return { titulo: "Auto golpeado", causa: "Choque o golpe fuerte al auto" };
+  }
+  if (/fren/.test(texto)) {
+    return { titulo: "Problema con los frenos", causa: "Posible falla de frenos" };
+  }
+  if (/fuga|gotea|derram/.test(texto)) {
+    return { titulo: "Fuga de líquido", causa: "Fuga de líquido bajo el auto" };
+  }
+  if (/sobrecalent|recalent|hirvi/.test(texto)) {
+    return { titulo: "Motor muy caliente", causa: "Motor sobrecalentado" };
+  }
+  return null;
 }
 
 /**
@@ -163,33 +292,143 @@ export function diagnosticoLlanta(datos: {
   };
 }
 
-// --- Batería y luz en el tablero (el diseño no las cubre) ------------------
+// --- Batería, luz en el tablero y fallas graves (el diseño no las cubre) ---
 
-function diagnosticoBateria(detalle: string): Resultado {
+function diagnosticoBateria(
+  detalle: string,
+  r: { lugar: Respuesta; humo: Respuesta; cables: Respuesta; otroAuto: Respuesta },
+): Resultado {
+  if (r.humo === "Sí") {
+    return diagnosticoGrave(
+      "Batería con riesgo",
+      detalle,
+      "Batería con humo, olor a quemado o hinchada. No se debe tocar",
+    );
+  }
+
+  const puedeSola = r.lugar === "Sí" && r.humo === "No" && r.cables === "Sí" && r.otroAuto === "Sí";
+  let motivo: string;
+  let extra: string;
+  if (puedeSola) {
+    motivo =
+      "Tienes cables y otro auto que te ayude. Te guiamos paso a paso para pasarle corriente a tu batería.";
+    extra = "Tiene cables y otro auto que la ayude.";
+  } else if (r.lugar !== "Sí") {
+    motivo =
+      "Si no estás en un lugar seguro, mejor que te ayude un mecánico verificado. Llega con lo necesario.";
+    extra = "No está en un lugar seguro.";
+  } else if (r.cables !== "Sí") {
+    motivo =
+      "Sin cables pasacorriente no podrás hacerlo tú. Un mecánico verificado llega con cables y te pasa corriente.";
+    extra = "No tiene cables pasacorriente.";
+  } else {
+    motivo =
+      "Sin otro auto no se puede pasar corriente. Un mecánico verificado llega con una batería de apoyo.";
+    extra = "No tiene otro auto que la ayude.";
+  }
+
   return {
     diagnostico: {
-      nivel: 2,
+      nivel: puedeSola ? 1 : 2,
       semaforo: "ambar",
       falla: "bateria",
       titulo: "Batería descargada",
       queHacer: [
         "Apaga las luces, la radio y el aire.",
         "No sigas intentando prender el auto.",
-        "Espera en el auto con los seguros puestos.",
+        puedeSola
+          ? "Ten a la mano los cables y el otro auto."
+          : "Espera en el auto con los seguros puestos.",
       ],
-      resumen: `Batería descargada, el auto no prende. Conductora en ${USUARIO.ubicacion}.`,
+      resumen: `Batería descargada, el auto no prende. Conductora en ${USUARIO.ubicacion}. ${extra}`,
       seguro: true,
     },
-    notas: {
-      detalle,
-      motivo:
-        "Un mecánico verificado puede pasarte corriente o cambiar la batería donde estás.",
-      posibles: [],
-    },
+    notas: { detalle, motivo, posibles: [] },
   };
 }
 
-function diagnosticoTablero(detalle: string): Resultado {
+function diagnosticoTablero(
+  detalle: string,
+  r: { roja: Respuesta; aceiteTemp: Respuesta; humo: Respuesta },
+): Resultado {
+  if (r.humo === "Sí") {
+    return diagnosticoGrave(
+      "Luz de aviso con humo",
+      detalle,
+      "Luz de aviso en el tablero con humo, olor a quemado o ruidos raros",
+    );
+  }
+
+  if (r.roja === "Sí" && r.aceiteTemp === "Sí") {
+    return {
+      diagnostico: {
+        nivel: 3,
+        semaforo: "rojo",
+        falla: "luz_tablero",
+        titulo: "Luz roja de aceite o temperatura",
+        queHacer: [
+          "Detente en un lugar seguro y apaga el motor.",
+          "No sigas manejando: el motor se puede dañar.",
+          "No abras el radiador ni la tapa del aceite en caliente.",
+        ],
+        resumen: `Luz roja de aceite o temperatura en el tablero. Conductora en ${USUARIO.ubicacion}. No debe manejar.`,
+        seguro: true,
+      },
+      notas: {
+        detalle,
+        motivo:
+          "Seguir manejando con esta luz puede arruinar el motor. Una grúa lleva tu auto a un taller sin riesgo.",
+        posibles: [],
+      },
+    };
+  }
+
+  if (r.roja === "Sí") {
+    return {
+      diagnostico: {
+        nivel: 2,
+        semaforo: "rojo",
+        falla: "luz_tablero",
+        titulo: "Luz roja en el tablero",
+        queHacer: [
+          "Detente en un lugar seguro y apaga el motor.",
+          "No sigas manejando hasta saber qué es.",
+          "Deja las luces de emergencia prendidas.",
+        ],
+        resumen: `Luz roja en el tablero. Conductora en ${USUARIO.ubicacion}. No debe manejar hasta revisarlo.`,
+        seguro: true,
+      },
+      notas: {
+        detalle,
+        motivo: "Una luz roja pide revisión. Un mecánico verificado puede leer el aviso donde estás.",
+        posibles: [],
+      },
+    };
+  }
+
+  if (r.roja === "No" && r.aceiteTemp === "No" && r.humo === "No") {
+    return {
+      diagnostico: {
+        nivel: 1,
+        semaforo: "ambar",
+        falla: "luz_tablero",
+        titulo: "Luz informativa en el tablero",
+        queHacer: [
+          "Estaciona en un lugar seguro para revisar.",
+          "Fíjate en el color y el dibujo de la luz.",
+          "Sigue la guía para revisar lo más simple.",
+        ],
+        resumen: `Luz de aviso en el tablero, no es roja y no hay humo. Conductora en ${USUARIO.ubicacion}.`,
+        seguro: true,
+      },
+      notas: {
+        detalle,
+        motivo: "La luz no es roja y no hay humo. Te guiamos para revisar lo más simple.",
+        posibles: [],
+      },
+    };
+  }
+
   return {
     diagnostico: {
       nivel: 2,
@@ -207,6 +446,31 @@ function diagnosticoTablero(detalle: string): Resultado {
     notas: {
       detalle,
       motivo: "Un mecánico verificado puede leer el aviso y decirte si es seguro seguir.",
+      posibles: [],
+    },
+  };
+}
+
+/** Falla de riesgo: Nivel 3, sin guía. No se intenta arreglar ni se sigue manejando. */
+function diagnosticoGrave(titulo: string, detalle: string, causa: string): Resultado {
+  return {
+    diagnostico: {
+      nivel: 3,
+      semaforo: "rojo",
+      falla: "otra",
+      titulo,
+      queHacer: [
+        "Si ves humo o fuego, apaga el motor y aléjate del auto.",
+        "Prende las luces de emergencia y no sigas manejando.",
+        "No intentes arreglarlo tú. Si hay riesgo, llama al 105.",
+      ],
+      resumen: `${causa}. Conductora en ${USUARIO.ubicacion}. No es seguro manejar.`,
+      seguro: true,
+    },
+    notas: {
+      detalle,
+      motivo:
+        "Con una falla así no es seguro arreglarlo ni manejar. Una grúa lleva tu auto a un taller sin riesgo.",
       posibles: [],
     },
   };
