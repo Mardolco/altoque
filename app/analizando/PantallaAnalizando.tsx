@@ -16,6 +16,7 @@ import {
   FallaIcon,
   SpinnerIcon,
 } from "@/components/ui/icons";
+import { TextoBrillante } from "@/components/ui/efectos";
 import { PrimaryButton } from "@/components/ui/PrimaryButton";
 import { SafetyNotice } from "@/components/ui/SafetyNotice";
 import { TextButton } from "@/components/ui/TextButton";
@@ -199,8 +200,8 @@ export function PantallaAnalizando() {
             <TextButton href={RUTAS.falla}>Volver a contar qué pasó</TextButton>
           </div>
         ) : (
-          <p className="flex min-h-14 items-center justify-center text-[15px] text-ink-muted">
-            Esto toma unos segundos…
+          <p className="flex min-h-14 items-center justify-center text-[15px]">
+            <TextoBrillante>Esto toma unos segundos…</TextoBrillante>
           </p>
         )}
       </BottomBar>

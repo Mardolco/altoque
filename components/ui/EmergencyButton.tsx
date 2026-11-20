@@ -22,7 +22,7 @@ export function EmergencyButton({ className }: { className?: string }) {
         onClick={() => setAbierta(true)}
         aria-label="Emergencia: llamar a la Policía al 105"
         className={cx(
-          "flex min-h-12 shrink-0 items-center gap-2 rounded-full border-2 border-stop bg-white pr-4 pl-3.5 text-[15px] font-bold text-stop",
+          "flex min-h-12 shrink-0 animate-pulso items-center gap-2 rounded-full border-2 border-stop bg-white pr-4 pl-3.5 text-[15px] font-bold text-stop",
           className,
         )}
       >

@@ -11,3 +11,11 @@ export const USUARIO = {
     descripcion: "Tu contacto de confianza",
   },
 };
+
+// Cuenta de prueba del login simulado (/ingresar). No hay servidor: la
+// validación es local y solo sirve para la demo.
+export const CUENTA_DE_PRUEBA = {
+  email: "demo@altoque.pe",
+  clave: "Altoque2026",
+  nombre: USUARIO.nombre,
+};

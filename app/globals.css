@@ -71,6 +71,55 @@
   --animate-halo: halo 2.2s ease-out infinite; /* aro de Analizando */
   --animate-radar: radar 2.2s ease-out infinite; /* "estás aquí" en los mapas */
   --animate-sheet: sheet-in 0.22s ease-out;
+  --animate-fade: fade-in 0.2s ease-out;
+  --animate-aparecer: aparecer 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-pulso: pulso 2.6s ease-out infinite; /* aro suave del botón de emergencia */
+  --animate-brillo: brillo 2.4s linear infinite; /* texto brillante y esqueleto */
+  --animate-aurora: aurora 14s ease-in-out infinite alternate;
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes aparecer {
+    from {
+      transform: translateY(12px);
+      opacity: 0;
+    }
+    to {
+      transform: none;
+      opacity: 1;
+    }
+  }
+  @keyframes pulso {
+    0% {
+      box-shadow: 0 0 0 0 rgb(217 48 37 / 0.35);
+    }
+    70%,
+    100% {
+      box-shadow: 0 0 0 12px rgb(217 48 37 / 0);
+    }
+  }
+  @keyframes brillo {
+    from {
+      background-position: 200% 0;
+    }
+    to {
+      background-position: -200% 0;
+    }
+  }
+  @keyframes aurora {
+    from {
+      transform: translate3d(-6%, -4%, 0) scale(1);
+    }
+    to {
+      transform: translate3d(6%, 4%, 0) scale(1.15);
+    }
+  }
 
   @keyframes halo {
     from {
