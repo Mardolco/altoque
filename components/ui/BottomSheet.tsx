@@ -61,7 +61,7 @@ export function BottomSheet({ open, onClose, title, className, children }: Props
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col bg-ink/50">
+    <div className="fixed inset-0 z-50 flex animate-fade flex-col bg-ink/50">
       <button
         type="button"
         aria-label="Cerrar"

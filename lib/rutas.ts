@@ -9,6 +9,7 @@ export const RUTAS = {
   preguntas: "/preguntas",
   diagnostico: "/diagnostico",
   iaNoSegura: "/ia-no-segura",
+  ingresar: "/ingresar",
   fotoError: "/foto-error",
 
   guia: "/nivel-1/guia",
@@ -35,4 +36,9 @@ export const RUTA_DE_NIVEL: Record<Nivel, string> = {
 /** Pantalla que muestra un diagnóstico: la normal o "La IA no está segura". */
 export function rutaDeDiagnostico(diagnostico: Diagnostico): string {
   return diagnostico.seguro ? RUTAS.diagnostico : RUTAS.iaNoSegura;
+}
+
+/** Ruta de ingreso que vuelve a `destino` al terminar. */
+export function rutaDeIngreso(destino: string): string {
+  return `${RUTAS.ingresar}?volver=${encodeURIComponent(destino)}`;
 }

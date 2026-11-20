@@ -31,7 +31,7 @@ export function PrimaryButton({
   return (
     <Pressable
       className={cx(
-        "flex w-full items-center justify-center bg-primary text-center font-display leading-6 font-black text-white no-underline transition-colors hover:bg-primary-dark active:bg-primary-dark",
+        "flex w-full items-center justify-center bg-primary text-center font-display leading-6 font-black text-white no-underline transition-[colors,transform] hover:bg-primary-dark active:scale-[0.98] active:bg-primary-dark",
         "disabled:bg-line disabled:text-ink-muted disabled:shadow-none",
         TAMANOS[size],
         className,

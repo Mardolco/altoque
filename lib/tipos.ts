@@ -75,6 +75,8 @@ export type Resena = {
   texto: string;
 };
 
+export type MedioDePago = "Yape" | "Plin" | "Tarjeta" | "Efectivo";
+
 type ProveedorBase = {
   id: string;
   nombre: string;
@@ -85,6 +87,8 @@ type ProveedorBase = {
   precio: RangoPrecio | null;
   motivo: string | null; // por qué es la mejor opción
   telefono: string | null; // para tel: y wa.me; null mientras no haya un número de demo
+  pagos: MedioDePago[]; // cómo se le puede pagar
+  respondio: string; // "Hace 1 min": respuesta simulada a la consulta por WhatsApp
 };
 
 export type Mecanico = ProveedorBase & {
@@ -94,6 +98,8 @@ export type Mecanico = ProveedorBase & {
   distrito: string;
   calificacion: number;
   resenas: number;
+  atencion: "movil" | "taller" | "ambos"; // va hasta el auto, atiende en taller o ambos
+  distanciaKm: number; // desde la ubicación del usuario
   especialidad: string; // "Llantas y frenos"
   fallas: Falla[]; // fallas que atiende, para ordenar por especialidad
   perfil: {
@@ -108,6 +114,14 @@ export type Grua = ProveedorBase & {
   tipo: "grua";
   clase: string; // "Plataforma"
   descripcion: string; // "Grúa de plataforma"
+  modalidad: "arrastre" | "plataforma"; // arrastre solo sirve si las ruedas giran libres
+  alturaM: number; // alto de la grúa, para estacionamientos techados
+  conductor: string; // quien maneja
+  iniciales: string; // del avatar
+  placa: string;
+  calificacion: number;
+  traslados: number; // traslados hechos
+  kmIncluidos: number; // la tarifa cubre hasta estos km
 };
 
 export type Proveedor = Mecanico | Grua;

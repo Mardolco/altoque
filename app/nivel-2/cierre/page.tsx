@@ -2,10 +2,10 @@
 // El reporte (12b, Reporte.dc.html) es el segundo paso de esta misma pantalla.
 
 import type { Metadata } from "next";
-import { Cierre } from "@/components/flujo/Cierre";
+import { PantallaCierre } from "./PantallaCierre";
 
 export const metadata: Metadata = { title: "Cierre" };
 
 export default function Page() {
-  return <Cierre camino="mecanico" />;
+  return <PantallaCierre />;
 }

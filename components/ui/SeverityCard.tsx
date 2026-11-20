@@ -57,7 +57,7 @@ export function SeverityCard({ level, label, fault, detail, className, children 
     <section
       aria-label={`Gravedad: ${lectura}`}
       className={cx(
-        "shrink-0 overflow-hidden rounded-[22px] border border-line-soft bg-white shadow-card",
+        "shrink-0 animate-aparecer overflow-hidden rounded-[22px] border border-line-soft bg-white shadow-card",
         className,
       )}
     >

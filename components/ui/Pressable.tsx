@@ -7,6 +7,7 @@ import type { HTMLAttributes } from "react";
 export type PressableProps = Omit<HTMLAttributes<HTMLElement>, "type"> & {
   href?: string;
   disabled?: boolean;
+  form?: string; // id del <form> al que envía un botón type="submit"
   type?: "button" | "submit";
   target?: string;
   rel?: string;

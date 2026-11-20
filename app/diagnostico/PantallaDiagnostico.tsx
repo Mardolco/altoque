@@ -9,6 +9,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { BottomBar } from "@/components/ui/BottomBar";
+import { Aparecer } from "@/components/ui/efectos";
 import { InfoIcon } from "@/components/ui/icons";
 import { CAMINOS, PathOption } from "@/components/ui/PathOption";
 import { PrimaryButton } from "@/components/ui/PrimaryButton";
@@ -58,9 +59,12 @@ export function PantallaDiagnostico() {
   const notas = flujo.notas ?? DIAGNOSTICO_DEMO.notas;
   const { Icono } = CAMINOS[diagnostico.nivel];
 
-  // La guía del Nivel 1 solo existe para la llanta.
+  // La guía del Nivel 1 existe para llanta, batería y luz del tablero, y no se
+  // ofrece si el diagnóstico es del Nivel 3 (riesgo).
+  const hayGuia = ["llanta", "bateria", "luz_tablero"].includes(diagnostico.falla);
   const otros = NIVELES.filter(
-    (nivel) => nivel !== diagnostico.nivel && (nivel !== 1 || diagnostico.falla === "llanta"),
+    (nivel) =>
+      nivel !== diagnostico.nivel && (nivel !== 1 || (hayGuia && diagnostico.nivel !== 3)),
   );
 
   return (
@@ -74,7 +78,7 @@ export function PantallaDiagnostico() {
           detail={notas.detalle}
         />
 
-        <section className="shrink-0">
+        <Aparecer como="section" retraso={90} className="shrink-0">
           <h2 className="mb-2 font-display text-heading">Qué hacer ahora</h2>
           <ol className="flex flex-col gap-2">
             {diagnostico.queHacer.map((paso, i) => (
@@ -86,11 +90,13 @@ export function PantallaDiagnostico() {
               </li>
             ))}
           </ol>
-        </section>
+        </Aparecer>
 
-        <PathOption level={diagnostico.nivel} recommended reason={notas.motivo} />
+        <Aparecer retraso={180}>
+          <PathOption level={diagnostico.nivel} recommended reason={notas.motivo} />
+        </Aparecer>
 
-        <section className="shrink-0">
+        <Aparecer como="section" retraso={270} className="shrink-0">
           <h2 className="mb-2 font-display text-[17px] leading-[22px] font-extrabold">
             O elige otro camino
           </h2>
@@ -104,7 +110,7 @@ export function PantallaDiagnostico() {
               />
             ))}
           </div>
-        </section>
+        </Aparecer>
       </main>
 
       <BottomBar surface="white" className="gap-2 pt-2.5!">

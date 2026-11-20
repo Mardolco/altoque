@@ -41,50 +41,85 @@ import { MECANICO_DEMO } from "@/lib/mock/mecanicos";
 import { DIAGNOSTICO_DEMO } from "@/lib/mock/triaje";
 import { USUARIO } from "@/lib/mock/usuario";
 import { RUTAS } from "@/lib/rutas";
-import type { Diagnostico, NotasDiagnostico } from "@/lib/tipos";
+import type { Diagnostico, Falla, NotasDiagnostico, Proveedor } from "@/lib/tipos";
+import { StarIcon } from "@/components/ui/icons";
 
 export type Camino = "mecanico" | "guia" | "grua";
 
 type Props = {
   camino: Camino;
   vista?: "form" | "reporte";
+  /** Quien ayudó, si se eligió en la lista. Sin él se usa el de la demo. */
+  proveedor?: Proveedor;
+  /** Nivel 3: nombre del taller o la dirección a donde se llevó el auto. */
+  destino?: string;
+};
+
+const CRITERIOS: Record<"mecanico" | "grua", string[]> = {
+  mecanico: ["Puntualidad", "Trato", "Cumplió el precio acordado"],
+  grua: ["Puntualidad", "Cuidado del vehículo", "Cumplió el precio acordado"],
 };
 
 const OTRA_COSA = "Otra cosa";
 const LUGAR = `en la ${USUARIO.ubicacion}`;
 
+/** Cierre del Nivel 1 según la falla que se resolvió con la guía. */
+const TEXTOS_GUIA: Record<Falla, { sub: string; hecho: string; pendiente: string }> = {
+  llanta: {
+    sub: "Cambiaste la llanta con la guía. ¡Bien hecho!",
+    hecho: "cambió la llanta por el repuesto",
+    pendiente: "reparar la llanta pinchada en una llantería esta semana.",
+  },
+  bateria: {
+    sub: "Arrancaste el auto con la guía. ¡Bien hecho!",
+    hecho: "arrancó el auto pasando corriente desde otra batería",
+    pendiente: "revisar la batería en un taller esta semana, por si ya terminó su vida útil.",
+  },
+  luz_tablero: {
+    sub: "Revisaste la luz del tablero con la guía. ¡Bien hecho!",
+    hecho: "revisó la luz del tablero",
+    pendiente: "hacer revisar el auto en un taller si la luz vuelve a prender.",
+  },
+  otra: {
+    sub: "Resolviste el problema con la guía. ¡Bien hecho!",
+    hecho: "atendió la falla",
+    pendiente: "hacer revisar el auto en un taller esta semana.",
+  },
+};
+
 /** Textos que cambian según quién resolvió el problema. */
-function textosDe(camino: Camino, esLlanta: boolean) {
+function textosDe(camino: Camino, falla: Falla, esLlanta: boolean, proveedor?: Proveedor, destino?: string) {
   if (camino === "guia") {
+    const guia = TEXTOS_GUIA[falla];
     return {
-      sub: "Cambiaste la llanta con la guía. ¡Bien hecho!",
+      sub: guia.sub,
       preguntaCal: "¿Te sirvió la guía?",
       conCosto: false,
       montoInicial: CIERRE_DEMO.monto.guia,
-      queSeHizo: `${USUARIO.nombre} cambió la llanta por el repuesto con la guía paso a paso.`,
+      queSeHizo: `${USUARIO.nombre} ${guia.hecho} con la guía paso a paso.`,
       quien: USUARIO.nombre,
       quienDetalle: "Con la guía de AlToque",
       costoDetalle: "Sin costo",
-      pendiente: "reparar la llanta pinchada en una llantería esta semana.",
+      pendiente: guia.pendiente,
     };
   }
 
   if (camino === "grua") {
-    const grua = GRUA_DEMO;
+    const grua = proveedor?.tipo === "grua" ? proveedor : GRUA_DEMO;
     return {
-      sub: `${grua.nombre} llevó tu auto al taller.`,
+      sub: `${grua.nombre} llevó tu auto${destino ? ` a ${destino}` : " al taller"}.`,
       preguntaCal: `¿Cómo te ayudó ${grua.nombre}?`,
       conCosto: true,
       montoInicial: CIERRE_DEMO.monto.grua,
-      queSeHizo: `Una ${enMinuscula(grua.descripcion)} llevó el auto al taller para repararlo.`,
+      queSeHizo: `Una ${enMinuscula(grua.descripcion)} llevó el auto ${destino ? `a ${destino}` : "al taller"} para repararlo.`,
       quien: grua.nombre,
-      quienDetalle: `${grua.descripcion} · Verificado`,
+      quienDetalle: `${grua.descripcion} · Placa ${grua.placa} · Verificado`,
       costoDetalle: grua.precio ? `Precio referencial: ${precioEnRango(grua.precio)}` : "",
       pendiente: "recoger el auto cuando el taller avise.",
     };
   }
 
-  const mecanico = MECANICO_DEMO;
+  const mecanico = proveedor?.tipo === "mecanico" ? proveedor : MECANICO_DEMO;
   const nombre = primerNombre(mecanico.nombre);
   return {
     sub: esLlanta
@@ -124,7 +159,18 @@ function fallasPosibles(diagnostico: Diagnostico, notas: NotasDiagnostico): stri
  * "Qué pasó" del reporte, según la falla real que confirmó el usuario. Solo
  * con foto se sabe cuál llanta fue (en la demo, la delantera derecha).
  */
-function quePaso(fallaReal: string | null, esLlanta: boolean, conFoto: boolean): string {
+function quePaso(
+  fallaReal: string | null,
+  falla: Falla,
+  esLlanta: boolean,
+  conFoto: boolean,
+): string {
+  if ((!fallaReal || fallaReal !== OTRA_COSA) && falla === "bateria") {
+    return `La batería se descargó y el auto no arrancó ${LUGAR}.`;
+  }
+  if ((!fallaReal || fallaReal !== OTRA_COSA) && falla === "luz_tablero") {
+    return `Se prendió una luz en el tablero ${LUGAR}.`;
+  }
   if (esLlanta) {
     const llanta = conFoto ? "la llanta delantera derecha" : "una llanta";
     if (fallaReal === "Llanta pinchada") return `Se pinchó ${llanta} ${LUGAR}.`;
@@ -148,10 +194,11 @@ function horaActual(): string {
   }).format(new Date());
 }
 
-export function Cierre({ camino, vista: vistaInicial = "form" }: Props) {
+export function Cierre({ camino, vista: vistaInicial = "form", proveedor, destino }: Props) {
   const flujo = useFlujo();
   const [vista, setVista] = useState(vistaInicial);
   const [estrellas, setEstrellas] = useState(0);
+  const [criterios, setCriterios] = useState([0, 0, 0]);
   const [fallaElegida, setFallaElegida] = useState<string | null>(null);
   const [montoEscrito, setMontoEscrito] = useState<string | null>(null);
   const [hora, setHora] = useState(CIERRE_DEMO.hora);
@@ -164,7 +211,7 @@ export function Cierre({ camino, vista: vistaInicial = "form" }: Props) {
   const esLlanta = diagnostico.falla === "llanta";
   const conFoto = flujo.diagnostico ? Boolean(flujo.foto) : true;
 
-  const textos = textosDe(camino, esLlanta);
+  const textos = textosDe(camino, diagnostico.falla, esLlanta, proveedor, destino);
   const opciones = fallasPosibles(diagnostico, notas);
   const fallaReal = fallaElegida ?? (diagnostico.seguro ? opciones[0] : null);
   const monto = montoEscrito ?? textos.montoInicial;
@@ -214,7 +261,7 @@ export function Cierre({ camino, vista: vistaInicial = "form" }: Props) {
                 icono={<FallaIcon falla={diagnostico.falla} size={18} />}
                 titulo="Qué pasó"
               >
-                {quePaso(fallaReal, esLlanta, conFoto)}
+                {quePaso(fallaReal, diagnostico.falla, esLlanta, conFoto)}
               </Dato>
               <Dato icono={<WrenchIcon size={18} />} titulo="Qué se hizo">
                 {textos.queSeHizo}
@@ -314,7 +361,20 @@ export function Cierre({ camino, vista: vistaInicial = "form" }: Props) {
           <h2 className="text-center font-display text-[18px] leading-[23px] font-extrabold">
             {textos.preguntaCal}
           </h2>
-          <StarRating mode="input" value={estrellas} onChange={setEstrellas} />
+          {camino === "guia" ? (
+            <StarRating mode="input" value={estrellas} onChange={setEstrellas} />
+          ) : (
+            <div className="flex w-full flex-col gap-2">
+              {CRITERIOS[camino].map((criterio, i) => (
+                <Criterio
+                  key={criterio}
+                  nombre={criterio}
+                  valor={criterios[i]}
+                  onChange={(n) => setCriterios((c) => c.map((v, j) => (j === i ? n : v)))}
+                />
+              ))}
+            </div>
+          )}
         </section>
 
         <section className="flex shrink-0 flex-col gap-2.5 rounded-card border border-line-soft bg-white px-4 pt-3.5 pb-4">
@@ -411,6 +471,37 @@ function Dato({
         {titulo}
       </dt>
       <dd className="text-[15px] leading-[21px]">{children}</dd>
+    </div>
+  );
+}
+
+/** Una pregunta de calificación con cinco estrellas de 48 px. */
+function Criterio({
+  nombre,
+  valor,
+  onChange,
+}: {
+  nombre: string;
+  valor: number;
+  onChange: (estrellas: number) => void;
+}) {
+  return (
+    <div role="group" aria-label={nombre} className="flex flex-col items-center gap-0.5">
+      <span className="text-[15px] leading-5 font-bold">{nombre}</span>
+      <div className="flex gap-1">
+        {[1, 2, 3, 4, 5].map((n) => (
+          <button
+            key={n}
+            type="button"
+            aria-label={`${nombre}: ${n === 1 ? "1 estrella" : `${n} estrellas`}`}
+            aria-pressed={n <= valor}
+            onClick={() => onChange(n)}
+            className="flex size-12 items-center justify-center rounded-[14px] bg-transparent"
+          >
+            <StarIcon size={32} filled={n <= valor} />
+          </button>
+        ))}
+      </div>
     </div>
   );
 }
