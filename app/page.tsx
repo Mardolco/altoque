@@ -24,9 +24,11 @@ import { FALLAS } from "@/lib/fallas";
 import { useFlujo } from "@/lib/flujo";
 import { USUARIO } from "@/lib/mock/usuario";
 import { RUTAS } from "@/lib/rutas";
+import { cerrarSesion, useSesion } from "@/lib/sesion";
 
 export default function Inicio() {
   const { empezar } = useFlujo();
+  const { sesion } = useSesion();
   const [hoja, setHoja] = useState<"cerrada" | "pendiente" | "enviada">(
     "cerrada",
   );
@@ -50,6 +52,15 @@ export default function Inicio() {
           <p className="text-[17px] leading-[25px] text-ink-muted">
             Estamos contigo. Cuéntanos qué pasó y te decimos qué hacer.
           </p>
+          {sesion && (
+            <button
+              type="button"
+              onClick={cerrarSesion}
+              className="-mb-2 flex min-h-12 items-center self-start text-[14px] font-bold text-primary"
+            >
+              Cerrar sesión
+            </button>
+          )}
         </Aparecer>
 
         <div className="relative mt-4 flex items-center gap-2 self-start rounded-full border border-line bg-white py-2 pr-3.5 pl-2.5 text-[14px] font-semibold">

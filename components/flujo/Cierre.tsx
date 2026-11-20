@@ -41,7 +41,7 @@ import { MECANICO_DEMO } from "@/lib/mock/mecanicos";
 import { DIAGNOSTICO_DEMO } from "@/lib/mock/triaje";
 import { USUARIO } from "@/lib/mock/usuario";
 import { RUTAS } from "@/lib/rutas";
-import type { Diagnostico, NotasDiagnostico, Proveedor } from "@/lib/tipos";
+import type { Diagnostico, Falla, NotasDiagnostico, Proveedor } from "@/lib/tipos";
 import { StarIcon } from "@/components/ui/icons";
 
 export type Camino = "mecanico" | "guia" | "grua";
@@ -63,19 +63,44 @@ const CRITERIOS: Record<"mecanico" | "grua", string[]> = {
 const OTRA_COSA = "Otra cosa";
 const LUGAR = `en la ${USUARIO.ubicacion}`;
 
+/** Cierre del Nivel 1 según la falla que se resolvió con la guía. */
+const TEXTOS_GUIA: Record<Falla, { sub: string; hecho: string; pendiente: string }> = {
+  llanta: {
+    sub: "Cambiaste la llanta con la guía. ¡Bien hecho!",
+    hecho: "cambió la llanta por el repuesto",
+    pendiente: "reparar la llanta pinchada en una llantería esta semana.",
+  },
+  bateria: {
+    sub: "Arrancaste el auto con la guía. ¡Bien hecho!",
+    hecho: "arrancó el auto pasando corriente desde otra batería",
+    pendiente: "revisar la batería en un taller esta semana, por si ya terminó su vida útil.",
+  },
+  luz_tablero: {
+    sub: "Revisaste la luz del tablero con la guía. ¡Bien hecho!",
+    hecho: "revisó la luz del tablero",
+    pendiente: "hacer revisar el auto en un taller si la luz vuelve a prender.",
+  },
+  otra: {
+    sub: "Resolviste el problema con la guía. ¡Bien hecho!",
+    hecho: "atendió la falla",
+    pendiente: "hacer revisar el auto en un taller esta semana.",
+  },
+};
+
 /** Textos que cambian según quién resolvió el problema. */
-function textosDe(camino: Camino, esLlanta: boolean, proveedor?: Proveedor, destino?: string) {
+function textosDe(camino: Camino, falla: Falla, esLlanta: boolean, proveedor?: Proveedor, destino?: string) {
   if (camino === "guia") {
+    const guia = TEXTOS_GUIA[falla];
     return {
-      sub: "Cambiaste la llanta con la guía. ¡Bien hecho!",
+      sub: guia.sub,
       preguntaCal: "¿Te sirvió la guía?",
       conCosto: false,
       montoInicial: CIERRE_DEMO.monto.guia,
-      queSeHizo: `${USUARIO.nombre} cambió la llanta por el repuesto con la guía paso a paso.`,
+      queSeHizo: `${USUARIO.nombre} ${guia.hecho} con la guía paso a paso.`,
       quien: USUARIO.nombre,
       quienDetalle: "Con la guía de AlToque",
       costoDetalle: "Sin costo",
-      pendiente: "reparar la llanta pinchada en una llantería esta semana.",
+      pendiente: guia.pendiente,
     };
   }
 
@@ -134,7 +159,18 @@ function fallasPosibles(diagnostico: Diagnostico, notas: NotasDiagnostico): stri
  * "Qué pasó" del reporte, según la falla real que confirmó el usuario. Solo
  * con foto se sabe cuál llanta fue (en la demo, la delantera derecha).
  */
-function quePaso(fallaReal: string | null, esLlanta: boolean, conFoto: boolean): string {
+function quePaso(
+  fallaReal: string | null,
+  falla: Falla,
+  esLlanta: boolean,
+  conFoto: boolean,
+): string {
+  if ((!fallaReal || fallaReal !== OTRA_COSA) && falla === "bateria") {
+    return `La batería se descargó y el auto no arrancó ${LUGAR}.`;
+  }
+  if ((!fallaReal || fallaReal !== OTRA_COSA) && falla === "luz_tablero") {
+    return `Se prendió una luz en el tablero ${LUGAR}.`;
+  }
   if (esLlanta) {
     const llanta = conFoto ? "la llanta delantera derecha" : "una llanta";
     if (fallaReal === "Llanta pinchada") return `Se pinchó ${llanta} ${LUGAR}.`;
@@ -175,7 +211,7 @@ export function Cierre({ camino, vista: vistaInicial = "form", proveedor, destin
   const esLlanta = diagnostico.falla === "llanta";
   const conFoto = flujo.diagnostico ? Boolean(flujo.foto) : true;
 
-  const textos = textosDe(camino, esLlanta, proveedor, destino);
+  const textos = textosDe(camino, diagnostico.falla, esLlanta, proveedor, destino);
   const opciones = fallasPosibles(diagnostico, notas);
   const fallaReal = fallaElegida ?? (diagnostico.seguro ? opciones[0] : null);
   const monto = montoEscrito ?? textos.montoInicial;
@@ -225,7 +261,7 @@ export function Cierre({ camino, vista: vistaInicial = "form", proveedor, destin
                 icono={<FallaIcon falla={diagnostico.falla} size={18} />}
                 titulo="Qué pasó"
               >
-                {quePaso(fallaReal, esLlanta, conFoto)}
+                {quePaso(fallaReal, diagnostico.falla, esLlanta, conFoto)}
               </Dato>
               <Dato icono={<WrenchIcon size={18} />} titulo="Qué se hizo">
                 {textos.queSeHizo}

@@ -59,9 +59,12 @@ export function PantallaDiagnostico() {
   const notas = flujo.notas ?? DIAGNOSTICO_DEMO.notas;
   const { Icono } = CAMINOS[diagnostico.nivel];
 
-  // La guía del Nivel 1 solo existe para la llanta.
+  // La guía del Nivel 1 existe para llanta, batería y luz del tablero, y no se
+  // ofrece si el diagnóstico es del Nivel 3 (riesgo).
+  const hayGuia = ["llanta", "bateria", "luz_tablero"].includes(diagnostico.falla);
   const otros = NIVELES.filter(
-    (nivel) => nivel !== diagnostico.nivel && (nivel !== 1 || diagnostico.falla === "llanta"),
+    (nivel) =>
+      nivel !== diagnostico.nivel && (nivel !== 1 || (hayGuia && diagnostico.nivel !== 3)),
   );
 
   return (
