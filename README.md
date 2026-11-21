@@ -33,7 +33,8 @@ npm run build
 
 - `/api/triaje` no usa una IA: responde con las reglas de `lib/mock/triaje.ts`. El chat del Nivel 1 responde con guiones por palabras clave (`app/nivel-1/_datos/chat.ts`).
 - Mecánicos, grúas, talleres, ubicación y usuaria son inventados (`lib/mock/`).
-- La "consulta de disponibilidad por WhatsApp" es una espera simulada. "Escribir por WhatsApp" abre `wa.me` con el resumen ya escrito, sin número de destino. "Llamar" al mecánico o a la grúa es simulado.
+- El chat con el mecánico o la grúa y el pago (Yape, Plin, tarjeta o efectivo) ocurren dentro de la app, pero son simulados: no se envía ningún mensaje real ni se cobra dinero. "Llamar" también es simulado.
+- El pedido en curso vive en `localStorage` (`lib/servicio.ts`) y se sincroniza entre pestañas del mismo navegador. Dos celulares distintos no comparten el pedido.
 - Compartir ubicación, avisar a la familia, enviar el reporte y guardar la imagen solo cambian de estado, no envían nada.
 - El login (`/ingresar`) es local, sin servidor: la sesión vive en `localStorage`.
 - "Llamar al 105" sí marca de verdad (`tel:105`). No lo pulses en las pruebas.
@@ -53,6 +54,24 @@ Los Niveles 2 y 3 piden iniciar sesión. Usa la cuenta de prueba definida en `li
 | 4. Falla grave | Otro, describe "sale humo del capó" | Nivel 3: alerta de seguridad y grúas (pide login) |
 
 En cualquier momento del Nivel 1 están los botones "Necesito un mecánico" y "Necesito una grúa".
+
+## Chat, pago y comisión dentro de la app
+
+En los Niveles 2 y 3, el conductor ya no sale a WhatsApp. Al elegir un mecánico o una grúa toca "Enviar solicitud" y todo sigue en `/servicio`: estado del pedido, chat, cotización, pago y recibo. Así AlToque puede cobrar su comisión.
+
+Modelo de ingresos (`lib/mock/comision.ts`, ajustable):
+
+| Concepto | Valor | Ejemplo con un trabajo de S/ 90 |
+| --- | --- | --- |
+| Tarifa de servicio que paga el conductor | S/ 4 fijo | El conductor paga S/ 94 |
+| Comisión que se descuenta al proveedor | 12 % | El mecánico recibe S/ 79.20 |
+| Ingreso de AlToque | tarifa + comisión | S/ 14.80 |
+
+### Las dos vistas
+
+- `/proveedor`: la app del mecánico o grúa ("AlToque Socios"). Recibe la solicitud con el resumen de la IA, acepta, chatea, avisa que va en camino y que llegó, envía la cotización (ve cuánto se lleva después de la comisión) y recibe el pago.
+- `/demo`: para presentar en una laptop. Muestra los dos teléfonos lado a lado (conductor y mecánico) y un panel "Así gana AlToque" que se actualiza en vivo. En un celular, `/demo` muestra un selector "Conductor | Mecánico".
+- En un solo celular, el botón "Ver como mecánico" / "Ver como conductor" cambia de vista. Si la vista del mecánico no está abierta, el mecánico responde solo (modo automático) para que la demo nunca se quede esperando.
 
 ## Despliegue en Vercel
 
