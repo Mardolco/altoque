@@ -29,7 +29,7 @@ single-pr from `feat/chat-pago-in-app`.
 
 ## Tasks
 - [x] T1 Shared contract: `lib/servicio.ts`, `lib/mock/comision.ts`, routes. Route: inline.
-- [x] T2 Driver flow: request, chat, payment, receipt; remove WhatsApp handoff. Route: delegated (driver agent). Commits 59f... (feat(servicio)), 167bbd3.
+- [x] T2 Driver flow: request, chat, payment, receipt; remove WhatsApp handoff. Route: delegated (driver agent). Commits 578fcd6, 167bbd3.
 - [x] T3 Provider app and `/demo`. Route: delegated (provider agent, parallel, disjoint folders). Commit bbff41d.
 - [x] T4 UX/UI pass over both sides. Route: delegated (UX/UI agent). Commit a8a4d88.
 - [x] T5 Browser verification, README update. Route: inline. Commit bf9098b. PR pending user decision.
