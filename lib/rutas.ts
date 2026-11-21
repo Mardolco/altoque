@@ -24,6 +24,15 @@ export const RUTAS = {
   gruas: "/nivel-3/gruas",
   esperandoGrua: "/nivel-3/esperando",
   cierreGrua: "/nivel-3/cierre",
+
+  // Chat y pago dentro de la app (vista del conductor).
+  servicio: "/servicio",
+  pagoServicio: "/servicio/pago",
+  reciboServicio: "/servicio/recibo",
+
+  // App del proveedor (mecánico o grúa) y vista con los dos teléfonos.
+  proveedor: "/proveedor",
+  demo: "/demo",
 } as const;
 
 /** Primera pantalla de cada nivel. */
