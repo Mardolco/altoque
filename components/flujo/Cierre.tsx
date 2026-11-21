@@ -40,7 +40,9 @@ import { GRUA_DEMO } from "@/lib/mock/gruas";
 import { MECANICO_DEMO } from "@/lib/mock/mecanicos";
 import { DIAGNOSTICO_DEMO } from "@/lib/mock/triaje";
 import { USUARIO } from "@/lib/mock/usuario";
+import { soles } from "@/lib/mock/comision";
 import { RUTAS } from "@/lib/rutas";
+import { borrarServicio, useServicio } from "@/lib/servicio";
 import type { Diagnostico, Falla, NotasDiagnostico, Proveedor } from "@/lib/tipos";
 import { StarIcon } from "@/components/ui/icons";
 
@@ -194,8 +196,12 @@ function horaActual(): string {
   }).format(new Date());
 }
 
-export function Cierre({ camino, vista: vistaInicial = "form", proveedor, destino }: Props) {
+export function Cierre({ camino, vista: vistaInicial = "form", proveedor: elegido, destino }: Props) {
   const flujo = useFlujo();
+  const servicio = useServicio();
+  // Con un pedido pagado dentro de la app, el monto y el proveedor son los reales.
+  const pagado = camino !== "guia" ? (servicio?.pago ?? null) : null;
+  const proveedor = (camino !== "guia" ? servicio?.proveedor : undefined) ?? elegido;
   const [vista, setVista] = useState(vistaInicial);
   const [estrellas, setEstrellas] = useState(0);
   const [criterios, setCriterios] = useState([0, 0, 0]);
@@ -216,6 +222,11 @@ export function Cierre({ camino, vista: vistaInicial = "form", proveedor, destin
   const fallaReal = fallaElegida ?? (diagnostico.seguro ? opciones[0] : null);
   const monto = montoEscrito ?? textos.montoInicial;
   const montoLimpio = monto.replace(/[^0-9.,]/g, "") || "0";
+  const montoMostrado = pagado ? soles(pagado.desglose.totalConductor) : `S/ ${montoLimpio}`;
+  const detallePagado = pagado ? `Pagado con ${pagado.medio} en AlToque · Operación ${pagado.codigo}` : null;
+
+  /** Al terminar, el pedido en curso ya no hace falta. */
+  const terminar = () => borrarServicio();
 
   function generar() {
     setHora(horaActual());
@@ -277,10 +288,10 @@ export function Cierre({ camino, vista: vistaInicial = "form", proveedor, destin
                 ultimo
               >
                 <b className="font-extrabold">
-                  {textos.conCosto ? `S/ ${montoLimpio}` : "S/ 0"}
+                  {textos.conCosto ? montoMostrado : "S/ 0"}
                 </b>
                 <br />
-                <span className="text-ink-muted">{textos.costoDetalle}</span>
+                <span className="text-ink-muted">{detallePagado ?? textos.costoDetalle}</span>
               </Dato>
             </dl>
 
@@ -333,6 +344,7 @@ export function Cierre({ camino, vista: vistaInicial = "form", proveedor, destin
             <SecondaryButton
               size="sm"
               href={RUTAS.inicio}
+              onClick={terminar}
               icon={<HouseIcon size={18} />}
               className="px-1!"
             >
@@ -346,7 +358,7 @@ export function Cierre({ camino, vista: vistaInicial = "form", proveedor, destin
 
   return (
     <>
-      <TopBar backHref={RUTAS.inicio} backLabel="Cerrar y volver al inicio" backIcon="close" />
+      <TopBar backHref={RUTAS.inicio} onBack={terminar} backLabel="Cerrar y volver al inicio" backIcon="close" />
 
       <main className="flex flex-1 flex-col gap-3 px-5 pb-4">
         <div className="flex shrink-0 flex-col items-center gap-1.5 pb-1 text-center">
@@ -401,7 +413,7 @@ export function Cierre({ camino, vista: vistaInicial = "form", proveedor, destin
           </div>
         </section>
 
-        {textos.conCosto && (
+        {textos.conCosto && !pagado && (
           <div className="flex shrink-0 flex-col gap-2">
             <label
               htmlFor="monto-pagado"
@@ -436,7 +448,9 @@ export function Cierre({ camino, vista: vistaInicial = "form", proveedor, destin
         >
           Generar reporte para compartir
         </PrimaryButton>
-        <TextButton href={RUTAS.inicio}>Volver al inicio</TextButton>
+        <TextButton href={RUTAS.inicio} onClick={terminar}>
+          Volver al inicio
+        </TextButton>
       </BottomBar>
     </>
   );

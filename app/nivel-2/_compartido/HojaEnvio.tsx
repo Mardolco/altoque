@@ -1,25 +1,25 @@
 "use client";
 
-// Hoja "Esto le enviaremos a ...": ubicación exacta, foto y resumen de la IA,
-// con "Escribir por WhatsApp" (enlace real wa.me con el resumen) y "Llamar".
-// Elegir cualquiera de las dos sigue al seguimiento. No se envía nada solo.
+// Hoja "Esto le enviaremos a ...": ubicación exacta, foto y resumen de la IA.
+// "Enviar solicitud" crea el pedido dentro de la app (lib/servicio.ts) y sigue
+// al chat. Nada sale de AlToque: no hay WhatsApp ni llamadas reales.
 
-import { useState, type ReactNode } from "react";
+import type { ReactNode } from "react";
 import { BottomSheet } from "@/components/ui/BottomSheet";
 import {
   FileTextIcon,
   ImageIcon,
   MapPinIcon,
-  MessageCircleIcon,
-  PhoneIcon,
+  SendIcon,
+  ShieldCheckIcon,
 } from "@/components/ui/icons";
 import { PrimaryButton } from "@/components/ui/PrimaryButton";
-import { SecondaryButton } from "@/components/ui/SecondaryButton";
 import { TextButton } from "@/components/ui/TextButton";
-import { enlaceLlamada, enlaceWhatsApp } from "@/lib/contacto";
 import { USUARIO } from "@/lib/mock/usuario";
+import { crearServicio } from "@/lib/servicio";
 import type { Proveedor } from "@/lib/tipos";
-import { GPS, ubicacionEnviada } from "./seleccion";
+import { GPS } from "./seleccion";
+import { useDiagnostico } from "./useDiagnostico";
 
 type Props = {
   proveedor: Proveedor | null;
@@ -32,21 +32,27 @@ type Props = {
 };
 
 export function HojaEnvio({ proveedor, resumen, foto, referencia, extra, onClose, onConfirmar }: Props) {
-  const [llamada, setLlamada] = useState(false);
-
-  function cerrar() {
-    setLlamada(false);
-    onClose();
-  }
+  const { diagnostico } = useDiagnostico();
 
   if (!proveedor) return null;
   const nombre = proveedor.nombre;
   const ref = referencia.trim();
   const lugar = `${GPS.texto}${ref ? `, ${ref}` : ""}`;
-  const mensaje = `Hola ${nombre}, soy ${USUARIO.nombre}. Te escribo por AlToque. ${resumen}${extra ? ` ${extra}` : ""} Mi ubicación: ${ubicacionEnviada(referencia)}`;
+
+  function enviar() {
+    if (!proveedor) return;
+    crearServicio({
+      proveedor,
+      conductor: { nombre: USUARIO.nombre, ubicacion: GPS.texto, referencia: ref },
+      diagnostico,
+      resumen: `${resumen}${extra ? ` ${extra}` : ""}`,
+      foto,
+    });
+    onConfirmar();
+  }
 
   return (
-    <BottomSheet open onClose={cerrar} title={`Enviar mi caso a ${proveedor.nombre}`}>
+    <BottomSheet open onClose={onClose} title={`Enviar mi caso a ${proveedor.nombre}`}>
       <div className="flex flex-col gap-1.5">
         <h2 className="font-display text-[24px] leading-[30px] font-black">
           Esto le enviaremos a {nombre}
@@ -78,37 +84,17 @@ export function HojaEnvio({ proveedor, resumen, foto, referencia, extra, onClose
         </Dato>
       </ul>
 
-      {llamada ? (
-        <div className="flex flex-col gap-3">
-          <p
-            role="status"
-            className="rounded-2xl bg-ok-tint px-4 py-3 text-[15px] leading-[22px] text-ok-ink"
-          >
-            Llamada simulada. En la demo no marcamos números reales.
-          </p>
-          <PrimaryButton onClick={onConfirmar}>Seguir al seguimiento</PrimaryButton>
-        </div>
-      ) : (
-        <div className="flex flex-col gap-2.5">
-          <PrimaryButton
-            href={enlaceWhatsApp(proveedor.telefono, mensaje)}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={onConfirmar}
-            icon={<MessageCircleIcon size={22} />}
-          >
-            Escribir por WhatsApp
-          </PrimaryButton>
-          <SecondaryButton
-            href={enlaceLlamada(proveedor.telefono)}
-            onClick={() => (proveedor.telefono ? onConfirmar() : setLlamada(true))}
-            icon={<PhoneIcon size={22} />}
-          >
-            Llamar
-          </SecondaryButton>
-          <TextButton onClick={cerrar}>Volver</TextButton>
-        </div>
-      )}
+      <p className="flex items-start gap-2.5 rounded-2xl bg-ok-tint px-3.5 py-3 text-[15px] leading-[22px] text-ok-ink">
+        <ShieldCheckIcon size={20} className="mt-0.5 shrink-0" />
+        <span>El chat y el pago se hacen dentro de AlToque, así tu dinero queda protegido.</span>
+      </p>
+
+      <div className="flex flex-col gap-1">
+        <PrimaryButton onClick={enviar} icon={<SendIcon size={22} />}>
+          Enviar solicitud a {nombre}
+        </PrimaryButton>
+        <TextButton onClick={onClose}>Volver</TextButton>
+      </div>
     </BottomSheet>
   );
 }
