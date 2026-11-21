@@ -1,5 +1,6 @@
 "use client";
 
+import { CambiarVista } from "@/components/flujo/CambiarVista";
 import { Logo } from "@/components/ui/Logo";
 import { borrarServicio } from "@/lib/servicio";
 import type { Proveedor } from "@/lib/tipos";
@@ -10,16 +11,11 @@ export function Cabecera({ proveedor, enLinea = true }: { proveedor: Proveedor; 
     <header className="bg-ink px-5 pt-4 pb-1 text-white">
       <div className="flex items-center gap-3">
         <Logo size={34} />
-        <div className="flex-1 leading-tight">
+        <div className="min-w-0 flex-1 leading-tight">
           <h1 className="font-display text-[19px] font-black">AlToque Socios</h1>
-          <p className="text-[13px] font-semibold text-white/70">Sesión de socio: {proveedor.nombre}</p>
+          <p className="truncate text-[13px] font-semibold text-white/70">Sesión de socio: {proveedor.nombre}</p>
         </div>
-        <span
-          aria-hidden="true"
-          className="flex size-11 items-center justify-center rounded-full bg-white/15 font-display text-[15px] font-black"
-        >
-          {proveedor.iniciales}
-        </span>
+        <CambiarVista tono="oscuro" />
       </div>
       <div className="mt-1 flex items-center justify-between">
         <span className="flex items-center gap-2 text-[13px] font-semibold text-white/80">

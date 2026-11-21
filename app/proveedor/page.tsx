@@ -4,7 +4,6 @@
 // que eligió el conductor; sin pedido, es Carlos Huamán esperando solicitudes.
 
 import { useEffect } from "react";
-import { CambiarVista } from "@/components/flujo/CambiarVista";
 import { MECANICO_DEMO } from "@/lib/mock/mecanicos";
 import { marcarProveedorPresente, useServicio } from "@/lib/servicio";
 import { Cobrado } from "./Cobrado";
@@ -31,7 +30,6 @@ export default function PaginaProveedor() {
   return (
     <div className="flex min-h-dvh flex-1 flex-col bg-canvas">
       {vista}
-      <CambiarVista />
     </div>
   );
 }

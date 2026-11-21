@@ -46,7 +46,7 @@ export function PanelComision({ compacto = false }: { compacto?: boolean }) {
   }
 
   return (
-    <section aria-label="Comisión de AlToque" className="w-[300px] rounded-card bg-white p-5 shadow-float">
+    <section aria-label="Comisión de AlToque" className="w-[300px] rounded-card bg-white p-5 text-ink shadow-float">
       <h2 className="font-display text-heading">Así gana AlToque</h2>
       <p className="mt-1 text-small text-ink-muted">
         {servicio ? ESTADOS[servicio.estado] : "Aún no hay un pedido en curso"}
@@ -57,10 +57,10 @@ export function PanelComision({ compacto = false }: { compacto?: boolean }) {
           {filas.map((f) => (
             <div
               key={f.t}
-              className={`rounded-2xl p-3.5 ${f.destacado ? "bg-primary text-white" : "bg-canvas"}`}
+              className={`rounded-2xl p-3.5 ${f.destacado ? "bg-ink text-white" : "border border-line-soft bg-canvas text-ink"}`}
             >
               <dt className={`text-small ${f.destacado ? "text-white/80" : "text-ink-muted"}`}>{f.t}</dt>
-              <dd className="font-display text-[26px] leading-8 font-black">{f.v}</dd>
+              <dd className={`font-display text-[26px] leading-8 font-black ${f.destacado ? "text-white" : "text-ink"}`}>{f.v}</dd>
               <p className={`text-caption ${f.destacado ? "text-white/80" : "text-ink-muted"}`}>{f.s}</p>
             </div>
           ))}

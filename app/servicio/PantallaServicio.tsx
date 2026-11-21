@@ -11,7 +11,6 @@ import { RequiereSesion } from "@/components/flujo/RequiereSesion";
 import { BottomBar } from "@/components/ui/BottomBar";
 import {
   CameraIcon,
-  CheckIcon,
   HazardIcon,
   LockIcon,
   PhoneIcon,
@@ -125,22 +124,24 @@ function Pedido({ servicio }: { servicio: Servicio }) {
 
   return (
     <>
-      <CambiarVista />
       <TopBar
         title="Tu pedido"
         backHref={volverALista}
         backLabel="Volver a la lista"
         surface="white"
         action={
-          !pagado && (
-            <button
-              type="button"
-              onClick={cancelar}
-              className="flex min-h-12 items-center px-2.5 text-[15px] font-bold text-primary"
-            >
-              Cancelar
-            </button>
-          )
+          <div className="flex items-center">
+            <CambiarVista />
+            {!pagado && (
+              <button
+                type="button"
+                onClick={cancelar}
+                className="flex min-h-12 items-center px-2.5 text-[15px] font-bold text-primary"
+              >
+                Cancelar
+              </button>
+            )}
+          </div>
         }
       />
 
@@ -165,32 +166,31 @@ function Pedido({ servicio }: { servicio: Servicio }) {
             </div>
           </div>
 
-          <ol aria-label="Estado del pedido" className="grid grid-cols-6 gap-0.5 text-center">
-            {PASOS.map((nombre, i) => {
-              const hecho = i < actual;
-              const ahora = i === actual && !rechazado;
-              return (
+          <div className="flex flex-col gap-2">
+            <ol aria-label="Estado del pedido" className="flex gap-1">
+              {PASOS.map((nombre, i) => (
                 <li
                   key={nombre}
-                  aria-current={ahora ? "step" : undefined}
-                  className={`flex flex-col items-center gap-1 text-[11px] leading-[14px] ${
-                    hecho || ahora ? "font-extrabold text-ink" : "text-ink-muted"
+                  aria-current={i === actual && !rechazado ? "step" : undefined}
+                  className={`h-2 flex-1 rounded-full ${
+                    i < actual ? "bg-primary" : i === actual && !rechazado ? "bg-primary/45" : "bg-line"
                   }`}
                 >
-                  <span
-                    aria-hidden="true"
-                    className={`flex size-6 items-center justify-center rounded-full ${
-                      hecho ? "bg-primary text-white" : ahora ? "border-2 border-primary bg-white" : "bg-line"
-                    }`}
-                  >
-                    {hecho && <CheckIcon size={13} strokeWidth={3.4} />}
-                    {ahora && <span className="size-2 rounded-full bg-primary" />}
+                  <span className="sr-only">
+                    {nombre}
+                    {i < actual ? ", hecho" : i === actual && !rechazado ? ", paso actual" : ""}
                   </span>
-                  {nombre}
                 </li>
-              );
-            })}
-          </ol>
+              ))}
+            </ol>
+            <p className="text-[14px] leading-5 font-bold">
+              {rechazado
+                ? "Solicitud rechazada"
+                : actual >= PASOS.length
+                  ? "Todo listo"
+                  : `Paso ${actual + 1} de ${PASOS.length}: ${PASOS[actual]}`}
+            </p>
+          </div>
 
           <SecondaryButton size="sm" onClick={() => setLlamada(true)} icon={<PhoneIcon size={18} />}>
             Llamar
@@ -225,6 +225,7 @@ function Pedido({ servicio }: { servicio: Servicio }) {
               <Burbuja key={m.id} mensaje={m} />
             ))}
           </ul>
+          {estado === "cotizado" && cotizacion && <TarjetaCotizacion servicio={servicio} />}
           <div ref={fin} />
         </section>
 
@@ -252,7 +253,11 @@ function Pedido({ servicio }: { servicio: Servicio }) {
       </main>
 
       <BottomBar surface="white" className="gap-2.5">
-        {estado === "cotizado" && cotizacion && <TarjetaCotizacion servicio={servicio} />}
+        {estado === "cotizado" && cotizacion && (
+          <PrimaryButton href={RUTAS.pagoServicio} icon={<LockIcon size={20} />}>
+            Precio final {soles(desglosar(cotizacion.precio).totalConductor)} · Pagar
+          </PrimaryButton>
+        )}
 
         {pagado && (
           <PrimaryButton href={RUTAS.reciboServicio} icon={<ShieldCheckIcon size={22} />}>
@@ -324,7 +329,7 @@ function TarjetaCotizacion({ servicio }: { servicio: Servicio }) {
   return (
     <section
       aria-label="Precio final"
-      className="flex flex-col gap-2 rounded-[18px] border-2 border-primary bg-surface p-3.5"
+      className="flex flex-col gap-2 rounded-[18px] border-2 border-primary bg-surface p-3.5 text-ink"
     >
       <h2 className="font-display text-[17px] leading-[22px] font-black">
         {servicio.proveedor.nombre} te envió el precio final
@@ -340,7 +345,6 @@ function TarjetaCotizacion({ servicio }: { servicio: Servicio }) {
         </div>
       </dl>
       {cot.nota && <p className="text-[13px] leading-[18px] text-ink-muted">{cot.nota}</p>}
-      <PrimaryButton href={RUTAS.pagoServicio}>Pagar {soles(d.totalConductor)}</PrimaryButton>
     </section>
   );
 }
