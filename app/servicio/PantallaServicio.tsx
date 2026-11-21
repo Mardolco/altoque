@@ -36,6 +36,7 @@ import {
   type Servicio,
 } from "@/lib/servicio";
 import { DestinoTraslado } from "../nivel-3/esperando/DestinoTraslado";
+import { CambiarVista } from "@/components/flujo/CambiarVista";
 import { horaCorta, useServicioOInicio } from "./_compartido";
 import { simularSiguientePaso, usePiloto } from "./_piloto";
 
@@ -124,6 +125,7 @@ function Pedido({ servicio }: { servicio: Servicio }) {
 
   return (
     <>
+      <CambiarVista />
       <TopBar
         title="Tu pedido"
         backHref={volverALista}
