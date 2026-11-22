@@ -4,7 +4,7 @@
 //
 // Tres pasos en la misma pantalla:
 //   datos     alerta de seguridad, ubicación, dónde está el auto y las ruedas
-//   consulta  "Consultando disponibilidad por WhatsApp..." (simulado)
+//   consulta  "Consultando disponibilidad..." (simulado)
 //   lista     hasta 5 grúas, ordenadas, para comparar y elegir
 
 import Link from "next/link";
@@ -240,7 +240,7 @@ function Contenido() {
           onClose={() => setElegida(null)}
           onConfirmar={() => {
             fijarSeleccion({ gruaId: elegida.id, destino: null });
-            router.push(RUTAS.esperandoGrua);
+            router.push(RUTAS.servicio);
           }}
         />
       )}

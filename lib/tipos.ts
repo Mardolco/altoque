@@ -75,7 +75,8 @@ export type Resena = {
   texto: string;
 };
 
-export type MedioDePago = "Yape" | "Plin" | "Tarjeta" | "Efectivo";
+// Solo pagos dentro de la app: así AlToque retiene el pago y cobra su comisión.
+export type MedioDePago = "Yape" | "Plin" | "Tarjeta";
 
 type ProveedorBase = {
   id: string;
@@ -86,9 +87,9 @@ type ProveedorBase = {
   disponibleDesde: string | null; // "9:30 p. m." si está ocupado
   precio: RangoPrecio | null;
   motivo: string | null; // por qué es la mejor opción
-  telefono: string | null; // para tel: y wa.me; null mientras no haya un número de demo
+  telefono: string | null; // para tel:; null mientras no haya un número de demo
   pagos: MedioDePago[]; // cómo se le puede pagar
-  respondio: string; // "Hace 1 min": respuesta simulada a la consulta por WhatsApp
+  respondio: string; // "Hace 1 min": respuesta simulada a la consulta de disponibilidad
 };
 
 export type Mecanico = ProveedorBase & {

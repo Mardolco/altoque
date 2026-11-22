@@ -29,7 +29,7 @@ import { SecondaryButton } from "@/components/ui/SecondaryButton";
 import { TextButton } from "@/components/ui/TextButton";
 import { TopBar } from "@/components/ui/TopBar";
 import { VerifiedBadge } from "@/components/ui/VerifiedBadge";
-import { enlaceLlamada, enlaceWhatsApp } from "@/lib/contacto";
+import { enlaceLlamada } from "@/lib/contacto";
 import { useFlujo } from "@/lib/flujo";
 import { primerNombre } from "@/lib/formato";
 import { GRUA_DEMO } from "@/lib/mock/gruas";
@@ -90,7 +90,7 @@ function textosDe(quien: Props["quien"], falla: Falla, proveedor: Proveedor) {
 }
 
 /** Consejos de seguridad mientras esperas, según la falla y quién viene. */
-function consejosDe(quien: Props["quien"], falla: Falla): string[] {
+export function consejosDe(quien: Props["quien"], falla: Falla): string[] {
   const base = [
     "Espera dentro del auto con los seguros puestos.",
     "Deja prendidas las luces de emergencia.",
@@ -256,29 +256,15 @@ export function Esperando({ quien, proveedor: elegido, extra }: Props) {
               ))}
             </ol>
           </div>
-          <div className="grid grid-cols-2 gap-2.5">
-            {/* Sin teléfono en lib/mock, "Llamar" simula la llamada. */}
-            <SecondaryButton
-              size="sm"
-              href={enlaceLlamada(proveedor.telefono)}
-              onClick={proveedor.telefono ? undefined : () => setLlamada(true)}
-              icon={<PhoneIcon size={18} />}
-            >
-              Llamar
-            </SecondaryButton>
-            <SecondaryButton
-              size="sm"
-              href={enlaceWhatsApp(
-                proveedor.telefono,
-                `Hola, soy ${USUARIO.nombre}. Te escribo por AlToque. ${diagnostico.resumen}`,
-              )}
-              target="_blank"
-              rel="noopener noreferrer"
-              icon={<MessageCircleIcon size={18} />}
-            >
-              WhatsApp
-            </SecondaryButton>
-          </div>
+          {/* Sin teléfono en lib/mock, "Llamar" simula la llamada. */}
+          <SecondaryButton
+            size="sm"
+            href={enlaceLlamada(proveedor.telefono)}
+            onClick={proveedor.telefono ? undefined : () => setLlamada(true)}
+            icon={<PhoneIcon size={18} />}
+          >
+            Llamar
+          </SecondaryButton>
           {llamada && (
             <p role="status" className="rounded-2xl bg-ok-tint px-3.5 py-2.5 text-[14px] leading-5 text-ok-ink">
               Llamada simulada. En la demo no marcamos números reales.

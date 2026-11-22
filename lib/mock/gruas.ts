@@ -7,7 +7,7 @@
 
 import type { Falla, Grua, MedioDePago } from "../tipos";
 
-const TODOS: MedioDePago[] = ["Yape", "Plin", "Tarjeta", "Efectivo"];
+const TODOS: MedioDePago[] = ["Yape", "Plin", "Tarjeta"];
 
 export const GRUAS: Grua[] = [
   {
@@ -55,7 +55,7 @@ export const GRUAS: Grua[] = [
     precio: { min: 120, max: 160 },
     motivo: null,
     telefono: null,
-    pagos: ["Yape", "Plin", "Efectivo"],
+    pagos: ["Yape", "Plin", "Tarjeta"],
     respondio: "Respondió hace 2 min",
   },
   {
@@ -104,7 +104,7 @@ export const GRUAS: Grua[] = [
     precio: null,
     motivo: null,
     telefono: null,
-    pagos: ["Yape", "Efectivo"],
+    pagos: ["Yape", "Plin", "Tarjeta"],
     respondio: "Respondió hace 3 min: ocupada",
   },
   {

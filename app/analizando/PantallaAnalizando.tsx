@@ -4,13 +4,13 @@
 //
 // Llama a /api/triaje con lo que contó el usuario. En el diseño la pantalla
 // avanza por tiempo; aquí los dos primeros pasos avanzan por tiempo y el
-// último termina cuando responde la API. Recién ahí aparece "Continuar".
+// último termina cuando responde la API. Con los tres pasos marcados, la app
+// avanza sola: aquí el usuario no decide nada, así que no le pedimos un toque.
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { BottomBar } from "@/components/ui/BottomBar";
 import {
-  ArrowRightIcon,
   CircleCheckIcon,
   CircleIcon,
   FallaIcon,
@@ -30,6 +30,8 @@ import { pedirTriaje } from "@/lib/triaje";
 type Resultado = { ok: true; respuesta: RespuestaTriaje } | { ok: false };
 
 const MS_POR_PASO = 1200;
+/** Pausa para que se vea el tercer check antes de avanzar solo. */
+const MS_ANTES_DE_AVANZAR = 900;
 
 export function PantallaAnalizando() {
   const router = useRouter();
@@ -83,13 +85,6 @@ export function PantallaAnalizando() {
     respuesta?.tipo === "diagnostico" ? "Preparando tu diagnóstico" : "Preparando unas preguntas",
   ];
 
-  function continuar() {
-    if (respuesta?.tipo === "preguntas") guardarPreguntas(respuesta.preguntas);
-    if (respuesta?.tipo === "diagnostico") {
-      guardarDiagnostico(respuesta.diagnostico, respuesta.notas);
-    }
-  }
-
   function reintentar() {
     setResultado(null);
     setIntento((n) => n + 1);
@@ -97,6 +92,17 @@ export function PantallaAnalizando() {
 
   const destino =
     respuesta?.tipo === "diagnostico" ? rutaDeDiagnostico(respuesta.diagnostico) : RUTAS.preguntas;
+
+  // Avance automático cuando los tres pasos están marcados.
+  useEffect(() => {
+    if (!respuesta) return;
+    const t = window.setTimeout(() => {
+      if (respuesta.tipo === "preguntas") guardarPreguntas(respuesta.preguntas);
+      if (respuesta.tipo === "diagnostico") guardarDiagnostico(respuesta.diagnostico, respuesta.notas);
+      router.replace(destino);
+    }, MS_ANTES_DE_AVANZAR);
+    return () => window.clearTimeout(t);
+  }, [respuesta, destino, guardarPreguntas, guardarDiagnostico, router]);
 
   return (
     <>
@@ -187,13 +193,9 @@ export function PantallaAnalizando() {
 
       <BottomBar>
         {respuesta ? (
-          <PrimaryButton
-            href={destino}
-            onClick={continuar}
-            iconEnd={<ArrowRightIcon size={22} strokeWidth={2.4} />}
-          >
-            Continuar
-          </PrimaryButton>
+          <p role="status" className="flex min-h-14 items-center justify-center text-[15px] font-bold text-ok-ink">
+            {respuesta.tipo === "diagnostico" ? "Listo, ya tenemos tu diagnóstico" : "Listo, unas preguntas rápidas"}
+          </p>
         ) : fallo ? (
           <div className="flex flex-col gap-1">
             <PrimaryButton onClick={reintentar}>Intentar de nuevo</PrimaryButton>

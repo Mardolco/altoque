@@ -4,7 +4,7 @@
 //
 // Tres pasos en la misma pantalla:
 //   datos     confirmar ubicación y si el auto se puede mover
-//   consulta  "Consultando disponibilidad por WhatsApp..." (simulado)
+//   consulta  "Consultando disponibilidad..." (simulado)
 //   lista     hasta 5 mecánicos, ordenados, para comparar y elegir
 
 import Link from "next/link";
@@ -255,7 +255,7 @@ function Contenido() {
           onClose={() => setElegido(null)}
           onConfirmar={() => {
             fijarSeleccion({ mecanicoId: elegido.id });
-            router.push(RUTAS.esperandoMecanico);
+            router.push(RUTAS.servicio);
           }}
         />
       )}
