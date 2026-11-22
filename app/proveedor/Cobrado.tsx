@@ -41,7 +41,7 @@ export function Cobrado({ servicio }: { servicio: Servicio }) {
               </div>
             </dl>
             <p className="mt-3 text-small text-ink-muted">
-              Se deposita en tu cuenta en breve.{servicio.pagoAdicional && " Incluye el adicional."}
+              Se deposita en tu cuenta en breve.{servicio.adicional?.aprobado && " Incluye el adicional."}
             </p>
           </section>
         </Aparecer>

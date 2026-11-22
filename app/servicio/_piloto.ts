@@ -5,8 +5,9 @@
 // Solo actúa si el conductor eligió "Que responda solo" (modoProveedor "auto")
 // y no hay una vista de proveedor abierta. Así nunca se adelanta a quien quiere
 // atender la solicitud en AlToque Socios. En orden: a los 4 s de elegir el modo
-// revisa el caso y cotiza; cuando el conductor paga, sale 2 s
-// después y llega 10 s más tarde. No cotiza adicionales. Antes de cada paso
+// revisa el caso y cotiza; cuando el conductor acepta la tarifa, sale 2 s
+// después y llega 10 s más tarde. Nunca paga ni pasa a "por pagar": el
+// conductor toca "Ya me ayudaron". No cotiza adicionales. Antes de cada paso
 // vuelve a mirar la presencia y el estado actual, así que nunca pelea con un
 // proveedor real.
 
@@ -14,12 +15,13 @@ import { useEffect, useRef } from "react";
 import { leerSeleccion } from "@/app/nivel-2/_compartido/seleccion";
 import { tarifaInicial } from "@/lib/mock/tarifas";
 import {
+  aceptarTarifa,
   cambiarEstado,
   enviarCotizacion,
   enviarMensaje,
   leerServicio,
-  pagarServicio,
   proveedorPresente,
+  terminarTrabajo,
   useServicio,
   type EstadoServicio,
   type Servicio,
@@ -27,7 +29,7 @@ import {
 import { primerNombre } from "@/lib/formato";
 
 const COTIZA = 4000; // desde que se creó el pedido
-const SALE = 2000; // desde el pago
+const SALE = 2000; // desde que el conductor aceptó la tarifa
 const LLEGA = 10000; // desde que salió
 const RESPONDE = 1500; // espera antes de contestar un mensaje del conductor
 
@@ -39,9 +41,9 @@ function saludoSalida(s: Servicio): string {
   const p = s.proveedor;
   const min = p.minutos ?? 10;
   if (p.tipo === "grua") {
-    return `Recibí tu pago, ${s.conductor.nombre}. Voy en camino con la grúa de placa ${p.placa}, llego en unos ${min} minutos.`;
+    return `Hola ${s.conductor.nombre}, ya voy en camino con la grúa de placa ${p.placa}, llego en unos ${min} minutos.`;
   }
-  return `Recibí tu pago, ${s.conductor.nombre}. Soy ${primerNombre(p.nombre)}, ya voy en camino, llego en unos ${min} minutos.`;
+  return `Hola ${s.conductor.nombre}, soy ${primerNombre(p.nombre)}, ya voy en camino, llego en unos ${min} minutos.`;
 }
 
 function cotizar(s: Servicio) {
@@ -68,7 +70,10 @@ function respuestaA(texto: string, foto: boolean, s: Servicio): string {
   return "Entendido, ya voy para allá.";
 }
 
-/** Avanza el pedido un paso, como lo haría el proveedor. Sirve también para el botón de demo. */
+/**
+ * Avanza el pedido un paso, como lo haría el proveedor. Sirve también para el
+ * botón de demo. Nunca paga: el pago lo hace el conductor.
+ */
 export function simularSiguientePaso() {
   const s = leerServicio();
   if (!s) return;
@@ -80,14 +85,17 @@ export function simularSiguientePaso() {
       break;
     }
     case "cotizado":
-      pagarServicio("Yape");
+      aceptarTarifa();
       break;
-    case "pagado":
+    case "aceptado":
       cambiarEstado("en_camino");
       enviarMensaje("proveedor", saludoSalida(s));
       break;
     case "en_camino":
       cambiarEstado("llego");
+      break;
+    case "llego":
+      terminarTrabajo();
       break;
   }
 }
@@ -128,7 +136,7 @@ export function usePiloto() {
 
       if (
         (s.estado === "solicitado" && Date.now() - (s.modoDesde ?? s.creadoEn) >= COTIZA) ||
-        (s.estado === "pagado" && enEstado >= SALE) ||
+        (s.estado === "aceptado" && enEstado >= SALE) ||
         (s.estado === "en_camino" && enEstado >= LLEGA)
       ) {
         simularSiguientePaso();

@@ -1,27 +1,30 @@
 "use client";
 
-import { COMISION_PROVEEDOR, desglosar, soles, TARIFA_SERVICIO_CONDUCTOR } from "@/lib/mock/comision";
-import { totalesPagados, useServicio, type EstadoServicio } from "@/lib/servicio";
+import { COMISION_PROVEEDOR, soles, TARIFA_SERVICIO_CONDUCTOR } from "@/lib/mock/comision";
+import { montoAPagar, totalesPagados, useServicio, type EstadoServicio } from "@/lib/servicio";
 
 const ESTADOS: Record<EstadoServicio, string> = {
   solicitado: "Proveedor revisando el caso",
   rechazado: "Solicitud rechazada",
-  cotizado: "Tarifa enviada, falta pagar",
-  pagado: "Pago recibido, el proveedor sale",
+  cotizado: "Tarifa enviada, esperando que el conductor la acepte",
+  aceptado: "Tarifa aceptada, el proveedor sale",
   en_camino: "Proveedor en camino",
   llego: "Proveedor en el lugar",
-  finalizado: "Servicio terminado",
+  por_pagar: "Servicio terminado, falta el pago",
+  pagado: "Pago recibido, servicio cerrado",
 };
 
 export function PanelComision({ compacto = false }: { compacto?: boolean }) {
   const servicio = useServicio();
-  // Con pago, suma el adicional si lo hubo; solo cotizado, lo que pagaría.
-  const d = (servicio ? totalesPagados(servicio) : null) ?? (servicio?.cotizacion ? desglosar(servicio.cotizacion.precio) : null);
+  // Pagado: lo cobrado de verdad. Antes: estimado (tarifa + adicional aprobado), se cobra al terminar.
+  const pagado = servicio ? totalesPagados(servicio) : null;
+  const d = pagado ?? (servicio ? montoAPagar(servicio) : null);
+  const estimado = d !== null && pagado === null;
   const porcentaje = Math.round(COMISION_PROVEEDOR * 100);
 
   const filas = d
     ? [
-        { t: "Paga el conductor", v: soles(d.totalConductor), s: `${soles(d.precio)} + tarifa de servicio ${soles(TARIFA_SERVICIO_CONDUCTOR)}` },
+        { t: estimado ? "Pagará el conductor" : "Paga el conductor", v: soles(d.totalConductor), s: `${soles(d.precio)} + tarifa de servicio ${soles(TARIFA_SERVICIO_CONDUCTOR)}` },
         { t: "Recibe el proveedor", v: soles(d.netoProveedor), s: `${soles(d.precio)} menos comisión ${soles(d.comision)}` },
         { t: "Gana AlToque", v: soles(d.ingresoAlToque), s: `Comisión ${porcentaje} % ${soles(d.comision)} + tarifa ${soles(d.tarifaServicio)}`, destacado: true },
       ]
@@ -32,7 +35,7 @@ export function PanelComision({ compacto = false }: { compacto?: boolean }) {
       <section aria-label="Comisión de AlToque" className="bg-ink px-4 py-2 text-white">
         {d ? (
           <p className="text-center text-[13px] font-semibold">
-            Conductor {soles(d.totalConductor)} · Proveedor {soles(d.netoProveedor)} · AlToque{" "}
+            {estimado ? "Estimado: " : ""}Conductor {soles(d.totalConductor)} · Proveedor {soles(d.netoProveedor)} · AlToque{" "}
             <b className="text-white">{soles(d.ingresoAlToque)}</b>
           </p>
         ) : (
@@ -50,6 +53,7 @@ export function PanelComision({ compacto = false }: { compacto?: boolean }) {
       <p className="mt-1 text-small text-ink-muted">
         {servicio ? ESTADOS[servicio.estado] : "Aún no hay un pedido en curso"}
       </p>
+      {estimado && <p className="mt-1 text-caption font-bold text-primary">Estimado. Se cobra al terminar.</p>}
 
       {d ? (
         <dl className="mt-4 flex flex-col gap-3" aria-live="polite">

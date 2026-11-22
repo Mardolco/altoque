@@ -1,7 +1,7 @@
 "use client";
 
 // Pago dentro de la app, simulado: no se pide ningún número de tarjeta ni de
-// celular. AlToque "retiene" el pago hasta que el conductor confirme.
+// celular. Se paga al final, cuando el conductor ya recibió la ayuda.
 
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -10,9 +10,9 @@ import { BottomBar } from "@/components/ui/BottomBar";
 import { LockIcon, ShieldCheckIcon } from "@/components/ui/icons";
 import { PrimaryButton } from "@/components/ui/PrimaryButton";
 import { TopBar } from "@/components/ui/TopBar";
-import { desglosar, soles } from "@/lib/mock/comision";
+import { soles } from "@/lib/mock/comision";
 import { RUTAS } from "@/lib/rutas";
-import { pagarAdicional, pagarServicio, type Cotizacion } from "@/lib/servicio";
+import { montoAPagar, pagarServicio, terminarTrabajo, type Servicio } from "@/lib/servicio";
 import type { MedioDePago } from "@/lib/tipos";
 import { useServicioOInicio } from "../_compartido";
 
@@ -27,56 +27,42 @@ export function PantallaPago() {
 function Contenido() {
   const router = useRouter();
   const servicio = useServicioOInicio();
-  // Con un adicional pendiente se paga el adicional; si no, la tarifa inicial.
-  const paraAdicional = servicio?.adicional != null && servicio.pagoAdicional === null;
-  const yaPagado = servicio != null && !paraAdicional && servicio.pago != null;
-  const destinoPagado = servicio?.pagoAdicional ? RUTAS.servicio : RUTAS.reciboServicio;
-  const sinPrecio = servicio !== null && !paraAdicional && servicio.cotizacion === null;
+  const estado = servicio?.estado;
+  const yaPagado = estado === "pagado";
+  // Aún no se aceptó la tarifa: no hay nada que pagar.
+  const sinTrabajo = estado === "solicitado" || estado === "cotizado" || estado === "rechazado";
+  const porTerminar = estado === "aceptado" || estado === "en_camino" || estado === "llego";
 
   useEffect(() => {
-    if (yaPagado) router.replace(destinoPagado);
-    else if (sinPrecio) router.replace(RUTAS.servicio);
-  }, [yaPagado, destinoPagado, sinPrecio, router]);
+    if (yaPagado) router.replace(RUTAS.reciboServicio);
+    else if (sinTrabajo) router.replace(RUTAS.servicio);
+    else if (porTerminar) terminarTrabajo(); // entró directo a /servicio/pago
+  }, [yaPagado, sinTrabajo, porTerminar, router]);
 
-  const cotizacion = paraAdicional ? servicio?.adicional : servicio?.cotizacion;
-  if (!servicio || !cotizacion || yaPagado) return <main className="flex-1" aria-busy="true" />;
-  return <Formulario cotizacion={cotizacion} adicional={paraAdicional} />;
+  if (!servicio || estado !== "por_pagar") return <main className="flex-1" aria-busy="true" />;
+  return <Formulario servicio={servicio} />;
 }
 
 const nuevoCodigo = () => String(Math.floor(100000 + Math.random() * 900000));
 
 const MEDIOS: MedioDePago[] = ["Yape", "Plin", "Tarjeta"];
 
-function Formulario({
-  cotizacion,
-  adicional,
-}: {
-  cotizacion: Cotizacion;
-  adicional: boolean;
-}) {
-  const router = useRouter();
+function Formulario({ servicio }: { servicio: Servicio }) {
   const [medio, setMedio] = useState<MedioDePago>("Yape");
   const [codigo] = useState(nuevoCodigo);
   const [procesando, setProcesando] = useState(false);
   const espera = useRef<number | undefined>(undefined);
-  // El adicional no lleva tarifa de servicio: ya se cobró con la tarifa inicial.
-  const d = adicional
-    ? { ...desglosar(cotizacion.precio), tarifaServicio: 0, totalConductor: cotizacion.precio }
-    : desglosar(cotizacion.precio);
+  const d = montoAPagar(servicio);
+  const extra = servicio.adicional?.aprobado ? servicio.adicional : null;
 
   useEffect(() => () => window.clearTimeout(espera.current), []);
 
+  if (!d) return <main className="flex-1" aria-busy="true" />;
+
   function pagar() {
     setProcesando(true);
-    espera.current = window.setTimeout(() => {
-      if (adicional) {
-        pagarAdicional(medio);
-        router.push(RUTAS.servicio);
-      } else {
-        pagarServicio(medio);
-        router.push(RUTAS.reciboServicio);
-      }
-    }, 1100);
+    // Al pagar, el pedido pasa a "pagado" y Contenido lleva al recibo.
+    espera.current = window.setTimeout(() => pagarServicio(medio), 1100);
   }
 
   const etiqueta =
@@ -84,7 +70,7 @@ function Formulario({
 
   return (
     <>
-      <TopBar title={adicional ? "Pagar adicional" : "Pagar"} backHref={RUTAS.servicio} backLabel="Volver al chat" />
+      <TopBar title="Pagar" backHref={RUTAS.servicio} backLabel="Volver al chat" />
 
       <main className="flex flex-1 flex-col gap-5 px-5 pb-4">
         <section className="flex flex-col gap-2.5">
@@ -132,11 +118,13 @@ function Formulario({
 
         <section aria-label="Resumen del pago" className="flex flex-col gap-2 rounded-2xl bg-surface p-4">
           <dl className="flex flex-col gap-1.5 text-[16px] leading-[22px]">
-            {cotizacion.detalle.map((l) => (
+            {servicio.cotizacion?.detalle.map((l) => (
               <Fila key={l.concepto} a={l.concepto} b={soles(l.monto)} />
             ))}
-            <Fila a={adicional ? "Adicional" : "Precio del servicio"} b={soles(d.precio)} fuerte />
-            {!adicional && <Fila a="Tarifa de servicio AlToque" b={soles(d.tarifaServicio)} />}
+            {extra?.detalle.map((l) => (
+              <Fila key={`adicional-${l.concepto}`} a={`Adicional: ${l.concepto}`} b={soles(l.monto)} />
+            ))}
+            <Fila a="Tarifa de servicio AlToque" b={soles(d.tarifaServicio)} />
             <div className="mt-1 flex items-baseline justify-between border-t border-line-strong pt-2 font-display text-[22px] font-black">
               <dt>Total</dt>
               <dd>{soles(d.totalConductor)}</dd>
@@ -146,7 +134,7 @@ function Formulario({
 
         <p className="flex items-start gap-2.5 rounded-2xl bg-ok-tint px-3.5 py-3 text-[15px] leading-[22px] text-ok-ink">
           <ShieldCheckIcon size={20} className="mt-0.5 shrink-0" />
-          <span>AlToque retiene el pago y se lo entrega al proveedor cuando el servicio termine.</span>
+          <span>Pagas después de recibir la ayuda. AlToque le entrega el pago al proveedor.</span>
         </p>
       </main>
 

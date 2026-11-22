@@ -6,17 +6,18 @@ import { SecondaryButton } from "@/components/ui/SecondaryButton";
 import { Aparecer } from "@/components/ui/efectos";
 import { MapPinIcon } from "@/components/ui/icons";
 import { desglosar, soles } from "@/lib/mock/comision";
-import { cambiarEstado, type Servicio } from "@/lib/servicio";
+import { cambiarEstado, montoAPagar, terminarTrabajo, type EstadoServicio, type Servicio } from "@/lib/servicio";
 import { Cabecera } from "./Cabecera";
 import { EntradaChat, Mensajes } from "./Chat";
 import { Cotizar } from "./Cotizar";
 import { PORCENTAJE } from "./datos";
 
-const ETIQUETA: Record<string, string> = {
+const ETIQUETA: Partial<Record<EstadoServicio, string>> = {
   cotizado: "Tarifa enviada",
-  pagado: "Pago recibido",
+  aceptado: "Tarifa aceptada",
   en_camino: "Vas en camino",
   llego: "Llegaste al lugar",
+  por_pagar: "Trabajo terminado",
 };
 
 /** Texto del aviso que el sistema deja en el chat cuando el conductor rechaza el adicional. */
@@ -24,14 +25,15 @@ const AVISO_RECHAZO = "No aceptaste el adicional";
 
 export function Trabajo({ servicio }: { servicio: Servicio }) {
   const [componiendo, setComponiendo] = useState(false);
-  const { estado, proveedor, conductor, adicional, pagoAdicional } = servicio;
+  const { estado, proveedor, conductor, adicional } = servicio;
 
   if (componiendo && estado === "llego") {
     return <Cotizar servicio={servicio} adicional onVolver={() => setComponiendo(false)} />;
   }
 
   const rechazado = !adicional && servicio.mensajes.some((m) => m.texto.startsWith(AVISO_RECHAZO));
-  const d = servicio.pago?.desglose ?? desglosar(servicio.cotizacion?.precio ?? 0);
+  const esperado = desglosar(servicio.cotizacion?.precio ?? 0);
+  const aPagar = montoAPagar(servicio);
 
   return (
     <>
@@ -48,30 +50,29 @@ export function Trabajo({ servicio }: { servicio: Servicio }) {
 
             {estado === "cotizado" && servicio.cotizacion && (
               <p className="mt-3 rounded-2xl bg-caution-tint px-3.5 py-3 text-small font-semibold text-caution-ink">
-                Cotizaste {soles(servicio.cotizacion.precio)}. Esperando que el conductor acepte y pague.
+                Tarifa enviada. Esperando que el conductor la acepte.
               </p>
             )}
 
-            {estado === "pagado" && (
+            {estado === "aceptado" && (
               <div className="mt-3 flex flex-col gap-3">
                 <p className="rounded-2xl bg-ok-tint px-3.5 py-3 text-small font-semibold text-ok-ink">
-                  Pago recibido en AlToque: puedes salir.
+                  Tarifa aceptada: puedes salir. Cobras al terminar, dentro de AlToque.
                 </p>
                 <dl className="flex flex-col gap-2 text-body">
                   <div className="flex justify-between">
                     <dt>Precio</dt>
-                    <dd className="font-bold">{soles(d.precio)}</dd>
+                    <dd className="font-bold">{soles(esperado.precio)}</dd>
                   </div>
                   <div className="flex justify-between text-ink-muted">
                     <dt>Comisión AlToque ({PORCENTAJE})</dt>
-                    <dd>- {soles(d.comision)}</dd>
+                    <dd>- {soles(esperado.comision)}</dd>
                   </div>
                   <div className="flex justify-between border-t border-line pt-2 font-display text-heading">
-                    <dt>Neto que recibes</dt>
-                    <dd className="text-ok-ink">{soles(d.netoProveedor)}</dd>
+                    <dt>Neto que recibirás</dt>
+                    <dd className="text-ok-ink">{soles(esperado.netoProveedor)}</dd>
                   </div>
                 </dl>
-                <p className="text-small text-ink-muted">Se deposita al terminar el servicio.</p>
                 <PrimaryButton size="sm" onClick={() => cambiarEstado("en_camino")}>
                   Voy en camino
                 </PrimaryButton>
@@ -88,14 +89,14 @@ export function Trabajo({ servicio }: { servicio: Servicio }) {
 
             {estado === "llego" && (
               <div className="mt-3 flex flex-col gap-2.5">
-                {adicional && !pagoAdicional && (
+                {adicional && !adicional.aprobado && (
                   <p className="rounded-2xl bg-caution-tint px-3.5 py-3 text-small font-semibold text-caution-ink">
                     Adicional enviado: {soles(adicional.precio)}. Esperando que el conductor lo apruebe.
                   </p>
                 )}
-                {adicional && pagoAdicional && (
+                {adicional?.aprobado && (
                   <p className="rounded-2xl bg-ok-tint px-3.5 py-3 text-small font-semibold text-ok-ink">
-                    Adicional pagado: {soles(adicional.precio)}, neto {soles(pagoAdicional.desglose.netoProveedor)}.
+                    Adicional aprobado: {soles(adicional.precio)}. Se suma al pago final.
                   </p>
                 )}
                 {rechazado && (
@@ -108,10 +109,19 @@ export function Trabajo({ servicio }: { servicio: Servicio }) {
                     Cotizar adicional
                   </SecondaryButton>
                 )}
-                <PrimaryButton size="sm" onClick={() => cambiarEstado("finalizado")}>
+                <PrimaryButton size="sm" onClick={terminarTrabajo}>
                   Marcar trabajo terminado
                 </PrimaryButton>
               </div>
+            )}
+
+            {estado === "por_pagar" && (
+              <p
+                role="status"
+                className="mt-3 rounded-2xl bg-caution-tint px-3.5 py-3 text-small font-semibold text-caution-ink"
+              >
+                Esperando el pago del conductor{aPagar ? `: ${soles(aPagar.totalConductor)}` : ""}.
+              </p>
             )}
           </section>
         </Aparecer>
