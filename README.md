@@ -60,12 +60,13 @@ En cualquier momento del Nivel 1 están los botones "Necesito un mecánico" y "N
 En los Niveles 2 y 3, el conductor ya no sale a WhatsApp. Al elegir un mecánico o una grúa toca "Enviar solicitud" y todo sigue en `/servicio`:
 
 1. El proveedor revisa el caso (foto, ubicación y resumen de la IA) y envía su tarifa en el chat, según la falla y la distancia (`lib/mock/tarifas.ts`).
-2. El conductor toca "Aceptar y pagar en la app" (Yape, Plin o tarjeta). La tarifa cubre la visita y la atención inicial.
-3. Recién con el pago confirmado, el proveedor sale: "Ayuda en camino", luego "Llegó".
-4. Si en el lugar hacen falta repuestos o más trabajo, el proveedor cotiza un adicional y el conductor lo aprueba y paga en el mismo chat.
-5. "Ya me ayudaron" lleva directo a la calificación.
+2. El conductor toca "Aceptar tarifa". **No paga todavía.** La tarifa cubre la visita y la atención inicial.
+3. Con la tarifa aceptada, el proveedor sale: "Ayuda en camino", luego "Llegó".
+4. Si en el lugar hacen falta repuestos o más trabajo, el proveedor cotiza un adicional y el conductor lo aprueba en el chat; se suma al pago final.
+5. Al recibir la ayuda ("Ya me ayudaron", o cuando el proveedor marca el trabajo como terminado), el conductor paga en la app (Yape, Plin o tarjeta): tarifa + adicional aprobado + tarifa de servicio.
+6. Después del pago viene el recibo y la calificación.
 
-Así nadie maneja en vano, cada taller pone sus tarifas y AlToque cobra su comisión sobre un pago real.
+Así el proveedor no cobra si no se presenta, cada taller pone sus tarifas y AlToque cobra su comisión porque el pago pasa por la app.
 
 Modelo de ingresos (`lib/mock/comision.ts`, ajustable):
 
@@ -77,7 +78,7 @@ Modelo de ingresos (`lib/mock/comision.ts`, ajustable):
 
 ### Las dos vistas
 
-- `/proveedor`: la app del mecánico o grúa ("AlToque Socios"). Recibe la solicitud con el resumen de la IA, cotiza su tarifa (ve cuánto se lleva después de la comisión), espera el pago, sale, avisa que llegó, puede cotizar un adicional y marca el trabajo como terminado.
+- `/proveedor`: la app del mecánico o grúa ("AlToque Socios"). Recibe la solicitud con el resumen de la IA, cotiza su tarifa (ve cuánto se lleva después de la comisión), sale cuando el conductor la acepta, avisa que llegó, puede cotizar un adicional, marca el trabajo como terminado y recibe el pago en la app.
 - `/demo`: para presentar en una laptop. Muestra los dos teléfonos lado a lado (conductor y mecánico) y un panel "Así gana AlToque" que se actualiza en vivo. En un celular, `/demo` muestra un selector "Conductor | Mecánico".
 - Al enviar una solicitud, el chat del conductor pregunta quién responde por el proveedor: "Atender en AlToque Socios" (abre `/proveedor` con la solicitud nueva) o "Que responda solo" (modo automático, cotiza a los 4 segundos). Nada avanza solo hasta elegir, y si se abre AlToque Socios el pedido queda en manual.
 - En un solo celular, el chip "Mecánico" / "Conductor" de la barra superior cambia de vista.
