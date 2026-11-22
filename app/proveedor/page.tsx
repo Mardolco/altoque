@@ -5,7 +5,7 @@
 
 import { useEffect } from "react";
 import { MECANICO_DEMO } from "@/lib/mock/mecanicos";
-import { marcarProveedorPresente, useServicio } from "@/lib/servicio";
+import { elegirModoProveedor, marcarProveedorPresente, useServicio } from "@/lib/servicio";
 import { Cobrado } from "./Cobrado";
 import { Inactivo } from "./Inactivo";
 import { Solicitud } from "./Solicitud";
@@ -19,6 +19,15 @@ export default function PaginaProveedor() {
     const id = setInterval(marcarProveedorPresente, 2000);
     return () => clearInterval(id);
   }, []);
+
+  // Si alguien abre Socios con un pedido en curso, ese pedido pasa a manual:
+  // el piloto automático del conductor ya no responde por el proveedor.
+  const idServicio = servicio?.id;
+  const modo = servicio?.modoProveedor ?? null;
+  const terminado = servicio?.estado === "finalizado" || servicio?.estado === "rechazado";
+  useEffect(() => {
+    if (idServicio && modo !== "manual" && !terminado) elegirModoProveedor("manual");
+  }, [idServicio, modo, terminado]);
 
   let vista;
   if (!servicio) vista = <Inactivo proveedor={MECANICO_DEMO} />;

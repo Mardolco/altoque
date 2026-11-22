@@ -2,9 +2,10 @@
 
 // Piloto automático del proveedor para la demo en un solo celular.
 //
-// Mientras no haya una vista de proveedor abierta (proveedorPresente()), esta
-// pantalla del conductor hace de proveedor, en el orden del pedido: a los 4 s
-// de crearse revisa el caso y cotiza; cuando el conductor paga, sale 2 s
+// Solo actúa si el conductor eligió "Que responda solo" (modoProveedor "auto")
+// y no hay una vista de proveedor abierta. Así nunca se adelanta a quien quiere
+// atender la solicitud en AlToque Socios. En orden: a los 4 s de elegir el modo
+// revisa el caso y cotiza; cuando el conductor paga, sale 2 s
 // después y llega 10 s más tarde. No cotiza adicionales. Antes de cada paso
 // vuelve a mirar la presencia y el estado actual, así que nunca pelea con un
 // proveedor real.
@@ -108,6 +109,7 @@ export function usePiloto() {
       if (proveedorPresente()) return;
       const s = leerServicio();
       if (!s || s.id !== id) return;
+      if ((s.modoProveedor ?? null) !== "auto") return;
       if (desde.current?.estado !== s.estado) desde.current = { estado: s.estado, t: Date.now() };
       const enEstado = Date.now() - desde.current.t;
 
@@ -125,7 +127,7 @@ export function usePiloto() {
       }
 
       if (
-        (s.estado === "solicitado" && Date.now() - s.creadoEn >= COTIZA) ||
+        (s.estado === "solicitado" && Date.now() - (s.modoDesde ?? s.creadoEn) >= COTIZA) ||
         (s.estado === "pagado" && enEstado >= SALE) ||
         (s.estado === "en_camino" && enEstado >= LLEGA)
       ) {

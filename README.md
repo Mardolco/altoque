@@ -79,7 +79,8 @@ Modelo de ingresos (`lib/mock/comision.ts`, ajustable):
 
 - `/proveedor`: la app del mecánico o grúa ("AlToque Socios"). Recibe la solicitud con el resumen de la IA, cotiza su tarifa (ve cuánto se lleva después de la comisión), espera el pago, sale, avisa que llegó, puede cotizar un adicional y marca el trabajo como terminado.
 - `/demo`: para presentar en una laptop. Muestra los dos teléfonos lado a lado (conductor y mecánico) y un panel "Así gana AlToque" que se actualiza en vivo. En un celular, `/demo` muestra un selector "Conductor | Mecánico".
-- En un solo celular, el botón "Ver como mecánico" / "Ver como conductor" cambia de vista. Si la vista del mecánico no está abierta, el mecánico responde solo (modo automático) para que la demo nunca se quede esperando.
+- Al enviar una solicitud, el chat del conductor pregunta quién responde por el proveedor: "Atender en AlToque Socios" (abre `/proveedor` con la solicitud nueva) o "Que responda solo" (modo automático, cotiza a los 4 segundos). Nada avanza solo hasta elegir, y si se abre AlToque Socios el pedido queda en manual.
+- En un solo celular, el chip "Mecánico" / "Conductor" de la barra superior cambia de vista.
 
 ## Despliegue en Vercel
 
