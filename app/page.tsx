@@ -26,6 +26,10 @@ import { USUARIO } from "@/lib/mock/usuario";
 import { RUTAS } from "@/lib/rutas";
 import { cerrarSesion, useSesion } from "@/lib/sesion";
 
+// En Inicio solo se muestran las tres fallas más comunes. Cualquier otra falla
+// entra por "Tengo una falla", que abre "Cuéntanos qué pasó" con "Otro" elegido.
+const FALLAS_COMUNES = FALLAS.filter((f) => f.id !== "otra");
+
 export default function Inicio() {
   const { empezar } = useFlujo();
   const { sesion } = useSesion();
@@ -71,22 +75,22 @@ export default function Inicio() {
         <h2 className="relative mt-[26px] mb-3 font-display text-[19px] leading-6 font-extrabold">
           ¿Qué está fallando?
         </h2>
-        <div className="relative grid grid-cols-2 gap-3">
-          {FALLAS.map((falla, i) => (
+        <div className="relative grid grid-cols-3 gap-2.5">
+          {FALLAS_COMUNES.map((falla, i) => (
             <Aparecer key={falla.id} retraso={120 + i * 70}>
               <Link
                 href={RUTAS.falla}
                 onClick={() => empezar(falla.id)}
-                className="flex h-full min-h-[116px] flex-col justify-between gap-3 rounded-card border border-line-soft bg-white p-4 text-ink no-underline shadow-card"
+                className="flex h-full min-h-[136px] flex-col gap-2.5 rounded-card border border-line-soft bg-white px-3 py-3.5 text-ink no-underline shadow-card"
               >
                 <span className="flex size-11 items-center justify-center rounded-[14px] bg-surface text-primary">
                   <FallaIcon falla={falla.id} size={26} strokeWidth={2} />
                 </span>
                 <span className="flex flex-col gap-0.5">
-                  <span className="font-display text-[17px] leading-[22px] font-extrabold">
+                  <span className="font-display text-[16px] leading-[20px] font-extrabold">
                     {falla.etiqueta}
                   </span>
-                  <span className="text-[14px] leading-[19px] text-ink-muted">
+                  <span className="text-[13px] leading-[17px] text-ink-muted">
                     {falla.detalle}
                   </span>
                 </span>
@@ -94,13 +98,16 @@ export default function Inicio() {
             </Aparecer>
           ))}
         </div>
+        <p className="relative mt-4 text-[15px] leading-[21px] text-ink-muted">
+          ¿Es otra falla, como un ruido, humo o un golpe? Toca <strong className="text-ink">Tengo una falla</strong> y cuéntanos qué pasó.
+        </p>
       </main>
 
       <BottomBar className="gap-3">
         <PrimaryButton
           size="lg"
           href={RUTAS.falla}
-          onClick={() => empezar()}
+          onClick={() => empezar("otra")}
           icon={<CarFrontIcon size={26} />}
         >
           Tengo una falla
