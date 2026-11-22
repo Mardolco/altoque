@@ -52,8 +52,8 @@ export function Cotizar({
           <h2 className="font-display text-title">{adicional ? "Cotizar adicional" : "Tu tarifa"}</h2>
           <p className="mt-1 text-small text-ink-muted">
             {adicional
-              ? "Repuestos o trabajo extra. El conductor lo aprueba y lo paga dentro de AlToque."
-              : "Según la falla y la distancia. El conductor la ve al instante, acepta y paga en la app antes de que salgas."}
+              ? "Repuestos o trabajo extra. El conductor lo aprueba y se suma al pago final, dentro de AlToque."
+              : "Según la falla y la distancia. El conductor la ve al instante y la acepta antes de que salgas. Cobras al terminar, dentro de AlToque."}
           </p>
         </div>
 

@@ -24,7 +24,7 @@ export default function PaginaProveedor() {
   // el piloto automático del conductor ya no responde por el proveedor.
   const idServicio = servicio?.id;
   const modo = servicio?.modoProveedor ?? null;
-  const terminado = servicio?.estado === "finalizado" || servicio?.estado === "rechazado";
+  const terminado = servicio?.estado === "pagado" || servicio?.estado === "rechazado";
   useEffect(() => {
     if (idServicio && modo !== "manual" && !terminado) elegirModoProveedor("manual");
   }, [idServicio, modo, terminado]);
@@ -33,7 +33,7 @@ export default function PaginaProveedor() {
   if (!servicio) vista = <Inactivo proveedor={MECANICO_DEMO} />;
   else if (servicio.estado === "solicitado") vista = <Solicitud key={servicio.id} servicio={servicio} />;
   else if (servicio.estado === "rechazado") vista = <Inactivo proveedor={servicio.proveedor} rechazado />;
-  else if (servicio.estado === "finalizado") vista = <Cobrado servicio={servicio} />;
+  else if (servicio.estado === "pagado") vista = <Cobrado servicio={servicio} />;
   else vista = <Trabajo key={servicio.id} servicio={servicio} />;
 
   return (
