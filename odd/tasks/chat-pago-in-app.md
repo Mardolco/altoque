@@ -40,3 +40,9 @@ single-pr from `feat/chat-pago-in-app`.
 - Browser, single phone 390x844: auto-pilot accepted, greeted, arrived and quoted within 20 s.
 - Not exercised in browser: Level 3 tow flow through /servicio (destination card), Plin/card/cash payment variants, reject path.
 - Native review: assess fails pre-native (`git diff` "'$GIT_DIR' too big", Windows path length). Not run.
+
+## Team corrections (2026-11-22)
+- [x] C1 Replace remaining WhatsApp provider references with the in-app chat (family share kept). Commit 8924378.
+- [x] C2 Quote and in-app payment before dispatch; cash removed; initial-fee disclaimer; optional on-site additional; 'Ya me ayudaron' to rating. Commits 1345f0e, 8924378, plus estimate fix.
+- [x] C3 Auto-advance from the analyzing screen. Commit a6deae2.
+- Browser: /demo full flow incl. additional (S/ 65 + S/ 25; panel S/ 94 / S/ 79.20 / S/ 14.80), analyzing auto-advance, tow auto-pilot quote S/ 180 + S/ 20. No console errors.
