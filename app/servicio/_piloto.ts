@@ -3,64 +3,52 @@
 // Piloto automático del proveedor para la demo en un solo celular.
 //
 // Mientras no haya una vista de proveedor abierta (proveedorPresente()), esta
-// pantalla del conductor hace de proveedor con tiempos fijos desde que se creó
-// el pedido: acepta a los 3 s, sale a los 6 s, llega a los 14 s y cotiza a los
-// 18 s. Antes de cada paso vuelve a mirar la presencia y el estado actual, así
-// que nunca pelea con un proveedor real.
+// pantalla del conductor hace de proveedor, en el orden del pedido: a los 4 s
+// de crearse revisa el caso y cotiza; cuando el conductor paga, sale 2 s
+// después y llega 10 s más tarde. No cotiza adicionales. Antes de cada paso
+// vuelve a mirar la presencia y el estado actual, así que nunca pelea con un
+// proveedor real.
 
 import { useEffect, useRef } from "react";
+import { leerSeleccion } from "@/app/nivel-2/_compartido/seleccion";
+import { tarifaInicial } from "@/lib/mock/tarifas";
 import {
   cambiarEstado,
   enviarCotizacion,
   enviarMensaje,
   leerServicio,
+  pagarServicio,
   proveedorPresente,
   useServicio,
+  type EstadoServicio,
   type Servicio,
 } from "@/lib/servicio";
 import { primerNombre } from "@/lib/formato";
 
-const ACEPTA = 3000;
-const SALE = 6000;
-const LLEGA = 14000;
-const COTIZA = 18000;
+const COTIZA = 4000; // desde que se creó el pedido
+const SALE = 2000; // desde el pago
+const LLEGA = 10000; // desde que salió
 const RESPONDE = 1500; // espera antes de contestar un mensaje del conductor
 
-const redondear5 = (n: number) => Math.round(n / 5) * 5;
+function saludoCotizacion(s: Servicio): string {
+  return `Hola ${s.conductor.nombre}, ya revisé tu caso y la foto. Te envío mi tarifa.`;
+}
 
-function saludo(s: Servicio): string {
+function saludoSalida(s: Servicio): string {
   const p = s.proveedor;
   const min = p.minutos ?? 10;
   if (p.tipo === "grua") {
-    return `Hola ${s.conductor.nombre}, soy ${primerNombre(p.conductor)}. Voy en camino con la grúa de placa ${p.placa}, llego en unos ${min} minutos.`;
+    return `Recibí tu pago, ${s.conductor.nombre}. Voy en camino con la grúa de placa ${p.placa}, llego en unos ${min} minutos.`;
   }
-  return `Hola ${s.conductor.nombre}, soy ${primerNombre(p.nombre)}. Ya voy en camino, llego en unos ${min} minutos.`;
+  return `Recibí tu pago, ${s.conductor.nombre}. Soy ${primerNombre(p.nombre)}, ya voy en camino, llego en unos ${min} minutos.`;
 }
 
 function cotizar(s: Servicio) {
-  const p = s.proveedor;
-  const medio = p.precio ? redondear5((p.precio.min + p.precio.max) / 2) : 100;
-  if (p.tipo === "grua") {
-    return {
-      detalle: [{ concepto: "Servicio de grúa", monto: p.precio ? medio : 150 }],
-      nota: `Incluye traslado hasta ${p.kmIncluidos} km`,
-    };
-  }
-  if (s.diagnostico?.falla === "llanta") {
-    return {
-      detalle: [
-        { concepto: "Cambio de llanta", monto: 70 },
-        { concepto: "Movilidad", monto: 20 },
-      ],
-      nota: "Incluye mano de obra",
-    };
-  }
+  const falla = s.diagnostico?.falla;
+  const detalle = tarifaInicial(s.proveedor, falla, { ruedasTrabadas: leerSeleccion().ruedas === "trabadas" });
   return {
-    detalle: [
-      { concepto: s.diagnostico ? `Atención de ${s.diagnostico.titulo.toLowerCase()}` : "Atención en sitio", monto: Math.max(medio - 20, 40) },
-      { concepto: "Movilidad", monto: 20 },
-    ],
-    nota: "Incluye mano de obra",
+    detalle,
+    nota: s.proveedor.tipo === "grua" ? "Visita y atención inicial del operador" : "Visita y atención inicial",
   };
 }
 
@@ -70,7 +58,7 @@ function respuestaA(texto: string, foto: boolean, s: Servicio): string {
   if (t.includes("falta") || t.includes("cuánto") || t.includes("cuanto") || t.includes("demora")) {
     return `Estoy a unos ${s.proveedor.minutos ?? 10} minutos. Ya casi llego.`;
   }
-  if (t.includes("yape") || t.includes("plin") || t.includes("pago") || t.includes("tarjeta") || t.includes("efectivo")) {
+  if (t.includes("yape") || t.includes("plin") || t.includes("pago") || t.includes("tarjeta")) {
     return `Sí, puedes pagar con ${s.proveedor.pagos.join(", ")} dentro de AlToque.`;
   }
   if (t.includes("grifo") || t.includes("frente") || t.includes("estoy") || t.includes("cerca")) {
@@ -84,23 +72,21 @@ export function simularSiguientePaso() {
   const s = leerServicio();
   if (!s) return;
   switch (s.estado) {
-    case "solicitado":
-      cambiarEstado("aceptado");
-      break;
-    case "aceptado":
-      cambiarEstado("en_camino");
-      enviarMensaje("proveedor", saludo(s));
-      break;
-    case "en_camino":
-      cambiarEstado("llego");
-      break;
-    case "llego": {
+    case "solicitado": {
+      enviarMensaje("proveedor", saludoCotizacion(s));
       const q = cotizar(s);
       enviarCotizacion(q.detalle, q.nota);
       break;
     }
+    case "cotizado":
+      pagarServicio("Yape");
+      break;
     case "pagado":
-      cambiarEstado("finalizado");
+      cambiarEstado("en_camino");
+      enviarMensaje("proveedor", saludoSalida(s));
+      break;
+    case "en_camino":
+      cambiarEstado("llego");
       break;
   }
 }
@@ -108,6 +94,7 @@ export function simularSiguientePaso() {
 export function usePiloto() {
   const id = useServicio()?.id;
   const respondidos = useRef<Set<string> | null>(null);
+  const desde = useRef<{ estado: EstadoServicio; t: number } | null>(null);
 
   useEffect(() => {
     if (!id) return;
@@ -115,12 +102,14 @@ export function usePiloto() {
     respondidos.current = new Set(
       (leerServicio()?.mensajes ?? []).filter((m) => m.de === "conductor").map((m) => m.id),
     );
+    desde.current = null;
 
     const tic = window.setInterval(() => {
       if (proveedorPresente()) return;
       const s = leerServicio();
       if (!s || s.id !== id) return;
-      const pasado = Date.now() - s.creadoEn;
+      if (desde.current?.estado !== s.estado) desde.current = { estado: s.estado, t: Date.now() };
+      const enEstado = Date.now() - desde.current.t;
 
       const ultimo = s.mensajes[s.mensajes.length - 1];
       if (
@@ -136,10 +125,9 @@ export function usePiloto() {
       }
 
       if (
-        (s.estado === "solicitado" && pasado >= ACEPTA) ||
-        (s.estado === "aceptado" && pasado >= SALE) ||
-        (s.estado === "en_camino" && pasado >= LLEGA) ||
-        (s.estado === "llego" && pasado >= COTIZA)
+        (s.estado === "solicitado" && Date.now() - s.creadoEn >= COTIZA) ||
+        (s.estado === "pagado" && enEstado >= SALE) ||
+        (s.estado === "en_camino" && enEstado >= LLEGA)
       ) {
         simularSiguientePaso();
       }

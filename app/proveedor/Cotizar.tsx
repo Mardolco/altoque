@@ -5,17 +5,27 @@ import { PrimaryButton } from "@/components/ui/PrimaryButton";
 import { TextButton } from "@/components/ui/TextButton";
 import { XIcon } from "@/components/ui/icons";
 import { desglosar, soles } from "@/lib/mock/comision";
-import { enviarCotizacion, type Servicio } from "@/lib/servicio";
+import { enviarAdicional, enviarCotizacion, type Servicio } from "@/lib/servicio";
 import { Cabecera } from "./Cabecera";
-import { PORCENTAJE, aNumero, lineasIniciales, type Linea } from "./datos";
+import { PORCENTAJE, aNumero, lineasAdicional, lineasIniciales, type Linea } from "./datos";
 
-export function Cotizar({ servicio, onVolver }: { servicio: Servicio; onVolver: () => void }) {
+export function Cotizar({
+  servicio,
+  onVolver,
+  adicional = false,
+}: {
+  servicio: Servicio;
+  onVolver: () => void;
+  adicional?: boolean; // cotiza repuestos o trabajo extra, ya en el lugar
+}) {
   const { proveedor } = servicio;
   const [lineas, setLineas] = useState<Linea[]>(() =>
-    lineasIniciales(servicio.diagnostico?.falla, proveedor).map((l, i) => ({ ...l, id: i })),
+    (adicional ? lineasAdicional(servicio.diagnostico?.falla) : lineasIniciales(servicio.diagnostico?.falla, proveedor)).map(
+      (l, i) => ({ ...l, id: i }),
+    ),
   );
   const [siguienteId, setSiguienteId] = useState(100);
-  const [nota, setNota] = useState("Incluye mano de obra");
+  const [nota, setNota] = useState(adicional ? "Repuesto y mano de obra" : "Visita y atención inicial");
 
   const validas = lineas.filter((l) => l.concepto.trim() && aNumero(l.monto) > 0);
   const total = validas.reduce((t, l) => t + aNumero(l.monto), 0);
@@ -26,10 +36,9 @@ export function Cotizar({ servicio, onVolver }: { servicio: Servicio; onVolver: 
   }
 
   function enviar() {
-    enviarCotizacion(
-      validas.map((l) => ({ concepto: l.concepto.trim(), monto: aNumero(l.monto) })),
-      nota.trim(),
-    );
+    const detalle = validas.map((l) => ({ concepto: l.concepto.trim(), monto: aNumero(l.monto) }));
+    if (adicional) enviarAdicional(detalle, nota.trim());
+    else enviarCotizacion(detalle, nota.trim());
     onVolver();
   }
 
@@ -40,8 +49,12 @@ export function Cotizar({ servicio, onVolver }: { servicio: Servicio; onVolver: 
       <Cabecera proveedor={proveedor} />
       <main className="flex flex-1 flex-col gap-4 px-5 py-5">
         <div>
-          <h2 className="font-display text-title">Cotización final</h2>
-          <p className="mt-1 text-small text-ink-muted">El conductor la ve al instante y paga dentro de AlToque.</p>
+          <h2 className="font-display text-title">{adicional ? "Cotizar adicional" : "Tu tarifa"}</h2>
+          <p className="mt-1 text-small text-ink-muted">
+            {adicional
+              ? "Repuestos o trabajo extra. El conductor lo aprueba y lo paga dentro de AlToque."
+              : "Según la falla y la distancia. El conductor la ve al instante, acepta y paga en la app antes de que salgas."}
+          </p>
         </div>
 
         <ul className="flex flex-col gap-3">
@@ -119,7 +132,7 @@ export function Cotizar({ servicio, onVolver }: { servicio: Servicio; onVolver: 
 
       <div className="sticky bottom-0 z-10 flex flex-col gap-1 border-t border-line bg-canvas px-5 pt-3 pb-3">
         <PrimaryButton disabled={total <= 0} onClick={enviar}>
-          Enviar cotización
+          {adicional ? "Enviar adicional" : "Enviar cotización"}
         </PrimaryButton>
         <TextButton onClick={onVolver}>Volver al chat</TextButton>
       </div>

@@ -1,23 +1,22 @@
 "use client";
 
 import { COMISION_PROVEEDOR, desglosar, soles, TARIFA_SERVICIO_CONDUCTOR } from "@/lib/mock/comision";
-import { useServicio, type EstadoServicio } from "@/lib/servicio";
+import { totalesPagados, useServicio, type EstadoServicio } from "@/lib/servicio";
 
 const ESTADOS: Record<EstadoServicio, string> = {
-  solicitado: "Solicitud enviada",
+  solicitado: "Proveedor revisando el caso",
   rechazado: "Solicitud rechazada",
-  aceptado: "Pedido aceptado",
+  cotizado: "Tarifa enviada, falta pagar",
+  pagado: "Pago recibido, el proveedor sale",
   en_camino: "Proveedor en camino",
   llego: "Proveedor en el lugar",
-  cotizado: "Cotización enviada, falta pagar",
-  pagado: "Pago recibido en AlToque",
   finalizado: "Servicio terminado",
 };
 
 export function PanelComision({ compacto = false }: { compacto?: boolean }) {
   const servicio = useServicio();
-  const pago = servicio?.pago?.desglose;
-  const d = pago ?? (servicio?.cotizacion ? desglosar(servicio.cotizacion.precio) : null);
+  // Con pago, suma el adicional si lo hubo; solo cotizado, lo que pagaría.
+  const d = (servicio ? totalesPagados(servicio) : null) ?? (servicio?.cotizacion ? desglosar(servicio.cotizacion.precio) : null);
   const porcentaje = Math.round(COMISION_PROVEEDOR * 100);
 
   const filas = d
@@ -38,7 +37,7 @@ export function PanelComision({ compacto = false }: { compacto?: boolean }) {
           </p>
         ) : (
           <p className="text-center text-[13px] text-white/70">
-            {servicio ? ESTADOS[servicio.estado] : "Sin pedido"}. La comisión aparece con la cotización.
+            {servicio ? ESTADOS[servicio.estado] : "Sin pedido"}. La comisión aparece con la tarifa.
           </p>
         )}
       </section>
@@ -67,7 +66,7 @@ export function PanelComision({ compacto = false }: { compacto?: boolean }) {
         </dl>
       ) : (
         <p className="mt-4 rounded-2xl bg-canvas p-4 text-small text-ink-muted">
-          Cuando el mecánico envíe la cotización, verás aquí cuánto paga el conductor, cuánto recibe el
+          Cuando el proveedor envíe su tarifa, verás aquí cuánto paga el conductor, cuánto recibe el
           proveedor y cuánto gana AlToque ({porcentaje} % de comisión más una tarifa de servicio).
         </p>
       )}

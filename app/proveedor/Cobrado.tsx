@@ -1,18 +1,17 @@
 "use client";
 
-import { PrimaryButton } from "@/components/ui/PrimaryButton";
 import { StarRating } from "@/components/ui/StarRating";
 import { Aparecer } from "@/components/ui/efectos";
 import { CircleCheckIcon } from "@/components/ui/icons";
 import { desglosar, soles } from "@/lib/mock/comision";
-import { actualizarServicio, cambiarEstado, type Servicio } from "@/lib/servicio";
+import { actualizarServicio, totalesPagados, type Servicio } from "@/lib/servicio";
 import { Cabecera } from "./Cabecera";
 import { HOY_ANTES, PORCENTAJE } from "./datos";
 
 export function Cobrado({ servicio }: { servicio: Servicio }) {
-  const { proveedor, estado } = servicio;
-  const finalizado = estado === "finalizado";
-  const d = servicio.pago?.desglose ?? desglosar(servicio.cotizacion?.precio ?? 0);
+  const { proveedor } = servicio;
+  // Incluye el adicional si el conductor lo pagó.
+  const d = totalesPagados(servicio) ?? desglosar(servicio.cotizacion?.precio ?? 0);
   const antes = desglosar(HOY_ANTES.bruto);
 
   return (
@@ -42,13 +41,12 @@ export function Cobrado({ servicio }: { servicio: Servicio }) {
               </div>
             </dl>
             <p className="mt-3 text-small text-ink-muted">
-              {finalizado ? "Se deposita en tu cuenta en breve." : "Se deposita al terminar el servicio."}
+              Se deposita en tu cuenta en breve.{servicio.pagoAdicional && " Incluye el adicional."}
             </p>
           </section>
         </Aparecer>
 
-        {finalizado ? (
-          <>
+        <>
             <Aparecer retraso={80}>
               <section className="rounded-card bg-white p-5 shadow-card">
                 <h2 className="text-center font-display text-heading">Califica al conductor</h2>
@@ -83,17 +81,8 @@ export function Cobrado({ servicio }: { servicio: Servicio }) {
                 <p className="mt-3 text-caption text-white/70">Incluye este trabajo: {soles(d.netoProveedor)} netos.</p>
               </section>
             </Aparecer>
-          </>
-        ) : (
-          <p className="text-small text-ink-muted">Cuando termines el trabajo, márcalo para liberar tu pago.</p>
-        )}
+        </>
       </main>
-
-      {!finalizado && (
-        <div className="sticky bottom-0 z-10 border-t border-line bg-canvas px-5 pt-3 pb-4">
-          <PrimaryButton onClick={() => cambiarEstado("finalizado")}>Marcar trabajo terminado</PrimaryButton>
-        </div>
-      )}
     </>
   );
 }

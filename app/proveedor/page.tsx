@@ -24,7 +24,7 @@ export default function PaginaProveedor() {
   if (!servicio) vista = <Inactivo proveedor={MECANICO_DEMO} />;
   else if (servicio.estado === "solicitado") vista = <Solicitud key={servicio.id} servicio={servicio} />;
   else if (servicio.estado === "rechazado") vista = <Inactivo proveedor={servicio.proveedor} rechazado />;
-  else if (servicio.estado === "pagado" || servicio.estado === "finalizado") vista = <Cobrado servicio={servicio} />;
+  else if (servicio.estado === "finalizado") vista = <Cobrado servicio={servicio} />;
   else vista = <Trabajo key={servicio.id} servicio={servicio} />;
 
   return (

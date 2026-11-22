@@ -6,13 +6,13 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { RequiereSesion } from "@/components/flujo/RequiereSesion";
 import { BottomBar } from "@/components/ui/BottomBar";
-import { CheckIcon, StarIcon } from "@/components/ui/icons";
+import { CheckIcon, TruckIcon } from "@/components/ui/icons";
 import { Logo } from "@/components/ui/Logo";
 import { PrimaryButton } from "@/components/ui/PrimaryButton";
-import { TextButton } from "@/components/ui/TextButton";
 import { TopBar } from "@/components/ui/TopBar";
 import { soles } from "@/lib/mock/comision";
 import { RUTAS } from "@/lib/rutas";
+import { totalesPagados } from "@/lib/servicio";
 import { useServicioOInicio } from "../_compartido";
 
 export function PantallaRecibo() {
@@ -34,9 +34,8 @@ function Contenido() {
 
   if (!servicio || !servicio.pago) return <main className="flex-1" aria-busy="true" />;
 
-  const { pago, proveedor, cotizacion } = servicio;
-  const d = pago.desglose;
-  const cierre = proveedor.tipo === "grua" ? RUTAS.cierreGrua : RUTAS.cierreMecanico;
+  const { pago, proveedor, cotizacion, adicional, pagoAdicional } = servicio;
+  const d = totalesPagados(servicio) ?? pago.desglose;
   const fecha = new Intl.DateTimeFormat("es-PE", { dateStyle: "medium", timeStyle: "short" }).format(
     new Date(pago.en),
   );
@@ -52,7 +51,7 @@ function Contenido() {
           </span>
           <h2 className="font-display text-title">Pago confirmado</h2>
           <p className="text-[16px] leading-6 text-ink-muted">
-            AlToque guarda el dinero hasta que el trabajo termine.
+            AlToque guarda el dinero hasta que el servicio termine. Avisamos a tu proveedor para que salga.
           </p>
         </div>
 
@@ -74,6 +73,14 @@ function Contenido() {
               <Fila key={l.concepto} a={l.concepto} b={soles(l.monto)} />
             ))}
             <Fila a="Tarifa de servicio AlToque" b={soles(d.tarifaServicio)} />
+            {adicional && pagoAdicional && (
+              <>
+                <div className="my-1 border-t border-line-soft" />
+                {adicional.detalle.map((l) => (
+                  <Fila key={`adicional-${l.concepto}`} a={`Adicional: ${l.concepto}`} b={soles(l.monto)} />
+                ))}
+              </>
+            )}
             <div className="mt-1 flex items-baseline justify-between border-t border-line-strong pt-2 font-display text-[22px] font-black">
               <dt>Total</dt>
               <dd>{soles(d.totalConductor)}</dd>
@@ -83,10 +90,9 @@ function Contenido() {
       </main>
 
       <BottomBar surface="white" className="gap-1">
-        <PrimaryButton href={cierre} icon={<StarIcon size={22} />}>
-          Calificar el servicio
+        <PrimaryButton href={RUTAS.servicio} icon={<TruckIcon size={22} />}>
+          Ver ayuda en camino
         </PrimaryButton>
-        <TextButton href={RUTAS.servicio}>Volver al chat</TextButton>
       </BottomBar>
     </>
   );

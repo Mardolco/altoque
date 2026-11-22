@@ -13,14 +13,19 @@ import { useSyncExternalStore } from "react";
 import type { Diagnostico, MedioDePago, Proveedor } from "./tipos";
 import { desglosar, type Desglose } from "./mock/comision";
 
+// Orden del pedido: el proveedor cotiza ANTES de salir y el conductor paga
+// dentro de la app; recién entonces el proveedor sale. Así nadie maneja en
+// vano y AlToque cobra su comisión sobre un pago real.
+//
+// solicitado -> cotizado -> pagado -> en_camino -> llego -> finalizado
+//            \-> rechazado
 export type EstadoServicio =
-  | "solicitado" // el conductor envió el pedido, el proveedor aún no responde
+  | "solicitado" // el conductor envió el pedido, el proveedor revisa el caso
   | "rechazado" // el proveedor no puede ir
-  | "aceptado" // el proveedor aceptó
+  | "cotizado" // el proveedor envió su tarifa (visita y atención inicial), falta pagar
+  | "pagado" // el conductor pagó en la app; el proveedor aún no sale
   | "en_camino"
   | "llego"
-  | "cotizado" // el proveedor envió el precio final, falta pagar
-  | "pagado" // el conductor pagó dentro de la app
   | "finalizado"; // el proveedor marcó el trabajo como terminado
 
 export type Autor = "conductor" | "proveedor" | "sistema";
@@ -56,12 +61,14 @@ export type Servicio = {
   resumen: string; // resumen de la IA que recibe el proveedor
   foto: string | null;
   mensajes: Mensaje[];
-  cotizacion: Cotizacion | null;
+  cotizacion: Cotizacion | null; // tarifa inicial, se paga antes de que salga
   pago: Pago | null;
+  adicional: Cotizacion | null; // repuestos o trabajo extra, cotizado ya en el lugar
+  pagoAdicional: Pago | null;
   calificacionProveedor: number | null; // estrellas que el proveedor da al conductor
 };
 
-const CLAVE = "altoque.servicio.v1";
+const CLAVE = "altoque.servicio.v2"; // v2: cotización y pago antes de salir
 const CANAL = "altoque.servicio";
 const PRESENCIA = "altoque.presencia.proveedor";
 
@@ -151,6 +158,8 @@ export function crearServicio(datos: Pick<Servicio, "proveedor" | "conductor" | 
     mensajes: [],
     cotizacion: null,
     pago: null,
+    adicional: null,
+    pagoAdicional: null,
     calificacionProveedor: null,
   };
   servicio.mensajes.push(mensaje("sistema", `Enviamos tu caso a ${datos.proveedor.nombre}. El chat y el pago quedan protegidos dentro de AlToque.`));
@@ -167,9 +176,8 @@ export function enviarMensaje(de: Autor, texto: string, foto?: string) {
 }
 
 const AVISO_ESTADO: Partial<Record<EstadoServicio, (s: Servicio) => string>> = {
-  aceptado: (s) => `${s.proveedor.nombre} aceptó tu pedido.`,
   rechazado: (s) => `${s.proveedor.nombre} no puede atenderte ahora. Elige otra opción.`,
-  en_camino: (s) => `${s.proveedor.nombre} está en camino.`,
+  en_camino: (s) => `Pago confirmado. ${s.proveedor.nombre} ya salió hacia tu ubicación.`,
   llego: (s) => `${s.proveedor.nombre} llegó a tu ubicación.`,
   finalizado: () => "Servicio terminado. Gracias por usar AlToque.",
 };
@@ -187,7 +195,7 @@ export function enviarCotizacion(detalle: Cotizacion["detalle"], nota: string) {
     ...s,
     estado: "cotizado",
     cotizacion: { detalle, precio, nota },
-    mensajes: [...s.mensajes, mensaje("sistema", `${s.proveedor.nombre} envió el precio final: S/ ${precio.toFixed(2)}. Paga dentro de la app para confirmar.`)],
+    mensajes: [...s.mensajes, mensaje("sistema", `${s.proveedor.nombre} revisó tu caso y envió su tarifa: S/ ${precio.toFixed(2)}. Acepta y paga en la app para que salga.`)],
   }));
 }
 
@@ -204,9 +212,59 @@ export function pagarServicio(medio: MedioDePago) {
       ...s,
       estado: "pagado",
       pago,
-      mensajes: [...s.mensajes, mensaje("sistema", `Pago confirmado con ${medio}. AlToque guarda el dinero hasta que el trabajo termine.`)],
+      mensajes: [...s.mensajes, mensaje("sistema", `Pago confirmado con ${medio}. AlToque guarda el dinero hasta que el trabajo termine. Avisamos a ${s.proveedor.nombre} para que salga.`)],
     };
   });
+}
+
+/** Ya en el lugar: el proveedor cotiza repuestos o trabajo extra. */
+export function enviarAdicional(detalle: Cotizacion["detalle"], nota: string) {
+  const precio = detalle.reduce((t, d) => t + d.monto, 0);
+  actualizarServicio((s) => ({
+    ...s,
+    adicional: { detalle, precio, nota },
+    pagoAdicional: null,
+    mensajes: [...s.mensajes, mensaje("sistema", `${s.proveedor.nombre} cotizó un adicional: S/ ${precio.toFixed(2)}. Apruébalo y págalo aquí mismo si estás de acuerdo.`)],
+  }));
+}
+
+/** El conductor aprueba y paga el adicional. La tarifa de servicio no se cobra dos veces. */
+export function pagarAdicional(medio: MedioDePago) {
+  actualizarServicio((s) => {
+    if (!s.adicional) return s;
+    const d = desglosar(s.adicional.precio);
+    const desglose = { ...d, tarifaServicio: 0, totalConductor: d.precio, ingresoAlToque: d.comision };
+    const pago: Pago = { medio, desglose, en: Date.now(), codigo: `ATQ-${Math.floor(10000 + Math.random() * 90000)}` };
+    return {
+      ...s,
+      pagoAdicional: pago,
+      mensajes: [...s.mensajes, mensaje("sistema", `Adicional aprobado y pagado con ${medio}.`)],
+    };
+  });
+}
+
+/** El conductor no acepta el adicional. */
+export function rechazarAdicional() {
+  actualizarServicio((s) => ({
+    ...s,
+    adicional: null,
+    mensajes: [...s.mensajes, mensaje("sistema", "No aceptaste el adicional. Si no se puede reparar en el lugar, puedes pedir una grúa.")],
+  }));
+}
+
+/** Suma de lo pagado (inicial + adicional), para recibos y el panel de /demo. */
+export function totalesPagados(s: Servicio): Desglose | null {
+  const pagos = [s.pago, s.pagoAdicional].filter((p): p is Pago => p !== null);
+  if (pagos.length === 0) return null;
+  const suma = (k: keyof Desglose) => Math.round(pagos.reduce((t, p) => t + p.desglose[k], 0) * 100) / 100;
+  return {
+    precio: suma("precio"),
+    tarifaServicio: suma("tarifaServicio"),
+    totalConductor: suma("totalConductor"),
+    comision: suma("comision"),
+    netoProveedor: suma("netoProveedor"),
+    ingresoAlToque: suma("ingresoAlToque"),
+  };
 }
 
 export function borrarServicio() {

@@ -10,6 +10,7 @@ import { soles } from "@/lib/mock/comision";
 import { cambiarEstado, type Servicio } from "@/lib/servicio";
 import type { Semaforo } from "@/lib/tipos";
 import { Cabecera } from "./Cabecera";
+import { Cotizar } from "./Cotizar";
 import { PORCENTAJE, gananciaEstimada } from "./datos";
 
 const TOTAL = 45; // segundos para responder (solo ambientación)
@@ -50,11 +51,14 @@ function Anillo({ restante }: { restante: number }) {
 export function Solicitud({ servicio }: { servicio: Servicio }) {
   const { proveedor, diagnostico } = servicio;
   const [restante, setRestante] = useState(TOTAL);
+  const [componiendo, setComponiendo] = useState(false);
 
   useEffect(() => {
     const id = setInterval(() => setRestante((s) => Math.max(0, s - 1)), 1000);
     return () => clearInterval(id);
   }, []);
+
+  if (componiendo) return <Cotizar servicio={servicio} onVolver={() => setComponiendo(false)} />;
 
   const ganancia = gananciaEstimada(proveedor);
   const sem = diagnostico ? SEMAFORO[diagnostico.semaforo] : null;
@@ -130,7 +134,7 @@ export function Solicitud({ servicio }: { servicio: Servicio }) {
         {restante === 0 && (
           <p className="text-center text-small text-ink-muted">Sigue disponible. Responde cuando puedas.</p>
         )}
-        <PrimaryButton onClick={() => cambiarEstado("aceptado")}>Aceptar</PrimaryButton>
+        <PrimaryButton onClick={() => setComponiendo(true)}>Revisar y cotizar</PrimaryButton>
         <SecondaryButton size="sm" onClick={() => cambiarEstado("rechazado")}>
           Rechazar
         </SecondaryButton>

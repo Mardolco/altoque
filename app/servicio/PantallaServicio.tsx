@@ -11,11 +11,12 @@ import { RequiereSesion } from "@/components/flujo/RequiereSesion";
 import { BottomBar } from "@/components/ui/BottomBar";
 import {
   CameraIcon,
+  CircleCheckIcon,
   HazardIcon,
   LockIcon,
   PhoneIcon,
   SendIcon,
-  ShieldCheckIcon,
+  StarIcon,
   TruckIcon,
 } from "@/components/ui/icons";
 import { PrimaryButton } from "@/components/ui/PrimaryButton";
@@ -26,10 +27,12 @@ import { TopBar } from "@/components/ui/TopBar";
 import { VerifiedBadge } from "@/components/ui/VerifiedBadge";
 import { reducirImagen } from "@/lib/imagen";
 import { desglosar, soles } from "@/lib/mock/comision";
+import { primerNombre } from "@/lib/formato";
 import { RUTAS } from "@/lib/rutas";
 import {
   borrarServicio,
   enviarMensaje,
+  rechazarAdicional,
   type EstadoServicio,
   type Mensaje,
   type Servicio,
@@ -39,17 +42,16 @@ import { CambiarVista } from "@/components/flujo/CambiarVista";
 import { horaCorta, useServicioOInicio } from "./_compartido";
 import { simularSiguientePaso, usePiloto } from "./_piloto";
 
-const PASOS = ["Solicitado", "Aceptado", "En camino", "Llegó", "Pago", "Terminado"] as const;
+const PASOS = ["Enviado", "Cotizado", "Pagado", "En camino", "Llegó", "Listo"] as const;
 
 /** Paso actual (0 a 5). 6 significa que todo está hecho. */
 const PASO_ACTUAL: Record<EstadoServicio, number> = {
   solicitado: 0,
   rechazado: 0,
-  aceptado: 1,
-  en_camino: 2,
-  llego: 3,
-  cotizado: 4,
-  pagado: 5,
+  cotizado: 1,
+  pagado: 2,
+  en_camino: 3,
+  llego: 4,
   finalizado: 6,
 };
 
@@ -72,7 +74,7 @@ function Contenido() {
 
 function Pedido({ servicio }: { servicio: Servicio }) {
   const router = useRouter();
-  const { proveedor, estado, cotizacion } = servicio;
+  const { proveedor, estado, cotizacion, adicional } = servicio;
   const esGrua = proveedor.tipo === "grua";
   const [texto, setTexto] = useState("");
   const [llamada, setLlamada] = useState(false);
@@ -93,8 +95,10 @@ function Pedido({ servicio }: { servicio: Servicio }) {
 
   const actual = PASO_ACTUAL[estado];
   const rechazado = estado === "rechazado";
-  const pagado = estado === "pagado" || estado === "finalizado";
+  const pagado = actual >= 2 && !rechazado; // ya pagó la tarifa inicial: el proveedor sale o ya salió
   const volverALista = esGrua ? RUTAS.gruas : RUTAS.mecanicos;
+  const cierre = esGrua ? RUTAS.cierreGrua : RUTAS.cierreMecanico;
+  const nombreCorto = primerNombre(esGrua ? proveedor.conductor : proveedor.nombre);
   const eta = `${proveedor.minutos ?? 10} min`;
 
   function enviar(e: FormEvent) {
@@ -125,7 +129,7 @@ function Pedido({ servicio }: { servicio: Servicio }) {
   return (
     <>
       <TopBar
-        title="Tu pedido"
+        title={pagado ? "Ayuda en camino" : "Tu pedido"}
         backHref={volverALista}
         backLabel="Volver a la lista"
         surface="white"
@@ -161,7 +165,10 @@ function Pedido({ servicio }: { servicio: Servicio }) {
               </span>
               <span className="flex flex-wrap items-center gap-2">
                 {proveedor.verificado && <VerifiedBadge />}
-                {!rechazado && <b className="text-[14px] font-extrabold">Llega en {eta}</b>}
+                {pagado && estado !== "llego" && estado !== "finalizado" && (
+                  <b className="text-[14px] font-extrabold">Llega en {eta}</b>
+                )}
+                {estado === "llego" && <b className="text-[14px] font-extrabold">Ya llegó</b>}
               </span>
             </div>
           </div>
@@ -214,7 +221,7 @@ function Pedido({ servicio }: { servicio: Servicio }) {
           </section>
         )}
 
-        {esGrua && !rechazado && (
+        {esGrua && pagado && (
           <DestinoTraslado falla={servicio.diagnostico?.falla ?? "otra"} operador={proveedor.conductor} />
         )}
 
@@ -225,11 +232,13 @@ function Pedido({ servicio }: { servicio: Servicio }) {
               <Burbuja key={m.id} mensaje={m} />
             ))}
           </ul>
+          {estado === "solicitado" && <Revisando nombre={nombreCorto} />}
           {estado === "cotizado" && cotizacion && <TarjetaCotizacion servicio={servicio} />}
+          {adicional && <TarjetaAdicional servicio={servicio} />}
           <div ref={fin} />
         </section>
 
-        {actual < 3 && !rechazado && (
+        {pagado && estado !== "finalizado" && (
           <section className="flex shrink-0 flex-col gap-2.5 px-1">
             <h2 className="font-display text-[17px] leading-[22px] font-extrabold">Mientras esperas</h2>
             <ul className="flex flex-col gap-2">
@@ -245,7 +254,13 @@ function Pedido({ servicio }: { servicio: Servicio }) {
           </section>
         )}
 
-        {!pagado && !rechazado && (
+        {pagado && (
+          <TextButton href={RUTAS.reciboServicio} className="self-center text-[15px]!">
+            Ver recibo
+          </TextButton>
+        )}
+
+        {(estado === "solicitado" || estado === "cotizado" || estado === "pagado" || estado === "en_camino") && (
           <TextButton onClick={simularSiguientePaso} className="self-center text-[15px]! text-ink-muted!">
             Simular siguiente paso (demo)
           </TextButton>
@@ -255,13 +270,13 @@ function Pedido({ servicio }: { servicio: Servicio }) {
       <BottomBar surface="white" className="gap-2.5">
         {estado === "cotizado" && cotizacion && (
           <PrimaryButton href={RUTAS.pagoServicio} icon={<LockIcon size={20} />}>
-            Precio final {soles(desglosar(cotizacion.precio).totalConductor)} · Pagar
+            Aceptar y pagar {soles(desglosar(cotizacion.precio).totalConductor)}
           </PrimaryButton>
         )}
 
-        {pagado && (
-          <PrimaryButton href={RUTAS.reciboServicio} icon={<ShieldCheckIcon size={22} />}>
-            Ver recibo
+        {actual >= 3 && !rechazado && (
+          <PrimaryButton href={cierre} icon={<StarIcon size={22} />}>
+            Ya me ayudaron
           </PrimaryButton>
         )}
 
@@ -322,17 +337,44 @@ function Pedido({ servicio }: { servicio: Servicio }) {
   );
 }
 
+function Revisando({ nombre }: { nombre: string }) {
+  return (
+    <div role="status" className="flex max-w-[88%] flex-col items-start gap-1 self-start">
+      <div className="flex items-center gap-1.5 rounded-[18px_18px_18px_6px] bg-surface px-4 py-3.5" aria-hidden="true">
+        {[0, 1, 2].map((i) => (
+          <span
+            key={i}
+            className="size-2 animate-pulse rounded-full bg-ink-muted"
+            style={{ animationDelay: `${i * 200}ms` }}
+          />
+        ))}
+      </div>
+      <p className="px-1 text-[14px] leading-5 text-ink-muted">
+        {nombre} está revisando tu caso… Mira la foto, tu ubicación y el resumen de la IA para darte su tarifa exacta.
+      </p>
+    </div>
+  );
+}
+
 function TarjetaCotizacion({ servicio }: { servicio: Servicio }) {
+  const router = useRouter();
   const cot = servicio.cotizacion;
   if (!cot) return null;
+  const esGrua = servicio.proveedor.tipo === "grua";
   const d = desglosar(cot.precio);
+
+  function rechazar() {
+    borrarServicio();
+    router.replace(esGrua ? RUTAS.gruas : RUTAS.mecanicos);
+  }
+
   return (
     <section
-      aria-label="Precio final"
-      className="flex flex-col gap-2 rounded-[18px] border-2 border-primary bg-surface p-3.5 text-ink"
+      aria-label="Tarifa del proveedor"
+      className="flex flex-col gap-3 rounded-[18px] border-2 border-primary bg-surface p-3.5 text-ink"
     >
       <h2 className="font-display text-[17px] leading-[22px] font-black">
-        {servicio.proveedor.nombre} te envió el precio final
+        {servicio.proveedor.nombre} te envió su tarifa
       </h2>
       <dl className="flex flex-col gap-1 text-[15px] leading-[21px]">
         {cot.detalle.map((l) => (
@@ -345,6 +387,59 @@ function TarjetaCotizacion({ servicio }: { servicio: Servicio }) {
         </div>
       </dl>
       {cot.nota && <p className="text-[13px] leading-[18px] text-ink-muted">{cot.nota}</p>}
+      <div className="flex flex-col gap-1.5">
+        <PrimaryButton size="sm" href={RUTAS.pagoServicio} icon={<LockIcon size={20} />}>
+          Aceptar y pagar en la app
+        </PrimaryButton>
+        <p className="px-0.5 text-[13px] leading-[18px] text-ink-muted">
+          Esta tarifa cubre la visita y atención inicial {esGrua ? "del operador de la grúa" : "del mecánico"}. Si al
+          revisar el auto requiere repuestos o un trabajo más complejo, el adicional se cotiza y aprueba aquí mismo
+          {esGrua ? "." : "; si no se puede reparar en el lugar, puedes pasar directo a pedir una grúa."}
+        </p>
+      </div>
+      <SecondaryButton size="sm" onClick={rechazar}>
+        Rechazar y ver otras opciones
+      </SecondaryButton>
+    </section>
+  );
+}
+
+function TarjetaAdicional({ servicio }: { servicio: Servicio }) {
+  const { adicional, pagoAdicional } = servicio;
+  if (!adicional) return null;
+  return (
+    <section
+      aria-label={pagoAdicional ? "Adicional pagado" : "Adicional por aprobar"}
+      className={`flex flex-col gap-3 rounded-[18px] border-2 p-3.5 text-ink ${
+        pagoAdicional ? "border-ok bg-ok-tint" : "border-primary bg-surface"
+      }`}
+    >
+      <h2 className="flex items-center gap-2 font-display text-[17px] leading-[22px] font-black">
+        {pagoAdicional && <CircleCheckIcon size={22} className="shrink-0 text-ok-ink" />}
+        {pagoAdicional ? "Adicional pagado" : `${servicio.proveedor.nombre} cotizó un adicional`}
+      </h2>
+      <dl className="flex flex-col gap-1 text-[15px] leading-[21px]">
+        {adicional.detalle.map((l) => (
+          <Linea key={l.concepto} etiqueta={l.concepto} valor={soles(l.monto)} />
+        ))}
+        <div className="mt-1 flex items-baseline justify-between border-t border-line pt-1.5 font-display text-[19px] font-black">
+          <dt>Total adicional</dt>
+          <dd>{soles(adicional.precio)}</dd>
+        </div>
+      </dl>
+      {adicional.nota && <p className="text-[13px] leading-[18px] text-ink-muted">{adicional.nota}</p>}
+      {pagoAdicional ? (
+        <p className="text-[14px] leading-5 text-ok-ink">Pagado con {pagoAdicional.medio} en AlToque.</p>
+      ) : (
+        <div className="flex flex-col gap-2">
+          <PrimaryButton size="sm" href={RUTAS.pagoServicio} icon={<LockIcon size={20} />}>
+            Aprobar y pagar {soles(adicional.precio)}
+          </PrimaryButton>
+          <SecondaryButton size="sm" onClick={rechazarAdicional}>
+            No, gracias
+          </SecondaryButton>
+        </div>
+      )}
     </section>
   );
 }

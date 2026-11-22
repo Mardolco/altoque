@@ -42,7 +42,7 @@ import { DIAGNOSTICO_DEMO } from "@/lib/mock/triaje";
 import { USUARIO } from "@/lib/mock/usuario";
 import { soles } from "@/lib/mock/comision";
 import { RUTAS } from "@/lib/rutas";
-import { borrarServicio, useServicio } from "@/lib/servicio";
+import { borrarServicio, totalesPagados, useServicio } from "@/lib/servicio";
 import type { Diagnostico, Falla, NotasDiagnostico, Proveedor } from "@/lib/tipos";
 import { StarIcon } from "@/components/ui/icons";
 
@@ -200,7 +200,8 @@ export function Cierre({ camino, vista: vistaInicial = "form", proveedor: elegid
   const flujo = useFlujo();
   const servicio = useServicio();
   // Con un pedido pagado dentro de la app, el monto y el proveedor son los reales.
-  const pagado = camino !== "guia" ? (servicio?.pago ?? null) : null;
+  const pagado = camino !== "guia" && servicio ? servicio.pago : null;
+  const totales = pagado && servicio ? totalesPagados(servicio) : null;
   const proveedor = (camino !== "guia" ? servicio?.proveedor : undefined) ?? elegido;
   const [vista, setVista] = useState(vistaInicial);
   const [estrellas, setEstrellas] = useState(0);
@@ -222,7 +223,7 @@ export function Cierre({ camino, vista: vistaInicial = "form", proveedor: elegid
   const fallaReal = fallaElegida ?? (diagnostico.seguro ? opciones[0] : null);
   const monto = montoEscrito ?? textos.montoInicial;
   const montoLimpio = monto.replace(/[^0-9.,]/g, "") || "0";
-  const montoMostrado = pagado ? soles(pagado.desglose.totalConductor) : `S/ ${montoLimpio}`;
+  const montoMostrado = pagado ? soles((totales ?? pagado.desglose).totalConductor) : `S/ ${montoLimpio}`;
   const detallePagado = pagado ? `Pagado con ${pagado.medio} en AlToque · Operación ${pagado.codigo}` : null;
 
   /** Al terminar, el pedido en curso ya no hace falta. */

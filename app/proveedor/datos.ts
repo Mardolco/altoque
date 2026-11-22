@@ -1,6 +1,8 @@
 // Datos y ayudas de la app de socios (simulados).
 
+import { leerSeleccion } from "@/app/nivel-2/_compartido/seleccion";
 import { COMISION_PROVEEDOR, desglosar } from "@/lib/mock/comision";
+import { adicionalInicial, tarifaInicial } from "@/lib/mock/tarifas";
 import type { Falla, Proveedor } from "@/lib/tipos";
 
 /** Lo que el socio ya ganó hoy antes de este trabajo (inventado). */
@@ -20,25 +22,15 @@ export function gananciaEstimada(p: Proveedor): { min: number; max: number } | n
 
 export type Linea = { id: number; concepto: string; monto: string };
 
-/** Líneas de la cotización según la falla (o el traslado de la grúa). */
+/** Líneas de la tarifa inicial: la misma regla del piloto automático (lib/mock/tarifas.ts). */
 export function lineasIniciales(falla: Falla | undefined, p: Proveedor): Omit<Linea, "id">[] {
-  if (p.tipo === "grua") {
-    return [{ concepto: `Traslado hasta ${p.kmIncluidos} km`, monto: String(p.precio?.min ?? 120) }];
-  }
-  switch (falla) {
-    case "llanta":
-      return [
-        { concepto: "Cambio de llanta", monto: "70" },
-        { concepto: "Movilidad", monto: "20" },
-      ];
-    case "bateria":
-      return [
-        { concepto: "Pasar corriente", monto: "50" },
-        { concepto: "Movilidad", monto: "20" },
-      ];
-    default:
-      return [{ concepto: "Diagnóstico", monto: "60" }];
-  }
+  const ruedasTrabadas = leerSeleccion().ruedas === "trabadas";
+  return tarifaInicial(p, falla, { ruedasTrabadas }).map((l) => ({ concepto: l.concepto, monto: String(l.monto) }));
+}
+
+/** Líneas de ejemplo para el adicional cotizado en el lugar. */
+export function lineasAdicional(falla: Falla | undefined): Omit<Linea, "id">[] {
+  return adicionalInicial(falla).map((l) => ({ concepto: l.concepto, monto: String(l.monto) }));
 }
 
 export function aNumero(texto: string) {
