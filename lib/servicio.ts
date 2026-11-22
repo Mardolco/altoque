@@ -66,7 +66,14 @@ export type Servicio = {
   adicional: Cotizacion | null; // repuestos o trabajo extra, cotizado ya en el lugar
   pagoAdicional: Pago | null;
   calificacionProveedor: number | null; // estrellas que el proveedor da al conductor
+  // Quién responde por el proveedor en la demo: una persona en AlToque Socios
+  // ("manual") o el piloto automático del conductor ("auto"). null: aún no se
+  // eligió, así que nadie responde solo y la solicitud espera en Socios.
+  modoProveedor?: ModoProveedor | null;
+  modoDesde?: number | null; // cuándo se eligió el modo, para los tiempos del piloto
 };
+
+export type ModoProveedor = "auto" | "manual";
 
 const CLAVE = "altoque.servicio.v2"; // v2: cotización y pago antes de salir
 const CANAL = "altoque.servicio";
@@ -161,6 +168,8 @@ export function crearServicio(datos: Pick<Servicio, "proveedor" | "conductor" | 
     adicional: null,
     pagoAdicional: null,
     calificacionProveedor: null,
+    modoProveedor: null,
+    modoDesde: null,
   };
   servicio.mensajes.push(mensaje("sistema", `Enviamos tu caso a ${datos.proveedor.nombre}. El chat y el pago quedan protegidos dentro de AlToque.`));
   escribir(servicio);
@@ -265,6 +274,18 @@ export function totalesPagados(s: Servicio): Desglose | null {
     netoProveedor: suma("netoProveedor"),
     ingresoAlToque: suma("ingresoAlToque"),
   };
+}
+
+/** Elige quién responde por el proveedor. Una vez en "manual", el piloto no vuelve a actuar. */
+export function elegirModoProveedor(modo: ModoProveedor) {
+  actualizarServicio((s) => {
+    if ((s.modoProveedor ?? null) === modo) return s;
+    const aviso =
+      modo === "manual"
+        ? `${s.proveedor.nombre} responde desde AlToque Socios.`
+        : `${s.proveedor.nombre} (simulado) responderá solo para la demo.`;
+    return { ...s, modoProveedor: modo, modoDesde: Date.now(), mensajes: [...s.mensajes, mensaje("sistema", aviso)] };
+  });
 }
 
 export function borrarServicio() {

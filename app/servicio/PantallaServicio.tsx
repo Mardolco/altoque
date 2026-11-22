@@ -31,7 +31,9 @@ import { primerNombre } from "@/lib/formato";
 import { RUTAS } from "@/lib/rutas";
 import {
   borrarServicio,
+  elegirModoProveedor,
   enviarMensaje,
+  proveedorPresente,
   rechazarAdicional,
   type EstadoServicio,
   type Mensaje,
@@ -233,6 +235,9 @@ function Pedido({ servicio }: { servicio: Servicio }) {
             ))}
           </ul>
           {estado === "solicitado" && <Revisando nombre={nombreCorto} />}
+          {estado === "solicitado" && (servicio.modoProveedor ?? null) === null && !proveedorPresente() && (
+            <ElegirModo nombre={nombreCorto} esGrua={esGrua} />
+          )}
           {estado === "cotizado" && cotizacion && <TarjetaCotizacion servicio={servicio} />}
           {adicional && <TarjetaAdicional servicio={servicio} />}
           <div ref={fin} />
@@ -334,6 +339,28 @@ function Pedido({ servicio }: { servicio: Servicio }) {
         )}
       </BottomBar>
     </>
+  );
+}
+
+/** Demo: ¿quién responde por el proveedor? Nada avanza solo hasta elegir. */
+function ElegirModo({ nombre, esGrua }: { nombre: string; esGrua: boolean }) {
+  const router = useRouter();
+  return (
+    <div className="flex flex-col gap-2.5 rounded-card border border-dashed border-line-strong bg-white p-4">
+      <p className="text-caption font-bold tracking-wide text-ink-muted uppercase">Solo para la demo</p>
+      <p className="text-[15px] leading-[21px]">
+        ¿Quién responde por {nombre}? Puedes atender la solicitud tú mismo en la app del {esGrua ? "operador de grúa" : "mecánico"}, o dejar que responda solo.
+      </p>
+      <PrimaryButton
+        onClick={() => {
+          elegirModoProveedor("manual");
+          router.push(RUTAS.proveedor);
+        }}
+      >
+        Atender en AlToque Socios
+      </PrimaryButton>
+      <SecondaryButton onClick={() => elegirModoProveedor("auto")}>Que responda solo</SecondaryButton>
+    </div>
   );
 }
 
