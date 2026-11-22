@@ -1,13 +1,5 @@
-// Enlaces para contactar a un proveedor.
-
-/**
- * Abre WhatsApp con el mensaje ya escrito. Sin teléfono, WhatsApp deja elegir
- * el contacto.
- */
-export function enlaceWhatsApp(telefono: string | null, mensaje: string): string {
-  const numero = telefono ? telefono.replace(/\D/g, "") : "";
-  return `https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`;
-}
+// Enlaces para contactar a un proveedor. El chat con el proveedor es interno
+// (lib/servicio.ts): AlToque no deriva a WhatsApp para no saltarse la comisión.
 
 /** Enlace tel: para llamar, o undefined si el proveedor no tiene teléfono. */
 export function enlaceLlamada(telefono: string | null): string | undefined {

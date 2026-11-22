@@ -8,7 +8,7 @@
 
 import type { Mecanico, MedioDePago } from "../tipos";
 
-const TODOS: MedioDePago[] = ["Yape", "Plin", "Tarjeta", "Efectivo"];
+const TODOS: MedioDePago[] = ["Yape", "Plin", "Tarjeta"];
 
 const VERIFICACIONES = [
   "DNI validado",
@@ -82,7 +82,7 @@ export const MECANICOS: Mecanico[] = [
     precio: { min: 60, max: 120 },
     motivo: null,
     telefono: null,
-    pagos: ["Yape", "Plin", "Efectivo"],
+    pagos: ["Yape", "Plin", "Tarjeta"],
     respondio: "Respondió hace 2 min",
     perfil: {
       especialidades: ["Baterías", "Electricidad", "Luces del tablero"],
@@ -127,7 +127,7 @@ export const MECANICOS: Mecanico[] = [
     precio: null,
     motivo: null,
     telefono: null,
-    pagos: ["Yape", "Plin", "Efectivo"],
+    pagos: ["Yape", "Plin", "Tarjeta"],
     respondio: "Respondió hace 3 min: ocupado",
     perfil: {
       especialidades: ["Llantas", "Auxilio vial"],
@@ -164,7 +164,7 @@ export const MECANICOS: Mecanico[] = [
     precio: { min: 70, max: 130 },
     motivo: null,
     telefono: null,
-    pagos: ["Yape", "Plin", "Efectivo"],
+    pagos: ["Yape", "Plin", "Tarjeta"],
     respondio: "Respondió hace 1 min",
     perfil: {
       especialidades: ["Llantas", "Pase de corriente", "Cambio de batería"],
