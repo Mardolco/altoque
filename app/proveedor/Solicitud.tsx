@@ -5,7 +5,6 @@ import { PrimaryButton } from "@/components/ui/PrimaryButton";
 import { SecondaryButton } from "@/components/ui/SecondaryButton";
 import { Aparecer } from "@/components/ui/efectos";
 import { CircleCheckIcon, CircleHelpIcon, ClockIcon, MapPinIcon, OctagonAlertIcon } from "@/components/ui/icons";
-import { precioEnRango } from "@/lib/formato";
 import { soles } from "@/lib/mock/comision";
 import { cambiarEstado, type Servicio } from "@/lib/servicio";
 import type { Semaforo } from "@/lib/tipos";
@@ -60,7 +59,7 @@ export function Solicitud({ servicio }: { servicio: Servicio }) {
 
   if (componiendo) return <Cotizar servicio={servicio} onVolver={() => setComponiendo(false)} />;
 
-  const ganancia = gananciaEstimada(proveedor);
+  const ganancia = gananciaEstimada(proveedor, diagnostico?.falla);
   const sem = diagnostico ? SEMAFORO[diagnostico.semaforo] : null;
 
   return (
@@ -114,17 +113,10 @@ export function Solicitud({ servicio }: { servicio: Servicio }) {
 
         <Aparecer retraso={80}>
           <section className="rounded-card bg-ink p-5 text-white">
-            <p className="text-small text-white/70">Ganarías aprox.</p>
-            {ganancia ? (
-              <p className="font-display text-[28px] leading-9 font-black">
-                {soles(ganancia.min)} a {soles(ganancia.max)}
-              </p>
-            ) : (
-              <p className="font-display text-heading">Tú defines el precio al cotizar</p>
-            )}
+            <p className="text-small text-white/70">Recibirías aprox.</p>
+            <p className="font-display text-[28px] leading-9 font-black">{soles(ganancia.neto)}</p>
             <p className="mt-1 text-caption text-white/70">
-              Referencial, neto de la comisión de AlToque ({PORCENTAJE})
-              {proveedor.precio && `. Precio del servicio: ${precioEnRango(proveedor.precio)}`}
+              Tarifa sugerida {soles(ganancia.tarifa)}, neta de la comisión de AlToque ({PORCENTAJE}). Tú la ajustas al cotizar.
             </p>
           </section>
         </Aparecer>

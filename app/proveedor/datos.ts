@@ -14,10 +14,11 @@ export function etiquetaTipo(p: Proveedor) {
   return p.tipo === "grua" ? "Grúa" : "Mecánico";
 }
 
-/** "Ganarías aprox." neto de comisión, a partir del rango referencial. */
-export function gananciaEstimada(p: Proveedor): { min: number; max: number } | null {
-  if (!p.precio) return null;
-  return { min: desglosar(p.precio.min).netoProveedor, max: desglosar(p.precio.max).netoProveedor };
+/** Tarifa sugerida (misma regla que la cotización) y lo que recibiría el socio. */
+export function gananciaEstimada(p: Proveedor, falla: Falla | undefined): { tarifa: number; neto: number } {
+  const ruedasTrabadas = leerSeleccion().ruedas === "trabadas";
+  const tarifa = tarifaInicial(p, falla, { ruedasTrabadas }).reduce((t, l) => t + l.monto, 0);
+  return { tarifa, neto: desglosar(tarifa).netoProveedor };
 }
 
 export type Linea = { id: number; concepto: string; monto: string };
